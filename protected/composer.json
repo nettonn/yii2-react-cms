@@ -1,0 +1,78 @@
+{
+    "name": "nettonn/yii2-react-ts-admin",
+    "description": "Yii2 React Admin",
+    "keywords": ["yii2", "framework", "react"],
+    "homepage": "http://www.yiiframework.com/",
+    "type": "project",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/yiisoft/yii2/issues?state=open",
+        "forum": "http://www.yiiframework.com/forum/",
+        "wiki": "http://www.yiiframework.com/wiki/",
+        "irc": "irc://irc.freenode.net/yii",
+        "source": "https://github.com/yiisoft/yii2"
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.3.0",
+        "yiisoft/yii2": "~2.0.43",
+        "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
+        "sizeg/yii2-jwt": "^2.0",
+        "yiisoft/yii2-imagine": "^2.3",
+        "nettonn/yii2-file-storage": "dev-develop",
+        "yii2tech/ar-softdelete": "*",
+        "voskobovich/yii2-linker-behavior": "^4.1",
+        "samdark/sitemap": "^2.4",
+        "yiisoft/yii2-queue": "^2.3",
+        "denisogr/yii2-cronjobs": "dev-master",
+        "howardeagle/yii2-inline-widgets-behavior": "dev-master",
+        "yii2tech/ar-dynattribute": "1.0.x-dev",
+        "oxyaction/yii2-polymorphic-relation-behavior": "dev-master",
+        "prewk/xml-string-streamer": "dev-master"
+    },
+    "require-dev": {
+        "yiisoft/yii2-debug": "~2.1.0",
+        "yiisoft/yii2-gii": "~2.2.0"
+    },
+    "config": {
+        "process-timeout": 1800,
+        "fxp-asset": {
+            "enabled": false
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "yii\\composer\\Installer::postInstall"
+        ],
+        "post-create-project-cmd": [
+            "yii\\composer\\Installer::postCreateProject",
+            "yii\\composer\\Installer::postInstall"
+        ]
+    },
+    "extra": {
+        "yii\\composer\\Installer::postCreateProject": {
+            "setPermission": [
+                {
+                    "runtime": "0777",
+                    "web/assets": "0777",
+                    "yii": "0755"
+                }
+            ]
+        },
+        "yii\\composer\\Installer::postInstall": {
+            "generateCookieValidationKey": [
+                "config/web.php"
+            ]
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/nettonn/yii2-file-storage"
+        }
+    ]
+}

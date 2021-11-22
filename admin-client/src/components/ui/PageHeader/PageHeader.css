@@ -1,0 +1,11 @@
+.app-page-header {
+  padding: 0 0 20px;
+}
+
+.app-page-header.has-breadcrumb {
+  padding-top: 0;
+}
+.ant-page-header-heading-title {
+  font-size: 24px;
+  line-height: 35px;
+}

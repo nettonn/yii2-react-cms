@@ -1,0 +1,29 @@
+<?php namespace app\controllers\admin;
+
+use app\models\Chunk;
+use yii\db\ActiveQuery;
+
+class ChunkController extends RestController
+{
+    public $modelClass = Chunk::class;
+    public $indexQuerySelectExclude = ['content'];
+
+    protected function prepareSearchQuery(ActiveQuery $query, string $search) : ActiveQuery
+    {
+        return $query->andWhere(['or',
+            ['like', 'id',  "$search"],
+            ['like', 'name',  "$search"],
+            ['like', 'key',  "$search"],
+            ['like', 'content',  "$search"],
+        ]);
+    }
+
+    public function modelOptions(): array
+    {
+        $instance = Chunk::instance();
+
+        return [
+            'type' => prepare_value_text_options($instance->typeOptions),
+        ];
+    }
+}

@@ -1,0 +1,20 @@
+.app-private-layout .ant-layout {
+    background: #fff
+}
+.app-content-layout {
+    margin-left: 200px;
+    transition: margin 0.2s ease;
+
+}
+@media (max-width: 991.98px) {
+    .app-content-layout {
+        margin-left: 0;
+    }
+}
+
+.app-content {
+    padding: 15px 15px 200px;
+}
+.ant-layout-sider-collapsed + .app-content-layout {
+    margin-left: 0;
+}

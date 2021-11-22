@@ -1,0 +1,12 @@
+<?php
+
+return [
+    'class' => \yii\queue\db\Queue::class,
+    'db' => 'db', // DB connection component or its config
+    'tableName' => '{{%queue}}', // Table name
+    'channel' => 'default', // Queue channel key
+    'mutex' => \yii\mutex\MysqlMutex::class, // Mutex used to sync queries
+    'ttr' => 60, // Max time for job execution
+    'attempts' => 99, // Max number of attempts
+    'deleteReleased' => false,
+];
