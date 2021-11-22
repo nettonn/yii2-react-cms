@@ -31,6 +31,7 @@ abstract class BaseApplication extends yii\base\Application
  * @property \app\components\PlaceholderComponent $placeholders
  * @property \app\components\AjaxFileUploadComponent $ajaxFileUpload
  * @property \app\components\MicrodataComponent $microdata
+ * @property \yii\queue\Queue $queue
  */
 class WebApplication extends yii\web\Application
 {
@@ -40,6 +41,7 @@ class WebApplication extends yii\web\Application
  * Class ConsoleApplication
  * Include only Console application related components here
  *
+ * @property \yii\queue\Queue $queue
  */
 class ConsoleApplication extends yii\console\Application
 {

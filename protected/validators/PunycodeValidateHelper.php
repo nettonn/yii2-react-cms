@@ -1,4 +1,4 @@
-<?php namespace app\components\validators;
+<?php namespace app\validators;
 
 /**
  * Validate helper.

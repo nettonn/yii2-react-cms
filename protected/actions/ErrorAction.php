@@ -1,4 +1,4 @@
-<?php namespace app\modules\main\components;
+<?php namespace app\actions;
 
 class ErrorAction extends \yii\web\ErrorAction
 {

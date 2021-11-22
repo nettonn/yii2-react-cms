@@ -1,4 +1,4 @@
-<?php namespace app\components;
+<?php namespace app\log;
 
 use yii\helpers\VarDumper;
 

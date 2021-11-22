@@ -4,6 +4,8 @@ use yii\base\ActionFilter;
 
 class FrontOutputFilter extends ActionFilter
 {
+    public $enabled = true;
+
     public $isAdminEdit = false;
 
     protected $adminLink;
@@ -13,19 +15,27 @@ class FrontOutputFilter extends ActionFilter
      */
     public function afterAction($action, $result)
     {
-        $content = $result;
+        if($this->enabled) {
+            $result = $this->modifyOutput($result);
+        }
+
+        return parent::afterAction($action, $result);
+    }
+
+    public function addAdminLink($link)
+    {
+        $this->adminLink = $link;
+    }
+
+    public function modifyOutput($content)
+    {
         $content = $this->replaceRouble($content);
         if($this->isAdminEdit)
             $content = $this->addAdminButton($content);
         $content = $this->replacePlaceholders($content);
         $content = $this->replaceLazyImages($content);
 
-        return parent::afterAction($action, $content);
-    }
-
-    public function addAdminLink($link)
-    {
-        $this->adminLink = $link;
+        return $content;
     }
 
     protected function replaceRouble($content)

@@ -1,16 +1,16 @@
-<?php namespace app\components;
+<?php namespace app\log;
 
 use app\modules\error\models\NotFound;
-use yii\helpers\VarDumper;
+use app\jobs\MailJob;
 
-class EmailTarget extends \yii\log\EmailTarget
+class EmailQueueTarget extends \yii\log\EmailTarget
 {
     /**
      * @inheritdoc
      */
     public function export()
     {
-        if(!NotFound::isLoggable()) {
+        if(!CONSOLE_APP && !NotFound::isLoggable()) {
             return;
         }
 
@@ -22,7 +22,13 @@ class EmailTarget extends \yii\log\EmailTarget
         $messages = array_map([$this, 'formatMessage'], $this->messages);
 //        $body = wordwrap(implode("\n", $messages), 70);
         $body = implode("\n", $messages);
-        $this->composeMessage($body)->send($this->mailer);
-    }
 
+        $mail = $this->composeMessage($body);
+
+        \Yii::$app->queue->push(new MailJob([
+            'emailTo' => $mail->getTo(),
+            'subject'=>$mail->getSubject(),
+            'textBody'=>$body,
+        ]));
+    }
 }
