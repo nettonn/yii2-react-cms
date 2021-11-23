@@ -1,5 +1,6 @@
 <?php namespace app\components;
 
+use Yii;
 use yii\base\Component;
 use app\models\Seo;
 
@@ -30,7 +31,7 @@ class SeoComponent extends Component
 
     public function init()
     {
-        $this->currentUrl = urldecode(preg_replace('~\?.*?$~i', '', get_request()->getUrl()));
+        $this->currentUrl = urldecode(preg_replace('~\?.*?$~i', '', Yii::$app->getRequest()->getUrl()));
 //        $this->seoModel = $this->loadSeoModel();
     }
 
@@ -42,7 +43,7 @@ class SeoComponent extends Component
     public function getCanonicalUri()
     {
         if($this->canonicalUri === null) {
-            $this->canonicalUri = preg_replace('~\?.*?$~i', '', get_request()->getUrl());
+            $this->canonicalUri = preg_replace('~\?.*?$~i', '', Yii::$app->getRequest()->getUrl());
             $params = [];
             if($this->paginationPage && is_int($this->paginationPage) && $this->paginationPage > 1)
                 $params['page'] = $this->paginationPage;
@@ -55,8 +56,11 @@ class SeoComponent extends Component
 
     public function getCanonicalUrl()
     {
-        if($this->canonicalUrl === null)
-            $this->canonicalUrl = get_request()->hostInfo .  get_request()->baseUrl . $this->getCanonicalUri();
+        if($this->canonicalUrl === null) {
+            $request = Yii::$app->getRequest();
+            $this->canonicalUrl = $request->hostInfo .  $request->baseUrl . $this->getCanonicalUri();
+        }
+
         return $this->canonicalUrl;
     }
 

@@ -105,10 +105,10 @@ class User extends ActiveRecord implements IdentityInterface
             return $model->statusOptions[$model->status];
         };
         $fields['created_at_date'] = function($model) {
-            return app()->formatter->asDate($model->created_at);
+            return Yii::$app->getFormatter()->asDate($model->created_at);
         };
         $fields['updated_at_date'] = function($model) {
-            return app()->formatter->asDate($model->updated_at);
+            return Yii::$app->getFormatter()->asDate($model->updated_at);
         };
         return $fields;
     }
@@ -150,7 +150,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function validatePassword($password)
     {
-        return app()->security->validatePassword($password, $this->password_hash);
+        return Yii::$app->getSecurity()->validatePassword($password, $this->password_hash);
     }
 
     public function getPassword()
@@ -165,7 +165,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function setPassword($password)
     {
-        $this->password_hash = app()->security->generatePasswordHash($password);
+        $this->password_hash = Yii::$app->getSecurity()->generatePasswordHash($password);
     }
 
     public function getAuthKey()
@@ -206,7 +206,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * @param string $email
-     * @return ActiveRecord|null
+     * @return User|null
      */
     public static function findByEmail($email)
     {
@@ -248,7 +248,7 @@ class User extends ActiveRecord implements IdentityInterface
         if (empty($token)) {
             return false;
         }
-        $expire = get_param('user.passwordResetTokenExpire');
+        $expire = Yii::$app->params['user.passwordResetTokenExpire'];
         $parts = explode('_', $token);
         $timestamp = (int) end($parts);
         return $timestamp + $expire >= time();
@@ -259,7 +259,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function generatePasswordResetToken()
     {
-        $this->password_reset_token = app()->security->generateRandomString() . '_' . time();
+        $this->password_reset_token = Yii::$app->getSecurity()->generateRandomString() . '_' . time();
     }
 
     /**
@@ -287,7 +287,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function generateEmailConfirmToken()
     {
-        $this->email_confirm_token = app()->security->generateRandomString();
+        $this->email_confirm_token = Yii::$app->getSecurity()->generateRandomString();
     }
 
     public function emailConfirm()

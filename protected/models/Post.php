@@ -5,6 +5,7 @@ namespace app\models;
 use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
 use nettonn\yii2filestorage\behaviors\FileBehavior;
+use Yii;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -157,7 +158,7 @@ class Post extends ActiveRecord
     public function beforeSave($insert)
     {
         if (!$this->user_id) {
-            $this->user_id = app()->user->id;
+            $this->user_id = Yii::$app->user->id;
         }
         return parent::beforeSave($insert);
     }

@@ -32,6 +32,7 @@ abstract class BaseApplication extends yii\base\Application
  * @property \app\components\AjaxFileUploadComponent $ajaxFileUpload
  * @property \app\components\MicrodataComponent $microdata
  * @property \yii\queue\Queue $queue
+ * @property \sizeg\jwt\Jwt $jwt
  */
 class WebApplication extends yii\web\Application
 {

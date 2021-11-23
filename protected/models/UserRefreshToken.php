@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use app\behaviors\TimestampBehavior;
+use app\models\base\ActiveRecord;
 use Yii;
 
 /**
@@ -13,9 +15,12 @@ use Yii;
  * @property string $ip
  * @property string $user_agent
  * @property int $created_at
+ * @property int $updated_at
  */
-class UserRefreshToken extends \yii\db\ActiveRecord
+class UserRefreshToken extends ActiveRecord
 {
+    public $flushCache = false;
+
     /**
      * {@inheritdoc}
      */
@@ -30,8 +35,8 @@ class UserRefreshToken extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'token', 'ip', 'user_agent', 'created_at'], 'required'],
-            [['user_id', 'created_at'], 'integer'],
+            [['user_id', 'token', 'ip', 'user_agent'], 'required'],
+            [['user_id'], 'integer'],
             [['token', 'user_agent'], 'string', 'max' => 1000],
             [['ip'], 'string', 'max' => 50],
         ];
@@ -49,6 +54,16 @@ class UserRefreshToken extends \yii\db\ActiveRecord
             'ip' => 'Ip',
             'user_agent' => 'User Agent',
             'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            'TimestampBehavior' => [
+                'class' => TimestampBehavior::class,
+            ],
         ];
     }
 }

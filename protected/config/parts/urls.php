@@ -1,7 +1,7 @@
 <?php
 return [
     '' => 'site/index',
-    'files/<_path:.+>'=>'file-storage/thumb/get',
+    'files/<_path:.+>'=>'file-thumb/get',
     [
         'class' => 'app\components\AdminClientUrlCreateRules',
         'restControllers' => [

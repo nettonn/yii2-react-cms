@@ -1,6 +1,7 @@
 <?php namespace app\controllers;
 
 use app\filters\FrontOutputFilter;
+use Yii;
 use yii\web\Controller;
 
 class FrontController extends Controller
@@ -13,7 +14,7 @@ class FrontController extends Controller
         return [
             'frontOutput' => [
                 'class' => FrontOutputFilter::class,
-                'isAdminEdit' => \Yii::$app->admin->isAdminEdit(),
+                'isAdminEdit' => Yii::$app->admin->isAdminEdit(),
             ]
         ];
     }

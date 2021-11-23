@@ -83,7 +83,7 @@ class Todo extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if (!$this->user_id) {
-            $this->user_id = app()->user->id;
+            $this->user_id = Yii::$app->user->id;
         }
         if (!$this->sort) {
             $this->sort = self::find()->select('MAX(sort)')->scalar() + 1;

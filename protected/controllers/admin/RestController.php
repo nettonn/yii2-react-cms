@@ -1,5 +1,6 @@
 <?php namespace app\controllers\admin;
 
+use Yii;
 use yii\base\Action;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
@@ -205,6 +206,7 @@ abstract class RestController extends BaseApiController
 
     public function prepareDataProvider()
     {
+        $request = Yii::$app->getRequest();
         /* @var $modelClass ActiveRecord */
         $modelClass = $this->modelClass;
         $modelColumns = $modelClass::getTableSchema()->getColumnNames();
@@ -223,20 +225,20 @@ abstract class RestController extends BaseApiController
 
         $query = $this->prepareQuery($query);
 
-        if($ids = get_get($this->idsParam)) {
+        if($ids = $request->get($this->idsParam)) {
             if(!is_array($ids))
                 $ids = explode(',', $ids);
 
             return $query->andWhere(['in', 'id', $ids])->all();
         }
 
-        $search = get_get($this->searchQueryParam);
+        $search = $request->get($this->searchQueryParam);
         if($search) {
             $query = $this->prepareSearchQuery($query, $search);
         }
 
         $filterWhere = [];
-        $filters = (array) get_get('filters');
+        $filters = (array) $request->get('filters');
         if($filters) {
             foreach($filters as $column => $value) {
                 if(!in_array($column, $modelColumns))
@@ -250,10 +252,10 @@ abstract class RestController extends BaseApiController
             }
         }
 
-        $directionConst = get_get($this->sortDirectionParam, 'ascend') == 'ascend' ? SORT_ASC : SORT_DESC;
+        $directionConst = $request->get($this->sortDirectionParam, 'ascend') == 'ascend' ? SORT_ASC : SORT_DESC;
 
 
-        $sortField = $sort = get_get($this->sortFieldParam);
+        $sortField = $sort = $request->get($this->sortFieldParam);
 
         if(!in_array($sort, $modelColumns)) {
             $sort = 'id';
@@ -264,10 +266,10 @@ abstract class RestController extends BaseApiController
             'pageSize' => $this->pageSize,
         ];
         
-        $isList = get_get('list');
+        $isList = $request->get('list');
 
         if($isList) {
-            if($limit = get_get('limit')) {
+            if($limit = $request->get('limit')) {
                 $query = $query->limit(intval($limit));
             }
 
@@ -318,7 +320,7 @@ abstract class RestController extends BaseApiController
     {
         if (in_array($action->id, $this->modelOptionsLastModifiedActions)) {
             if($lastModified = $this->getModelOptionsLastModified()) {
-                app()->response->headers->add('x-model-options-last-modified', $lastModified);
+                Yii::$app->getResponse()->getHeaders()->add('x-model-options-last-modified', $lastModified);
             }
         }
     }

@@ -2,6 +2,7 @@
 return [
     'ADMIN_NAME' => 'Name Lastname',
     'ADMIN_EMAIL' => 'email@email.com',
+    'ADMIN_DEFAULT_PASSWORD' => '12345',
 
     'DEV_IPS' => '127.0.0.1, 127.0.0.1',
 

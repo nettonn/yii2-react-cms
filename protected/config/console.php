@@ -33,7 +33,6 @@ $config = [
         ],
         'errorHandler' => [
             'class'=>'app\components\ErrorHandlerConsole',
-//            'errorAction' => 'main/default/error',
         ],
         'chunks' => [
             'class'=>'app\components\ChunkComponent'
@@ -49,18 +48,6 @@ $config = [
         'urlManager' => array_merge(require(__DIR__.'/parts/urlManager.php'), [
             'baseUrl' => 'https://'.HOST.'/',
         ]),
-//        'urlManager' => [
-//            'class'=> 'app\components\UrlManager',
-//            'baseUrl' => 'https://'.HOST.'/',
-//            'enablePrettyUrl' => true,
-//            'showScriptName' => false,
-//            'enableStrictParsing' => true,
-//            'normalizer' => [
-//                'class' => 'yii\web\UrlNormalizer',
-//                'action' => \yii\web\UrlNormalizer::ACTION_REDIRECT_PERMANENT,
-//            ],
-//            'rules' => require (__DIR__ . '/parts/urls.php'),
-//        ],
         'log' => [
             'targets' => [
                 [
@@ -71,13 +58,6 @@ $config = [
         ],
     ],
     'params' => (require __DIR__ . '/params.php'),
-    /*
-    'controllerMap' => [
-        'fixture' => [ // Fixture generation command line.
-            'class' => 'yii\faker\FixtureController',
-        ],
-    ],
-    */
 ];
 
 if (DEV) {

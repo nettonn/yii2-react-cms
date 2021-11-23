@@ -31,7 +31,7 @@ class m210901_172352_create_user_table extends Migration
             'updated_at' => $this->integer()->notNull()->unsigned(),
         ], $tableOptions);
 
-//        $this->createIndex('idx-user-username', '{{%user}}', 'username', true);
+        $this->createIndex('idx-user-username', '{{%user}}', 'username', true);
         $this->createIndex('idx-user-email', '{{%user}}', 'email', true);
         $this->createIndex('idx-user-created_at', '{{%user}}', 'created_at');
         $this->createIndex('idx-user-updated_at', '{{%user}}', 'updated_at');
@@ -39,7 +39,7 @@ class m210901_172352_create_user_table extends Migration
         $this->insert('{{%user}}', [
                 'username'=>'admin',
                 'email'=>'dev.nettonn@gmail.com',
-                'password_hash'=>\Yii::$app->security->generatePasswordHash(97500009750000),
+                'password_hash'=>\Yii::$app->getSecurity()->generatePasswordHash(\Yii::$app->params['adminDefaultPassword']),
                 'role'=>'admin',
                 'status'=>1,
                 'auth_key'=>'YasdZK1LtSMDN3-vD4sIG-OO2Nrzh9r4',
@@ -54,23 +54,6 @@ class m210901_172352_create_user_table extends Migration
      */
     public function safeDown()
     {
-//        $this->dropIndex(
-//            'idx-user-username',
-//            '{{%user}}'
-//        );
-        $this->dropIndex(
-            'idx-user-email',
-            '{{%user}}'
-        );
-        $this->dropIndex(
-            'idx-user-created_at',
-            '{{%user}}'
-        );
-        $this->dropIndex(
-            'idx-user-updated_at',
-            '{{%user}}'
-        );
-
         $this->dropTable('{{%user}}');
     }
 }

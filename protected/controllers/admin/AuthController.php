@@ -16,8 +16,8 @@ class AuthController extends BaseApiController
     {
         $model = new LoginForm();
 
-        if ($model->load(get_post(), '') && $model->login()) {
-            $user = app()->user->identity;
+        if ($model->load(Yii::$app->getRequest()->post(), '') && $model->login()) {
+            $user = Yii::$app->getUser()->identity;
 
             $token = $this->generateJwt($user);
 
@@ -34,7 +34,7 @@ class AuthController extends BaseApiController
     public function actionRegistration()
     {
         $model = new RegistrationForm();
-        if ($model->load(get_post(), '')) {
+        if ($model->load(Yii::$app->getRequest()->post(), '')) {
             if ($user = $model->register()) {
                 return [
                     'message' => "Для завершения регистрации, перейдите по ссылке присланной вам на E-Mail ({$user->email}) ({$user->email_confirm_token})",
@@ -47,7 +47,7 @@ class AuthController extends BaseApiController
 
     public function actionEmailConfirm()
     {
-        $token = get_post('token');
+        $token = Yii::$app->getRequest()->post('token');
 
         if (empty($token) || !is_string($token)) {
             throw new BadRequestHttpException('Отсутствует код подтверждения.');
@@ -70,22 +70,23 @@ class AuthController extends BaseApiController
 
     public function actionRefreshToken()
     {
-        $refreshToken = app()->request->cookies->getValue('refresh-token', false);
+        $request = Yii::$app->getRequest();
+        $refreshToken = $request->getCookies()->getValue('refresh-token', false);
         if (!$refreshToken) {
             throw new UnauthorizedHttpException('Не найден refresh token.');
         }
 
         $userRefreshToken = UserRefreshToken::findOne(['token' => $refreshToken]);
 
-        if (get_request()->getMethod() == 'POST') {
+        if ($request->getMethod() == 'POST') {
             // Getting new JWT after it has expired
             if (!$userRefreshToken) {
                 throw new UnauthorizedHttpException('Refresh token не существует.');
             }
 
             $user = User::find()  //adapt this to your needs
-            ->where(['id' => $userRefreshToken->user_id])
-                ->andWhere(['status' => User::STATUS_ACTIVE,])
+                ->where(['id' => $userRefreshToken->user_id])
+                ->andWhere(['status' => User::STATUS_ACTIVE])
                 ->one();
 
             if (!$user) {
@@ -100,7 +101,7 @@ class AuthController extends BaseApiController
                 'user' => $user,
             ];
 
-        } elseif (get_request()->getMethod() == 'DELETE') {
+        } elseif ($request->getMethod() == 'DELETE') {
             // Logging out
             if ($userRefreshToken && !$userRefreshToken->delete()) {
                 throw new ServerErrorHttpException('Ошибка удаления токена.');
@@ -136,12 +137,12 @@ class AuthController extends BaseApiController
     }
 
     private function generateJwt(User $user) {
-        $jwt = app()->jwt;
+        $jwt = Yii::$app->jwt;
         $signer = $jwt->getSigner('HS256');
         $key = $jwt->getKey();
         $time = time();
 
-        $jwtParams = get_param('jwt');
+        $jwtParams = Yii::$app->params['jwt'];
 
         return $jwt->getBuilder()
             ->issuedBy($jwtParams['issuer'])
@@ -156,23 +157,32 @@ class AuthController extends BaseApiController
     /**
      * @throws \yii\base\Exception
      */
-    private function generateRefreshToken(User $user, User $impersonator = null) {
-        $refreshToken = app()->security->generateRandomString(200);
+    private function generateRefreshToken(User $user) {
+        $refreshToken = Yii::$app->getSecurity()->generateRandomString(200);
 
-        // TODO: Don't always regenerate - you could reuse existing one if user already has one with same IP and user agent
-        $userRefreshToken = new UserRefreshToken([
+        $request = Yii::$app->getRequest();
+
+        $userRefreshToken = UserRefreshToken::find()->where([
             'user_id' => $user->id,
-            'token' => $refreshToken,
-            'ip' => get_request()->userIP,
-            'user_agent' => get_request()->userAgent,
-            'created_at' => time(),
-        ]);
+            'ip' => $request->userIP,
+            'user_agent' => $request->userAgent,
+        ])->one();
+
+        if(!$userRefreshToken) {
+            $userRefreshToken = new UserRefreshToken([
+                'user_id' => $user->id,
+                'token' => $refreshToken,
+                'ip' => $request->userIP,
+                'user_agent' => $request->userAgent,
+            ]);
+        }
+
         if (!$userRefreshToken->save()) {
             throw new ServerErrorHttpException('Ошибка сохранения refresh token: '. $userRefreshToken->getErrorSummary(true));
         }
 
         // Send the refresh-token to the user in a HttpOnly cookie that Javascript can never read and that's limited by path
-        get_response()->cookies->add(new Cookie([
+        Yii::$app->getResponse()->getCookies()->add(new Cookie([
             'name' => 'refresh-token',
             'value' => $refreshToken,
             'httpOnly' => true,

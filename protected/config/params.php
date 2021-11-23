@@ -6,6 +6,7 @@ return [
     'transliterateUrl' => true,
 
     'adminEmail' => $envars['ADMIN_EMAIL'],
+    'adminDefaultPassword' => $envars['ADMIN_DEFAULT_PASSWORD'],
     'senderEmail' => $envars['ADMIN_EMAIL'],
     'supportEmail' => $envars['ADMIN_EMAIL'],
     'senderName' => $envars['ADMIN_NAME'],

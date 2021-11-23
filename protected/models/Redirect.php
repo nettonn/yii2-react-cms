@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
+use Yii;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -99,12 +100,13 @@ class Redirect extends ActiveRecord
 
     public static function handleRedirects()
     {
-        $path = '/'.ltrim(get_request()->getPathInfo(), '/');
+        $path = '/'.ltrim(Yii::$app->getRequest()->getPathInfo(), '/');
 
         foreach(self::find()->active()->orderBy('sort ASC')->asArray()->all() as $one) {
             if(preg_match("~{$one['from']}~ui", $path)) {
                 $to = preg_replace('~'.$one['from'].'~ui', $one['to'], $path);
-                redirect($to, $one['code']);
+                Yii::$app->getResponse()->redirect($to, 301, true)->send();
+                Yii::$app->end();
             }
         }
     }

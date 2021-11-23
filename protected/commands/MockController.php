@@ -12,6 +12,7 @@ use app\models\User;
 use app\models\UserMock;
 use app\models\Page;
 use nettonn\yii2filestorage\models\FileModel;
+use Yii;
 use yii\console\Controller;
 use yii\console\ExitCode;
 use yii\helpers\FileHelper;
@@ -59,8 +60,8 @@ class MockController extends Controller
 //        }
 
         $images = [];
-        if(is_dir(path_alias('@app/temp/photos'))) {
-            foreach(FileHelper::findFiles(path_alias('@app/temp/photos')) as $filename) {
+        if(is_dir(Yii::getAlias('@app/temp/photos'))) {
+            foreach(FileHelper::findFiles(Yii::getAlias('@app/temp/photos')) as $filename) {
                 $image = new UploadedFile();
                 $image->name = basename($filename);
                 $image->tempName = $filename;

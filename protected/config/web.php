@@ -76,7 +76,7 @@ $config = [
                     'levels' => ['error', 'warning'],
                 ],
                 [
-                    'class' => 'app\components\EmailQueueTarget',
+                    'class' => 'app\log\EmailQueueTarget',
                     'except' => ['yii\web\HttpException:404',],
                     'levels' => ['error', 'warning'],
                     'message' => [
@@ -85,7 +85,7 @@ $config = [
                     ],
                 ],
 //                [
-//                    'class' => 'app\modules\main\components\EmailQueueTarget',
+//                    'class' => 'app\log\EmailQueueTarget',
 //                    'categories' => ['yii\web\HttpException:404'],
 //                    'levels' => ['error', 'warning'],
 //                    'message' => [

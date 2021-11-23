@@ -1,6 +1,7 @@
 <?php namespace app\components;
 
 use app\utils\UrlHelper;
+use Yii;
 use yii\base\Component;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
@@ -23,7 +24,7 @@ class AjaxFileUploadComponent extends Component
 
     public function init()
     {
-        $this->uploadPath = path_alias($this->uploadPath);
+        $this->uploadPath = Yii::getAlias($this->uploadPath);
     }
 
     protected function getCurrentPath($token)

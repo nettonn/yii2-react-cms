@@ -158,7 +158,7 @@ function generate_image($filename, $saveFilename, $toWidth, $toHeight, $adaptive
         $image = \yii\imagine\Image::resize($filename, $toWidth, $toHeight);
     }
     if ($watermark) {
-        $watermarkObj = \yii\imagine\Image::getImagine()->open(path_alias($watermark));
+        $watermarkObj = \yii\imagine\Image::getImagine()->open(Yii::getAlias($watermark));
         $iSize = $image->getSize();
         $wSize = $watermarkObj->getSize();
         $image->paste($watermarkObj, new \Imagine\Image\Point(($iSize->getWidth() - $wSize->getWidth())/2, ($iSize->getHeight() - $wSize->getHeight())/2));

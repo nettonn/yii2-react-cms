@@ -1,8 +1,10 @@
 <?php namespace app\controllers\admin;
 
 use app\models\User;
-use app\services\FilterService;
+use sizeg\jwt\JwtHttpBearerAuth;
+use Yii;
 use yii\filters\ContentNegotiator;
+use yii\filters\Cors;
 use yii\filters\RateLimiter;
 use yii\filters\VerbFilter;
 use yii\web\ForbiddenHttpException;
@@ -12,8 +14,8 @@ class BaseApiController extends \yii\rest\Controller
 {
     public function afterAction($action, $result)
     {
-        if(!\Yii::$app->getUser()->isGuest) {
-            \Yii::$app->admin->setIsAdminEdit(true);
+        if(!Yii::$app->getUser()->isGuest) {
+            Yii::$app->admin->setIsAdminEdit(true);
         }
 
         return parent::afterAction($action, $result);
@@ -27,16 +29,16 @@ class BaseApiController extends \yii\rest\Controller
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::class,
             'formats' => [
-                'text/html' => \yii\web\Response::FORMAT_HTML,
-                'application/json' => \yii\web\Response::FORMAT_JSON,
-                'application/xml' => \yii\web\Response::FORMAT_XML,
-                'text/plain' => \yii\web\Response::FORMAT_RAW,
+                'text/html' => Response::FORMAT_HTML,
+                'application/json' => Response::FORMAT_JSON,
+                'application/xml' => Response::FORMAT_XML,
+                'text/plain' => Response::FORMAT_RAW,
             ],
         ];
 
         if(DEV) {
             $behaviors['corsFilter'] = [
-                'class' => \yii\filters\Cors::class,
+                'class' => Cors::class,
                 'cors' => [
                     'Origin' => ['http://localhost:3000'],
                     'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
@@ -57,11 +59,11 @@ class BaseApiController extends \yii\rest\Controller
             'class' => RateLimiter::class,
         ];
         $behaviors['authenticator'] = [
-            'class' => \sizeg\jwt\JwtHttpBearerAuth::class,
+            'class' => JwtHttpBearerAuth::class,
             'except' => $this->authExcept(),
             'auth' => function ($token, $authMethod) {
                 $user = User::findOne($token->getClaim('uid'));
-                return $user && app()->user->login($user);
+                return $user && Yii::$app->getUser()->login($user);
             }
         ];
 

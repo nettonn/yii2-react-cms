@@ -1,6 +1,7 @@
 <?php namespace app\modules\main\components;
 
 use app\models\Redirect;
+use Yii;
 use yii\web\Response;
 
 class ErrorHandler extends \yii\web\ErrorHandler
@@ -12,9 +13,9 @@ class ErrorHandler extends \yii\web\ErrorHandler
 //            NotFound::log();
         }
 
-        get_response()->on(Response::EVENT_AFTER_PREPARE, function($event) {
-            $event->sender->content = modify_output($event->sender->content);
-        });
+//        Yii::$app->getResponse()->on(Response::EVENT_AFTER_PREPARE, function($event) {
+//            $event->sender->content = modify_output($event->sender->content);
+//        });
 
 //        $url = get_request()->absoluteUrl;;
 //        $newUrl = $url.'.html';

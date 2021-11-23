@@ -1,5 +1,6 @@
 <?php namespace app\filters;
 
+use Yii;
 use yii\base\ActionFilter;
 
 class FrontOutputFilter extends ActionFilter
@@ -50,7 +51,7 @@ class FrontOutputFilter extends ActionFilter
             $title = 'Редактировать';
         }
         else {
-            $link = url(['/seo/seo-admin/create', 'url'=>get_request()->getUrl(), 'name'=>seo('h1')]);
+            $link = url(['/admin/seo/create', 'url'=> Yii::$app->getRequest()->getUrl(), 'name'=>seo('h1')]);
             $title = 'Добавить SEO';
         }
         $editButton = '<a href="'.$link.'" style="position: fixed; top: 0; left: 0; display: block; z-index: 9999; color: #fff; background: #444">'.$title.'</a>';
@@ -59,7 +60,7 @@ class FrontOutputFilter extends ActionFilter
 
     protected function replacePlaceholders($content)
     {
-        $placeholders = \Yii::$app->placeholders;
+        $placeholders = Yii::$app->placeholders;
         $content = $placeholders->replaceAll($content);
         $content = $placeholders->replaceAll($content);
         $content = $placeholders->remove_empty($content);

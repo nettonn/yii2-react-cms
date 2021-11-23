@@ -2,6 +2,7 @@
 
 
 use app\models\Todo;
+use Yii;
 use yii\base\InvalidArgumentException;
 use yii\data\ActiveDataProvider;
 
@@ -21,7 +22,7 @@ class TodoController extends RestController
         $sortedIds = array_map('intval', $sortedIds);
 
         $models = Todo::find()
-            ->where(['user_id' => app()->user->id])
+            ->where(['user_id' => Yii::$app->getUser()->id])
             ->andWhere(['in', 'id', $sortedIds])
             ->indexBy('id')
             ->all();
