@@ -1,11 +1,13 @@
 <?php namespace app\utils;
 
+use Yii;
+
 class UrlHelper
 {
 
     public static function generateAlias($str)
     {
-        if(\Yii::$app->params['transliterateUrl']) {
+        if(Yii::$app->params['transliterateUrl']) {
             return self::transliterate($str);
         }
         return self::filterUrl($str);

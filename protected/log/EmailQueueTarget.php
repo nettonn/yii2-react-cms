@@ -2,6 +2,7 @@
 
 use app\modules\error\models\NotFound;
 use app\jobs\MailJob;
+use Yii;
 
 class EmailQueueTarget extends \yii\log\EmailTarget
 {
@@ -25,7 +26,7 @@ class EmailQueueTarget extends \yii\log\EmailTarget
 
         $mail = $this->composeMessage($body);
 
-        \Yii::$app->queue->push(new MailJob([
+        Yii::$app->queue->push(new MailJob([
             'emailTo' => $mail->getTo(),
             'subject'=>$mail->getSubject(),
             'textBody'=>$body,

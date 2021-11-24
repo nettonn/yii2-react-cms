@@ -4,6 +4,7 @@ use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
 use nettonn\yii2filestorage\behaviors\ContentImagesBehavior;
 use nettonn\yii2filestorage\behaviors\FileBehavior;
+use Yii;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 use app\behaviors\TreeBehavior;
 
@@ -14,7 +15,9 @@ use app\behaviors\TreeBehavior;
  * @property string $name
  * @property string $alias
  * @property string $_url
+ * @property string $path
  * @property integer $parent_id
+ * @property integer $level
  * @property string $description
  * @property string $content
  * @property string $layout
@@ -76,7 +79,9 @@ class Page extends ActiveRecord
             'name' => 'Название',
             'alias' => 'Псевдоним',
             '_url' => 'Url',
+            'path' => 'Path',
             'parent_id' => 'Родитель',
+            'level' => 'Level',
             'description' => 'Описание',
             'content' => 'Содержимое',
             'layout' => 'Шаблон',
@@ -89,8 +94,6 @@ class Page extends ActiveRecord
             'seo_keywords' => 'Seo Keywords',
             'image'=>'Главное изображение',
             'images'=>'Изображения',
-            'imgback'=>'Фон шапки',
-
         ];
     }
 
@@ -173,9 +176,9 @@ class Page extends ActiveRecord
 
     public function generateUrl()
     {
-//        if(setting_get('mainpage') == $this->id)
-//            return url(['/page/default/index']);
-        return url(['/page/default/view', 'path'=>$this->treeGetPath()]);
+        if(Yii::$app->settings->get('main_page_id') == $this->id)
+            return url(['/site/index']);
+        return url(['/site/page', 'path'=>$this->treeGetPath()]);
     }
 
     public function getUrl($scheme = false)

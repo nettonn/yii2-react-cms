@@ -1,5 +1,4 @@
-<?php namespace app\components;
-
+<?php namespace app\errors;
 
 class ErrorHandlerConsole extends \yii\console\ErrorHandler
 {

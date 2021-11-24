@@ -1,5 +1,6 @@
 <?php namespace app\migrations;
 
+use Yii;
 use yii\db\Migration;
 
 /**
@@ -39,7 +40,7 @@ class m210901_172352_create_user_table extends Migration
         $this->insert('{{%user}}', [
                 'username'=>'admin',
                 'email'=>'dev.nettonn@gmail.com',
-                'password_hash'=>\Yii::$app->getSecurity()->generatePasswordHash(\Yii::$app->params['adminDefaultPassword']),
+                'password_hash'=> Yii::$app->getSecurity()->generatePasswordHash(Yii::$app->params['adminDefaultPassword']),
                 'role'=>'admin',
                 'status'=>1,
                 'auth_key'=>'YasdZK1LtSMDN3-vD4sIG-OO2Nrzh9r4',

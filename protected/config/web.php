@@ -19,6 +19,9 @@ $config = [
     'components' => [
         'authManager' => require(__DIR__ . '/parts/authManager.php'),
         'formatter' => require(__DIR__ . '/parts/formatter.php'),
+        'view' => [
+            'class'=>'app\components\View',
+        ],
         'request' => [
             'enableCsrfValidation' => false,
             'enableCsrfCookie' => false,
@@ -40,6 +43,7 @@ $config = [
             'enableSession' => false,
         ],
         'errorHandler' => [
+            'class'=>'app\errors\ErrorHandler',
             'errorAction' => 'site/error',
         ],
         'mailer' => require(__DIR__ . '/parts/mailer.php'),
@@ -63,6 +67,12 @@ $config = [
         ],
         'admin' => [
             'class' => 'app\components\AdminComponent',
+        ],
+        'inlineWidgets' => [
+            'class' => 'app\components\InlineWidgetsComponent',
+            'widgets' => [
+                'chunk' => 'app\widgets\ChunkWidget',
+            ],
         ],
         'queue' => require(__DIR__ . '/parts/queue.php'),
         'db' => require (__DIR__ . '/parts/db.php'),

@@ -1,12 +1,15 @@
 <?php
 require (__DIR__ . '/../utils/helpers.php');
+$envars = require (__DIR__.'/envars.php');
 
 $config = [
     'id' => 'Yii2 React CMS console',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log',],
     'controllerNamespace' => 'app\commands',
-    'aliases' => require(__DIR__ . '/parts/aliases.php'),
+    'aliases' => array_merge(require(__DIR__ . '/parts/aliases.php'), [
+        '@runnerScript' => '@app/yii'
+    ]),
     'modules' => [
         'file-storage' => [
             'class' => 'nettonn\yii2filestorage\Module',
@@ -15,12 +18,20 @@ $config = [
     'language'=>'ru-RU',
     'timeZone' => 'Europe/Moscow',
     'controllerMap' => [
+        'cron' => [
+            'class' => 'denisog\cronjobs\CronController',
+            'interpreterPath' => $envars['PHP_INTERPRETER_PATH'],
+        ],
+        'main' => [
+            'class' => 'app\commands\MainController'
+        ],
         'migrate' => [
             'class' => 'yii\console\controllers\MigrateController',
             'migrationPath' => null,
             'migrationNamespaces' => [
                 'app\migrations',
                 'nettonn\yii2filestorage\migrations',
+                'yii\queue\db\migrations',
             ],
         ],
     ],
@@ -32,7 +43,7 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'errorHandler' => [
-            'class'=>'app\components\ErrorHandlerConsole',
+            'class'=>'app\errors\ErrorHandlerConsole',
         ],
         'chunks' => [
             'class'=>'app\components\ChunkComponent'

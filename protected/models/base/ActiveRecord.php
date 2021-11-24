@@ -5,19 +5,11 @@ use Yii;
 
 abstract class ActiveRecord extends \yii\db\ActiveRecord
 {
-    protected static $_moduleName = null;
-
     public $flushCache = true;
 
     public static $flushCacheGlobal = true;
 
-    protected static function getModuleName()
-    {
-        if(static::$_moduleName === null) {
-            static::$_moduleName = lcfirst(class_basename(get_called_class()));
-        }
-        return static::$_moduleName;
-    }
+    protected static $softDeleteAttribute = 'is_deleted';
 
     public function fields()
     {

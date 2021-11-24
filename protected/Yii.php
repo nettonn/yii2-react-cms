@@ -28,6 +28,7 @@ abstract class BaseApplication extends yii\base\Application
  * @property \app\components\SeoComponent $seo
  * @property \app\components\ChunkComponent $chunks
  * @property \app\components\SettingComponent $settings
+ * @property \app\components\InlineWidgetsComponent $inlineWidgets
  * @property \app\components\PlaceholderComponent $placeholders
  * @property \app\components\AjaxFileUploadComponent $ajaxFileUpload
  * @property \app\components\MicrodataComponent $microdata

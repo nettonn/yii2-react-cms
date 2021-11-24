@@ -7,10 +7,6 @@ class FrontOutputFilter extends ActionFilter
 {
     public $enabled = true;
 
-    public $isAdminEdit = false;
-
-    protected $adminLink;
-
     /**
      * {@inheritdoc}
      */
@@ -23,31 +19,21 @@ class FrontOutputFilter extends ActionFilter
         return parent::afterAction($action, $result);
     }
 
-    public function addAdminLink($link)
-    {
-        $this->adminLink = $link;
-    }
-
     public function modifyOutput($content)
     {
-        $content = $this->replaceRouble($content);
-        if($this->isAdminEdit)
+        if(Yii::$app->admin->isAdminEdit())
             $content = $this->addAdminButton($content);
+        $content = $this->replaceInlineWidgets($content);
         $content = $this->replacePlaceholders($content);
+        $content = $this->replaceRouble($content);
         $content = $this->replaceLazyImages($content);
 
         return $content;
     }
 
-    protected function replaceRouble($content)
-    {
-        return preg_replace('~(#руб#|#rub#)~ui', '₽', $content);
-        //    return preg_replace('~(#руб#|#rub#)~ui', '<span class="icon-rouble" title="рублей"><span class="icon-text">рублей</span></span>', $content);
-    }
-
     protected function addAdminButton($content)
     {
-        if($link = $this->adminLink) {
+        if($link = Yii::$app->admin->getAdminLink()) {
             $title = 'Редактировать';
         }
         else {
@@ -58,6 +44,13 @@ class FrontOutputFilter extends ActionFilter
         return preg_replace('~(<body[^>]*?>)~ui', '$1'.$editButton, $content);
     }
 
+    protected function replaceInlineWidgets($content)
+    {
+        $content = Yii::$app->inlineWidgets->decodeWidgets($content);
+
+        return $content;
+    }
+
     protected function replacePlaceholders($content)
     {
         $placeholders = Yii::$app->placeholders;
@@ -65,6 +58,12 @@ class FrontOutputFilter extends ActionFilter
         $content = $placeholders->replaceAll($content);
         $content = $placeholders->remove_empty($content);
         return $content;
+    }
+
+    protected function replaceRouble($content)
+    {
+        return preg_replace('~(#руб#|#rub#)~ui', '₽', $content);
+        //    return preg_replace('~(#руб#|#rub#)~ui', '<span class="icon-rouble" title="рублей"><span class="icon-text">рублей</span></span>', $content);
     }
 
     protected function replaceLazyImages($content)
@@ -79,6 +78,4 @@ class FrontOutputFilter extends ActionFilter
         }
         return $content;
     }
-
-
 }

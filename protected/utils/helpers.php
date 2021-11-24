@@ -236,3 +236,37 @@ function placeholders($name = null, $value = null) {
     return $placeholders;
 }
 
+function remove_nbsp($value) {
+    return str_ireplace('&nbsp;', ' ', $value);
+}
+
+function asset_with_timestamp($filename, $relativePath = true) {
+    if(!file_exists($filename))
+        return false;
+
+    $fileDir = dirname($filename);
+    $dirRelative = str_replace(DOCROOT, '', $fileDir);
+    if($fileDir == $dirRelative)
+        return false;
+
+    $assetsDir = Yii::$app->assetManager->basePath.$dirRelative;
+
+    if(!is_dir($assetsDir)) {
+        \yii\helpers\FileHelper::createDirectory($assetsDir, 0775, true);
+    }
+
+    $time = filemtime($filename);
+
+    $pathInfo = pathinfo($filename);
+
+    $newFilename = $assetsDir.DS.$pathInfo['filename'].'-t'.$time.'.'.$pathInfo['extension'];
+
+    if(!file_exists($newFilename)) {
+        copy($filename, $newFilename);
+    }
+
+    if($relativePath) {
+        return str_replace(DOCROOT, '', $newFilename);
+    }
+    return $newFilename;
+}

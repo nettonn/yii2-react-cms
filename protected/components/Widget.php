@@ -1,5 +1,6 @@
 <?php namespace app\components;
 
+use Yii;
 use yii\db\BaseActiveRecord;
 
 class Widget extends \yii\base\Widget
@@ -13,10 +14,10 @@ class Widget extends \yii\base\Widget
 
         $key = self::getCacheKey($config);
 
-        $data = \Yii::$app->getCache()->get($key);
+        $data = Yii::$app->getCache()->get($key);
         if ($data === false) {
             $data = parent::widget($config);
-            \Yii::$app->getCache()->add($key, $data);
+            Yii::$app->getCache()->add($key, $data);
         }
         return $data;
     }

@@ -1,6 +1,7 @@
 <?php namespace app\models\forms;
 
 use app\models\User;
+use Yii;
 use yii\base\Model;
 /**
  * Password reset request form
@@ -41,10 +42,10 @@ class PasswordResetRequestForm extends Model
                 $user->generatePasswordResetToken();
             }
             if ($user->save()) {
-                return \Yii::$app->mailer->compose('/mail/passwordResetToken', ['user' => $user])
-                    ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name . ' robot'])
+                return Yii::$app->mailer->compose('/mail/passwordResetToken', ['user' => $user])
+                    ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
                     ->setTo($this->email)
-                    ->setSubject('Восстановление пароля ' . \Yii::$app->name)
+                    ->setSubject('Восстановление пароля ' . Yii::$app->name)
                     ->send();
             }
         }

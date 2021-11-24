@@ -1,7 +1,7 @@
-<?php
-namespace app\components;
+<?php namespace app\widgets;
 
 use app\components\Widget;
+use Yii;
 
 class ChunkWidget extends Widget
 {
@@ -9,6 +9,6 @@ class ChunkWidget extends Widget
 
     public function run()
     {
-        return \Yii::$app->chunks->get($this->id);
+        return Yii::$app->chunks->get($this->id);
     }
 }

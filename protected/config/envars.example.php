@@ -25,4 +25,6 @@ return [
     'SMTP_ENCRYPTION' => 'ssl',
 
     'COOKIE_VALIDATION_KEY' => 'long string',
+
+    'PHP_INTERPRETER_PATH' => 'php',
 ];

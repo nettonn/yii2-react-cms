@@ -15,7 +15,9 @@ class m210902_153857_create_page_table extends Migration
             'name' => $this->string()->notNull(),
             'alias' => $this->string()->notNull(),
             '_url' => $this->string()->notNull(),
+            'path' => $this->string()->notNull(),
             'parent_id' => $this->integer()->unsigned(),
+            'level' => $this->smallInteger()->unsigned()->notNull(),
             'description'=>$this->text(),
             'content'=>$this->text(),
 
@@ -33,6 +35,7 @@ class m210902_153857_create_page_table extends Migration
 
         $this->createIndex('idx-page-parent', '{{%page}}', ['parent_id']);
         $this->createIndex('idx-page-url', '{{%page}}', ['_url']);
+        $this->createIndex('idx-page-path', '{{%page}}', ['path']);
         $this->createIndex('idx-page-status', '{{%page}}', ['status']);
         $this->createIndex('idx-page-is_deleted', '{{%page}}', ['is_deleted']);
         $this->createIndex('idx-page-created_at', '{{%page}}', ['created_at']);
