@@ -14,6 +14,7 @@ interface UpdatePageActionsProps {
   createRoute: string;
   touched: boolean;
   afterSaveRedirect?: string;
+  afterSaveViewRedirect?: string;
 }
 
 interface ButtonConfig {
@@ -22,6 +23,7 @@ interface ButtonConfig {
   label: string;
   redirect?: string;
   replace?: boolean;
+  useLocation?: boolean;
 }
 
 const UpdatePageActions: FC<UpdatePageActionsProps> = ({
@@ -33,14 +35,15 @@ const UpdatePageActions: FC<UpdatePageActionsProps> = ({
   createRoute,
   touched,
   afterSaveRedirect,
+  afterSaveViewRedirect,
 }) => {
   const [lastClickKey, setLastClickKey] = useState<string | null>(null);
   const [isRedirectNeed, setIsRedirectNeed] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const buttons: ButtonConfig[] = useMemo(
-    () => [
+  const buttons = useMemo(() => {
+    const buttonList: ButtonConfig[] = [
       {
         key: "save",
         type: "primary",
@@ -58,9 +61,19 @@ const UpdatePageActions: FC<UpdatePageActionsProps> = ({
         label: "Сохранить и добавить",
         redirect: createRoute,
       },
-    ],
-    [afterSaveRedirect, exitRoute, createRoute]
-  );
+    ];
+
+    if (afterSaveViewRedirect !== undefined) {
+      buttonList.push({
+        key: "save-view",
+        label: "Сохранить и посмотреть",
+        redirect: afterSaveViewRedirect,
+        useLocation: true,
+      });
+    }
+
+    return buttonList;
+  }, [afterSaveRedirect, exitRoute, createRoute, afterSaveViewRedirect]);
 
   const buttonClickHandler = (button: ButtonConfig) => {
     if (loading) return;
@@ -83,7 +96,11 @@ const UpdatePageActions: FC<UpdatePageActionsProps> = ({
       pathname !== button.redirect
     ) {
       setIsRedirectNeed(false);
-      navigate(button.redirect, { replace: button.replace });
+      if (button.useLocation) {
+        window.location.href = button.redirect;
+      } else {
+        navigate(button.redirect, { replace: button.replace });
+      }
     } else {
       setIsRedirectNeed(false);
     }

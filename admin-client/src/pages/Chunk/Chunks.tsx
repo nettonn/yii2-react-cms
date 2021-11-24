@@ -1,25 +1,23 @@
 import React, { FC } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
-import useDataGrid from "../../hooks/dataGrid.hook";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { RouteNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
 import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
-import { IChunk } from "../../models/IChunk";
+import { IChunk, IChunkModelOptions } from "../../models/IChunk";
 import { chunkService } from "../../api/ChunkService";
 import { chunkGridActions } from "../../store/reducers/grids/chunkGrid";
+import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = RouteNames.chunk;
 
 const Chunks: FC = () => {
-  const dataGrid = useDataGrid<IChunk>(
-    chunkService,
-    "chunkGrid",
-    chunkGridActions
-  );
+  const dataGridHook = useDataGrid(chunkService, "chunkGrid", chunkGridActions);
 
-  const columns: ColumnsType<IChunk> = [
+  const getColumns = (
+    modelOptions: IChunkModelOptions
+  ): ColumnsType<IChunk> => [
     {
       title: "Id",
       dataIndex: "id",
@@ -34,7 +32,7 @@ const Chunks: FC = () => {
       ellipsis: true,
       render: (text: any, record: IChunk) => {
         return (
-          <Link to={modelRoutes.view.replace(/:id/, record.id.toString())}>
+          <Link to={modelRoutes.update.replace(/:id/, record.id.toString())}>
             {text}
           </Link>
         );
@@ -66,7 +64,7 @@ const Chunks: FC = () => {
     <>
       <PageHeader title="Чанки" backPath={RouteNames.home} />
 
-      <DataGridTable dataGrid={dataGrid} columns={columns} />
+      <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
 
       <IndexPageActions createPath={modelRoutes.create} />
     </>

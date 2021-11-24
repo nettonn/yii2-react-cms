@@ -6,7 +6,7 @@ const Chunk = React.lazy(() => import("../pages/Chunk/Chunk"));
 export const chunkRouteNames = {
   index: "/chunks",
   create: "/chunks/create",
-  view: "/chunks/:id",
+  update: "/chunks/:id",
 };
 
 export const chunkRoutes = [
@@ -16,7 +16,11 @@ export const chunkRoutes = [
     element: Chunk,
     elementProps: { key: "create" },
   },
-  { path: chunkRouteNames.view, element: Chunk, elementProps: { key: "view" } },
+  {
+    path: chunkRouteNames.update,
+    element: Chunk,
+    elementProps: { key: "update" },
+  },
 ];
 
 export const chunkRouteIcons = {

@@ -1,22 +1,22 @@
 import React, { FC } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
-import useDataGrid from "../../hooks/dataGrid.hook";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { RouteNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
-import { IPost } from "../../models/IPost";
+import { IPost, IPostModelOptions } from "../../models/IPost";
 import { ColumnsType } from "antd/lib/table/interface";
 import { statusColumn } from "../../components/crud/grid/columns";
 import { Link } from "react-router-dom";
 import { postGridActions } from "../../store/reducers/grids/postGrid";
 import { postService } from "../../api/PostService";
+import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = RouteNames.post;
 
 const Posts: FC = () => {
-  const dataGrid = useDataGrid<IPost>(postService, "postGrid", postGridActions);
+  const dataGridHook = useDataGrid(postService, "postGrid", postGridActions);
 
-  const columns: ColumnsType<IPost> = [
+  const getColumns = (modelOptions: IPostModelOptions): ColumnsType<IPost> => [
     // {
     //   title: "Id",
     //   dataIndex: "id",
@@ -31,7 +31,7 @@ const Posts: FC = () => {
       ellipsis: true,
       render: (text: any, record: IPost) => {
         return (
-          <Link to={modelRoutes.view.replace(/:id/, record.id.toString())}>
+          <Link to={modelRoutes.update.replace(/:id/, record.id.toString())}>
             {text}
           </Link>
         );
@@ -51,14 +51,18 @@ const Posts: FC = () => {
       sorter: true,
       width: 120,
     },
-    statusColumn<IPost>({ filters: dataGrid.modelOptions?.status }),
+    statusColumn<IPost>({ filters: modelOptions.status }),
   ];
 
   return (
     <>
       <PageHeader title="Записи" backPath={RouteNames.home} />
 
-      <DataGridTable dataGrid={dataGrid} columns={columns} />
+      <DataGridTable
+        dataGridHook={dataGridHook}
+        getColumns={getColumns}
+        hasUrl={true}
+      />
 
       <IndexPageActions createPath={modelRoutes.create} />
     </>

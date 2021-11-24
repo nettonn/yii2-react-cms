@@ -1,5 +1,5 @@
 import useDataGrid from "../../../hooks/dataGrid.hook";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { Popconfirm, Space, Table, Spin } from "antd";
 import Search from "antd/es/input/Search";
 import { ColumnsType } from "antd/lib/table/interface";
@@ -10,15 +10,17 @@ import RestService from "../../../api/RestService";
 import useLocalStorage from "../../../hooks/localStorage.hook";
 
 interface DataGridTableProps {
-  dataGrid: ReturnType<typeof useDataGrid>;
-  columns: ColumnsType<any>;
+  dataGridHook: ReturnType<typeof useDataGrid>;
+  getColumns: (modelOptions: any) => ColumnsType<any>;
   scroll?: { x?: number; y?: number };
+  hasUrl?: boolean;
 }
 
 const DataGridTable: FC<DataGridTableProps> = ({
-  dataGrid,
-  columns,
+  dataGridHook,
+  getColumns,
   scroll = { x: 600 },
+  hasUrl,
 }) => {
   const {
     currentPage,
@@ -35,7 +37,8 @@ const DataGridTable: FC<DataGridTableProps> = ({
     sortField,
     sortDirection,
     filters,
-  } = dataGrid;
+    modelOptions,
+  } = dataGridHook;
 
   const { pathname } = useLocation();
 
@@ -43,6 +46,23 @@ const DataGridTable: FC<DataGridTableProps> = ({
     `${RestService.name}-data-grid-expanded-rows`,
     []
   );
+
+  if (!isInit) return <Spin spinning={true} />;
+
+  if (error) return null;
+
+  const viewButton = (record: IModel) => {
+    if (hasUrl) {
+      return (
+        <a href={record.view_url}>
+          <EyeOutlined />
+        </a>
+      );
+    }
+    return null;
+  };
+
+  const columns = getColumns(modelOptions);
 
   const actionColumn: any = {
     title: "",
@@ -61,6 +81,7 @@ const DataGridTable: FC<DataGridTableProps> = ({
             <DeleteOutlined />
           </a>
         </Popconfirm>
+        {viewButton(record)}
       </Space>
     ),
   };
@@ -81,10 +102,6 @@ const DataGridTable: FC<DataGridTableProps> = ({
     };
     return column;
   });
-
-  if (!isInit) return <Spin spinning={true} />;
-
-  if (error) return null;
 
   return (
     <>

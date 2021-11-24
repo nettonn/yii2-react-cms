@@ -6,7 +6,7 @@ const Setting = React.lazy(() => import("../pages/Setting/Setting"));
 export const settingRouteNames = {
   index: "/settings",
   create: "/settings/create",
-  view: "/settings/:id",
+  update: "/settings/:id",
 };
 
 export const settingRoutes = [
@@ -17,9 +17,9 @@ export const settingRoutes = [
     elementProps: { key: "create" },
   },
   {
-    path: settingRouteNames.view,
+    path: settingRouteNames.update,
     element: Setting,
-    elementProps: { key: "view" },
+    elementProps: { key: "update" },
   },
 ];
 

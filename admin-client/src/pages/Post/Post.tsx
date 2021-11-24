@@ -84,7 +84,8 @@ const Post: FC = () => {
         formContent={formContent}
         exitRoute={modelRoutes.index}
         createRoute={modelRoutes.create}
-        viewRoute={modelRoutes.view}
+        updateRoute={modelRoutes.update}
+        hasUrl={true}
       />
     </>
   );

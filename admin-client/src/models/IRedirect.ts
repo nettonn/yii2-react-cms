@@ -8,4 +8,6 @@ export interface IRedirect extends IModel {
   status: boolean;
 }
 
-export interface IRedirectModelOptions extends IModelOptions {}
+export interface IRedirectModelOptions extends IModelOptions {
+  status: { value: string | number; text: string }[];
+}

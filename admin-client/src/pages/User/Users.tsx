@@ -1,20 +1,20 @@
 import React, { FC } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
-import useDataGrid from "../../hooks/dataGrid.hook";
-import { IUser } from "../../models/IUser";
+import { IUser, IUserModelOptions } from "../../models/IUser";
 import { ColumnsType } from "antd/es/table";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { RouteNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
 import { userGridActions } from "../../store/reducers/grids/userGrid";
 import { userService } from "../../api/UserService";
+import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = RouteNames.user;
 
 const Users: FC = () => {
-  const dataGrid = useDataGrid<IUser>(userService, "userGrid", userGridActions);
+  const dataGridHook = useDataGrid(userService, "userGrid", userGridActions);
 
-  const columns: ColumnsType<IUser> = [
+  const getColumns = (modelOptions: IUserModelOptions): ColumnsType<IUser> => [
     {
       title: "Id",
       dataIndex: "id",
@@ -32,14 +32,14 @@ const Users: FC = () => {
       dataIndex: "role_text",
       key: "role",
       sorter: true,
-      filters: dataGrid.modelOptions?.role,
+      filters: modelOptions.role,
     },
     {
       title: "Статус",
       dataIndex: "status_text",
       key: "status",
       sorter: true,
-      filters: dataGrid.modelOptions?.status,
+      filters: modelOptions.status,
     },
   ];
 
@@ -47,7 +47,7 @@ const Users: FC = () => {
     <>
       <PageHeader title="Пользователи" backPath={RouteNames.home} />
 
-      <DataGridTable dataGrid={dataGrid} columns={columns} />
+      <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
 
       <IndexPageActions createPath={modelRoutes.create} />
     </>

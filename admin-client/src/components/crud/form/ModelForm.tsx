@@ -16,7 +16,8 @@ interface ModelFormProps {
   ): React.ReactNode;
   exitRoute: string;
   createRoute: string;
-  viewRoute: string;
+  updateRoute: string;
+  hasUrl?: boolean;
 }
 
 const ModelForm: FC<ModelFormProps> = ({
@@ -24,10 +25,12 @@ const ModelForm: FC<ModelFormProps> = ({
   formContent,
   exitRoute,
   createRoute,
-  viewRoute,
+  updateRoute,
+  hasUrl,
 }) => {
   const {
     newId,
+    viewUrl,
     form,
     initData,
     isDataLoading,
@@ -81,8 +84,9 @@ const ModelForm: FC<ModelFormProps> = ({
         exitRoute={exitRoute}
         createRoute={createRoute}
         afterSaveRedirect={
-          newId ? viewRoute.replace(/:id/, newId.toString()) : undefined
+          newId ? updateRoute.replace(/:id/, newId.toString()) : undefined
         }
+        afterSaveViewRedirect={hasUrl ? viewUrl : undefined}
       />
     </>
   );

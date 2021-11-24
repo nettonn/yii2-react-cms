@@ -23,6 +23,8 @@ export function useModelForm<
     null
   );
   const [newId, setNewId] = useState<number | string | null>(null);
+  const [viewUrl, setViewUrl] = useState<string | undefined>();
+
   const navigate = useNavigate();
 
   const isCreateForm = !id;
@@ -85,6 +87,9 @@ export function useModelForm<
       const result = await modelService.view<T>(id, signal);
 
       if (result.success) {
+        if (result.data?.view_url) {
+          setViewUrl(result.data.view_url);
+        }
         return result.data;
       }
       if (result.status === 404) {
@@ -115,7 +120,12 @@ export function useModelForm<
 
     if (result.success) {
       if (isCreateForm) {
-        if (result.data && isMounted()) setNewId(result.data.id);
+        if (result.data && isMounted()) {
+          if (result.data.view_url) {
+            setViewUrl(result.data.view_url);
+          }
+          setNewId(result.data.id);
+        }
         form.resetFields();
       } else {
         form.setFieldsValue(result.data);
@@ -207,6 +217,7 @@ export function useModelForm<
   return {
     id,
     newId,
+    viewUrl,
     isCreateForm,
     isUpdateForm,
     form,

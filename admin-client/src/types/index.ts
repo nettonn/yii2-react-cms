@@ -39,6 +39,7 @@ export interface IModelRouteNames {
 
 export interface IModel {
   id: number;
+  view_url?: string;
 }
 
 export interface IModelOptions {}

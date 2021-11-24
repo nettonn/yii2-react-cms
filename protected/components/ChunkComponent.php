@@ -20,9 +20,9 @@ class ChunkComponent extends Component
             $models = Chunk::find()->notDeleted()->all();
             foreach($models as $model) {
                 if($model->key) {
-                    $this->data['keys'][$model->key] = intval($model->id);
+                    $this->data['keys'][$model->key] = $model->id;
                 }
-                $this->data['content'][intval($model->id)] = $model->content;
+                $this->data['content'][$model->id] = strval($model->content);
             }
             Yii::$app->getCache()->set($cacheKey, $this->data);
         }

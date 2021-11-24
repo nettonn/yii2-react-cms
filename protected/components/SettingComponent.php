@@ -24,7 +24,7 @@ class SettingComponent extends Component
                     $this->data['keys'][$model->key] = $model->id;
                 }
 
-                $this->data['value'][intval($model->id)] = $model->getValue();
+                $this->data['value'][$model->id] = $model->getValue();
             }
             Yii::$app->getCache()->set($cacheKey, $this->data);
         }

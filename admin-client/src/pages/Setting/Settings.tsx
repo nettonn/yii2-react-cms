@@ -1,25 +1,27 @@
 import React, { FC } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
-import useDataGrid from "../../hooks/dataGrid.hook";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { RouteNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
 import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
-import { ISetting } from "../../models/ISetting";
+import { ISetting, ISettingModelOptions } from "../../models/ISetting";
 import { settingService } from "../../api/SettingService";
 import { settingGridActions } from "../../store/reducers/grids/settingGrid";
+import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = RouteNames.setting;
 
 const Settings: FC = () => {
-  const dataGrid = useDataGrid<ISetting>(
+  const dataGridHook = useDataGrid(
     settingService,
     "settingGrid",
     settingGridActions
   );
 
-  const columns: ColumnsType<ISetting> = [
+  const getColumns = (
+    modelOptions: ISettingModelOptions
+  ): ColumnsType<ISetting> => [
     {
       title: "Id",
       dataIndex: "id",
@@ -34,7 +36,7 @@ const Settings: FC = () => {
       ellipsis: true,
       render: (text: any, record: ISetting) => {
         return (
-          <Link to={modelRoutes.view.replace(/:id/, record.id.toString())}>
+          <Link to={modelRoutes.update.replace(/:id/, record.id.toString())}>
             {text}
           </Link>
         );
@@ -65,7 +67,7 @@ const Settings: FC = () => {
     <>
       <PageHeader title="Настройки" backPath={RouteNames.home} />
 
-      <DataGridTable dataGrid={dataGrid} columns={columns} />
+      <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
 
       <IndexPageActions createPath={modelRoutes.create} />
     </>

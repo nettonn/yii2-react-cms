@@ -37,10 +37,11 @@ class InlineWidgetsComponent extends Component
      */
     public function decodeWidgets($text, $model = null)
     {
-        $this->model = $model;
-
         if(!$this->hasWidgets($text))
             return $text;
+
+        if($model)
+            $this->model = $model;
 
         $text = $this->_clearAutoParagraphs($text);
         $text = $this->_replaceBlocks($text);

@@ -7,7 +7,7 @@ const User = React.lazy(() => import("../pages/User/User"));
 export const userRouteNames = {
   index: "/users",
   create: "/users/create",
-  view: "/users/:id",
+  update: "/users/:id",
 };
 
 export const userRoutes = [
@@ -18,9 +18,9 @@ export const userRoutes = [
     elementProps: { key: "create" },
   },
   {
-    path: userRouteNames.view,
+    path: userRouteNames.update,
     element: User,
-    elementProps: { key: "view" },
+    elementProps: { key: "update" },
   },
 ];
 

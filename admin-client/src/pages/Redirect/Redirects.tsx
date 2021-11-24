@@ -1,26 +1,28 @@
 import React, { FC } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
-import useDataGrid from "../../hooks/dataGrid.hook";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { RouteNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
 import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
-import { IRedirect } from "../../models/IRedirect";
+import { IRedirect, IRedirectModelOptions } from "../../models/IRedirect";
 import { redirectService } from "../../api/RedirectService";
 import { redirectGridActions } from "../../store/reducers/grids/redirectGrid";
 import { statusColumn } from "../../components/crud/grid/columns";
+import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = RouteNames.redirect;
 
 const Redirects: FC = () => {
-  const dataGrid = useDataGrid<IRedirect>(
+  const dataGridHook = useDataGrid(
     redirectService,
     "redirectGrid",
     redirectGridActions
   );
 
-  const columns: ColumnsType<IRedirect> = [
+  const getColumns = (
+    modelOptions: IRedirectModelOptions
+  ): ColumnsType<IRedirect> => [
     {
       title: "Id",
       dataIndex: "id",
@@ -35,7 +37,7 @@ const Redirects: FC = () => {
       ellipsis: true,
       render: (text: any, record: IRedirect) => {
         return (
-          <Link to={modelRoutes.view.replace(/:id/, record.id.toString())}>
+          <Link to={modelRoutes.update.replace(/:id/, record.id.toString())}>
             {text}
           </Link>
         );
@@ -60,14 +62,14 @@ const Redirects: FC = () => {
       sorter: true,
       width: 120,
     },
-    statusColumn<IRedirect>({ filters: dataGrid.modelOptions?.status }),
+    statusColumn<IRedirect>({ filters: modelOptions.status }),
   ];
 
   return (
     <>
       <PageHeader title="Редиректы" backPath={RouteNames.home} />
 
-      <DataGridTable dataGrid={dataGrid} columns={columns} />
+      <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
 
       <IndexPageActions createPath={modelRoutes.create} />
     </>

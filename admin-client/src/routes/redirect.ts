@@ -6,7 +6,7 @@ const Redirect = React.lazy(() => import("../pages/Redirect/Redirect"));
 export const redirectRouteNames = {
   index: "/redirects",
   create: "/redirects/create",
-  view: "/redirects/:id",
+  update: "/redirects/:id",
 };
 
 export const redirectRoutes = [
@@ -17,9 +17,9 @@ export const redirectRoutes = [
     elementProps: { key: "create" },
   },
   {
-    path: redirectRouteNames.view,
+    path: redirectRouteNames.update,
     element: Redirect,
-    elementProps: { key: "view" },
+    elementProps: { key: "update" },
   },
 ];
 

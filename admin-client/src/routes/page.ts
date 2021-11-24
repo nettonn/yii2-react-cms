@@ -6,7 +6,7 @@ const Page = React.lazy(() => import("../pages/Page/Page"));
 export const pageRouteNames = {
   index: "/pages",
   create: "/pages/create",
-  view: "/pages/:id",
+  update: "/pages/:id",
 };
 
 export const pageRoutes = [
@@ -16,7 +16,11 @@ export const pageRoutes = [
     element: Page,
     elementProps: { key: "create" },
   },
-  { path: pageRouteNames.view, element: Page, elementProps: { key: "view" } },
+  {
+    path: pageRouteNames.update,
+    element: Page,
+    elementProps: { key: "update" },
+  },
 ];
 
 export const pageRouteIcons = {

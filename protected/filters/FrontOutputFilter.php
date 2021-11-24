@@ -33,11 +33,14 @@ class FrontOutputFilter extends ActionFilter
 
     protected function addAdminButton($content)
     {
+        if(!Yii::$app->response->isSuccessful)
+            return $content;
+
         if($link = Yii::$app->admin->getAdminLink()) {
             $title = 'Редактировать';
         }
         else {
-            $link = url(['/admin/seo/create', 'url'=> Yii::$app->getRequest()->getUrl(), 'name'=>seo('h1')]);
+            $link = url(['/admin/seo/create', 'url'=> Yii::$app->request->getUrl(), 'name'=>seo('h1')]);
             $title = 'Добавить SEO';
         }
         $editButton = '<a href="'.$link.'" style="position: fixed; top: 0; left: 0; display: block; z-index: 9999; color: #fff; background: #444">'.$title.'</a>';

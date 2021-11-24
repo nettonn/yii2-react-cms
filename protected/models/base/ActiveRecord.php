@@ -25,6 +25,13 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord
                 return Yii::$app->getFormatter()->asDate($model->updated_at);
             };
         }
+
+        if($this->hasMethod('getUrl')) {
+            $fields['view_url'] = function($model) {
+                return $model->getUrl();
+            };
+        }
+
         return $fields;
     }
 
