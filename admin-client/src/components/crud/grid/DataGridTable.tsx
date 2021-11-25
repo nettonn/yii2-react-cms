@@ -14,6 +14,7 @@ interface DataGridTableProps {
   getColumns: (modelOptions: any) => ColumnsType<any>;
   scroll?: { x?: number; y?: number };
   hasUrl?: boolean;
+  actionButtons?: (record: any) => React.ReactNode[];
 }
 
 const DataGridTable: FC<DataGridTableProps> = ({
@@ -21,6 +22,7 @@ const DataGridTable: FC<DataGridTableProps> = ({
   getColumns,
   scroll = { x: 600 },
   hasUrl,
+  actionButtons,
 }) => {
   const {
     currentPage,
@@ -82,6 +84,7 @@ const DataGridTable: FC<DataGridTableProps> = ({
           </a>
         </Popconfirm>
         {viewButton(record)}
+        {actionButtons ? actionButtons(record) : null}
       </Space>
     ),
   };

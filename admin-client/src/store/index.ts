@@ -15,6 +15,11 @@ import {
   settingGridReducer,
 } from "./reducers/grids/settingGrid";
 import { seoGridActions, seoGridReducer } from "./reducers/grids/seoGrid";
+import { menuGridActions, menuGridReducer } from "./reducers/grids/menuGrid";
+import {
+  menuItemGridActions,
+  menuItemGridReducer,
+} from "./reducers/grids/menuItemGrid";
 
 const rootReducer = combineReducers({
   app: appReducer,
@@ -27,6 +32,8 @@ const rootReducer = combineReducers({
   redirectGrid: redirectGridReducer,
   settingGrid: settingGridReducer,
   seoGrid: seoGridReducer,
+  menuGrid: menuGridReducer,
+  menuItemGrid: menuItemGridReducer,
 });
 
 export const setupStore = () => {
@@ -46,7 +53,9 @@ export type DataGridSelector =
   | "chunkGrid"
   | "redirectGrid"
   | "settingGrid"
-  | "seoGrid";
+  | "seoGrid"
+  | "menuGrid"
+  | "menuItemGrid";
 
 export type DataGridActions =
   | typeof pageGridActions
@@ -55,4 +64,6 @@ export type DataGridActions =
   | typeof chunkGridActions
   | typeof redirectGridActions
   | typeof settingGridActions
-  | typeof seoGridActions;
+  | typeof seoGridActions
+  | typeof menuGridActions
+  | typeof menuItemGridActions;

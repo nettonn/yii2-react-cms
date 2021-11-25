@@ -18,6 +18,12 @@ import {
 } from "./redirect";
 import { settingRouteIcons, settingRouteNames, settingRoutes } from "./setting";
 import { seoRouteIcons, seoRouteNames, seoRoutes } from "./seo";
+import { menuRouteIcons, menuRouteNames, menuRoutes } from "./menu";
+import {
+  menuItemRouteIcons,
+  menuItemRouteNames,
+  menuItemRoutes,
+} from "./menu-item";
 
 const Login = React.lazy(() => import("../pages/Login"));
 const Home = React.lazy(() => import("../pages/Home"));
@@ -37,6 +43,8 @@ export const RouteNames = {
   redirect: redirectRouteNames,
   setting: settingRouteNames,
   seo: seoRouteNames,
+  menu: menuRouteNames,
+  menuItem: menuItemRouteNames,
 };
 
 export const publicRoutes: IRoute[] = [
@@ -55,6 +63,8 @@ export const privateRoutes: IRoute[] = [
   ...redirectRoutes,
   ...settingRoutes,
   ...seoRoutes,
+  ...menuRoutes,
+  ...menuItemRoutes,
 ];
 
 export const routeIcons = {
@@ -68,4 +78,6 @@ export const routeIcons = {
   ...redirectRouteIcons,
   ...settingRouteIcons,
   ...seoRouteIcons,
+  ...menuRouteIcons,
+  ...menuItemRouteIcons,
 };

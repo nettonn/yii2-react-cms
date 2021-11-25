@@ -1,0 +1,95 @@
+import React, { FC } from "react";
+import DataGridTable from "../../components/crud/grid/DataGridTable";
+import PageHeader from "../../components/ui/PageHeader/PageHeader";
+import { RouteNames } from "../../routes";
+import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
+import { IMenu, IMenuModelOptions } from "../../models/IMenu";
+import { ColumnsType } from "antd/lib/table/interface";
+import { MenuOutlined } from "@ant-design/icons";
+import { statusColumn } from "../../components/crud/grid/columns";
+import { menuService } from "../../api/MenuService";
+import { Link } from "react-router-dom";
+import { menuGridActions } from "../../store/reducers/grids/menuGrid";
+import useDataGrid from "../../hooks/dataGrid.hook";
+import { stringReplace } from "../../utils/functions";
+
+const modelRoutes = RouteNames.menu;
+
+const MenuGridPage: FC = () => {
+  const dataGridHook = useDataGrid<IMenu, IMenuModelOptions>(
+    menuService,
+    "menuGrid",
+    menuGridActions
+  );
+
+  const getColumns = (modelOptions: IMenuModelOptions): ColumnsType<IMenu> => [
+    // {
+    //   title: "Id",
+    //   dataIndex: "id",
+    //   sorter: true,
+    //   width: 160,
+    // },
+    {
+      title: "Название",
+      dataIndex: "name",
+      sorter: true,
+      // filters: ,
+      ellipsis: true,
+      render: (text: any, record: IMenu) => {
+        return (
+          <Link to={stringReplace(modelRoutes.update, { ":id": record.id })}>
+            {text}
+          </Link>
+        );
+      },
+    },
+    {
+      title: "Ключ",
+      dataIndex: "key",
+      sorter: true,
+      width: 120,
+    },
+    {
+      title: "Создано",
+      dataIndex: "created_at_date",
+      key: "created_at",
+      sorter: true,
+      width: 120,
+    },
+    {
+      title: "Изменено",
+      dataIndex: "updated_at_date",
+      key: "updated_at",
+      sorter: true,
+      width: 120,
+    },
+    statusColumn<IMenu>({ filters: modelOptions.status }),
+  ];
+
+  return (
+    <>
+      <PageHeader title="Меню" backPath={RouteNames.home} />
+
+      <DataGridTable
+        dataGridHook={dataGridHook}
+        getColumns={getColumns}
+        scroll={{ x: 800 }}
+        actionButtons={(record: IMenu) => [
+          <Link
+            key="menuItems"
+            to={stringReplace(RouteNames.menuItem.index, {
+              ":menuId": record.id,
+            })}
+            title="Пункты меню"
+          >
+            <MenuOutlined />
+          </Link>,
+        ]}
+      />
+
+      <IndexPageActions createPath={modelRoutes.create} />
+    </>
+  );
+};
+
+export default MenuGridPage;

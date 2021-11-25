@@ -71,16 +71,16 @@ const Page: FC = () => {
         </Form.Item>
       </Tabs.TabPane>
       <Tabs.TabPane tab="SEO" key="seo">
-        <Form.Item label="Seo Title" name="seo_title">
+        <Form.Item label="MenuPage Title" name="seo_title">
           <Input />
         </Form.Item>
-        <Form.Item label="Seo H1" name="seo_h1">
+        <Form.Item label="MenuPage H1" name="seo_h1">
           <Input />
         </Form.Item>
-        <Form.Item label="Seo Description" name="seo_description">
+        <Form.Item label="MenuPage Description" name="seo_description">
           <Input.TextArea autoSize={{ minRows: 3, maxRows: 10 }} />
         </Form.Item>
-        <Form.Item label="Seo Keywords" name="seo_keywords">
+        <Form.Item label="MenuPage Keywords" name="seo_keywords">
           <Input.TextArea autoSize={{ minRows: 3, maxRows: 10 }} />
         </Form.Item>
       </Tabs.TabPane>

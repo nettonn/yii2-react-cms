@@ -123,7 +123,7 @@ if (DEV) {
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => array_merge(['127.0.0.1', '::1'], @array_map('trim', explode(',', $envars['DEV_IPS']))),
     ];
 }
 

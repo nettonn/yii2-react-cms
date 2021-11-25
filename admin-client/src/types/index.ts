@@ -1,5 +1,4 @@
 import React, { Attributes } from "react";
-import { MenuClickEventHandler } from "rc-menu/lib/interface";
 
 export interface IPaginationType {
   current: number;
@@ -52,18 +51,4 @@ export interface IImageThumbs {
 
 export interface IFiltersParam {
   [key: string]: string[] | number[];
-}
-
-export interface IMenuItem {
-  title: string;
-  route: string;
-  icon?: React.ReactNode;
-  onClick?: MenuClickEventHandler;
-}
-
-export interface IMenuItem {
-  title: string;
-  route: string;
-  icon?: React.ReactNode;
-  onClick?: MenuClickEventHandler;
 }

@@ -4,10 +4,15 @@ import RouteIcon from "../components/ui/RouteIcon";
 import PageHeader from "../components/ui/PageHeader/PageHeader";
 import { Card, List, Space } from "antd";
 import { Link } from "react-router-dom";
-import { IMenuItem } from "../types";
+
+interface IItem {
+  title: string;
+  route: string;
+  icon?: React.ReactNode;
+}
 
 const Home: FC = () => {
-  const items: IMenuItem[] = [
+  const items: IItem[] = [
     {
       route: RouteNames.event,
       title: "События",
@@ -23,6 +28,10 @@ const Home: FC = () => {
     {
       route: RouteNames.chunk.index,
       title: "Чанки",
+    },
+    {
+      route: RouteNames.menu.index,
+      title: "Меню",
     },
     {
       route: RouteNames.redirect.index,

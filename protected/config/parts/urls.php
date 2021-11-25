@@ -14,6 +14,8 @@ return [
             'redirects' => 'admin/redirect',
             'settings' => 'admin/setting',
             'seo' => 'admin/seo',
+            'menu' => 'admin/menu',
+            'menu-items' => 'admin/menu-items',
         ]
     ],
     [
@@ -54,6 +56,8 @@ return [
             'redirects' => 'admin/redirect',
             'settings' => 'admin/setting',
             'seo' => 'admin/seo',
+            'menu-items' => 'admin/menu-item',
+            'menu' => 'admin/menu',
         ],
         'prefix' => 'admin-api',
         'extraPatterns' => [

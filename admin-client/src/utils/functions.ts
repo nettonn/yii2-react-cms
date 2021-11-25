@@ -138,3 +138,19 @@ export function removeObjectEmpty(object: object) {
     Object.entries(object).filter(([_, v]) => v != null)
   );
 }
+
+export function stringReplace(
+  string: string,
+  replaces: { [key: string]: string | number | undefined }
+) {
+  Object.keys(replaces).forEach((find) => {
+    let replace = replaces[find];
+    if (!replace) return;
+    if (typeof replace === "number") {
+      replace = replace.toString();
+    }
+    string = string.replace(new RegExp(find), replace);
+  });
+
+  return string;
+}

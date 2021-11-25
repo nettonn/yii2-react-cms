@@ -6,7 +6,14 @@ import { RouteNames } from "../../../routes";
 import RouteIcon from "../../ui/RouteIcon";
 import { useAppActions } from "../../../hooks/redux";
 import { authActions } from "../../../store/reducers/auth";
-import { IMenuItem } from "../../../types";
+import { MenuClickEventHandler } from "rc-menu/lib/interface";
+
+interface IItem {
+  title: string;
+  route: string;
+  icon?: React.ReactNode;
+  onClick?: MenuClickEventHandler;
+}
 
 const Sidebar: FC = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>();
@@ -32,7 +39,7 @@ const Sidebar: FC = () => {
     setSelectedKeys([pathname]);
   }, [pathname]);
 
-  const menuItems: (IMenuItem | ReactElement)[] = [
+  const menuItems: (IItem | ReactElement)[] = [
     {
       route: RouteNames.home,
       title: "Панель",
@@ -52,6 +59,10 @@ const Sidebar: FC = () => {
     {
       route: RouteNames.chunk.index,
       title: "Чанки",
+    },
+    {
+      route: RouteNames.menu.index,
+      title: "Меню",
     },
     {
       route: RouteNames.redirect.index,
