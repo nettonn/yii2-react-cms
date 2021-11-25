@@ -21,7 +21,10 @@ const Setting: FC = () => {
   const { id } = useParams();
   const [type, setType] = useState<number>();
 
-  const modelForm = useModelForm<ISetting>(id, settingService);
+  const modelForm = useModelForm<ISetting, ISettingModelOptions>(
+    id,
+    settingService
+  );
 
   const initType = modelForm.initData?.type;
 

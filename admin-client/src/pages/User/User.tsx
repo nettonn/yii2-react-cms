@@ -14,7 +14,7 @@ const modelRoutes = RouteNames.user;
 const User: FC = () => {
   const { id } = useParams();
 
-  const modelForm = useModelForm(id, userService);
+  const modelForm = useModelForm<IUser, IUserModelOptions>(id, userService);
 
   const formContent = (initData: IUser, modelOptions: IUserModelOptions) => (
     <>

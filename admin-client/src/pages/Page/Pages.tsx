@@ -14,7 +14,11 @@ import useDataGrid from "../../hooks/dataGrid.hook";
 const modelRoutes = RouteNames.page;
 
 const Pages: FC = () => {
-  const dataGridHook = useDataGrid(pageService, "pageGrid", pageGridActions);
+  const dataGridHook = useDataGrid<IPage, IPageModelOptions>(
+    pageService,
+    "pageGrid",
+    pageGridActions
+  );
 
   const getColumns = (modelOptions: IPageModelOptions): ColumnsType<IPage> => [
     // {

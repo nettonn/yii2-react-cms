@@ -3,7 +3,7 @@ import { Form, FormInstance, Spin } from "antd";
 import _isEmpty from "lodash/isEmpty";
 import { useModelForm } from "../../../hooks/modelForm.hook";
 import UpdatePageActions from "./../../crud/PageActions/UpdatePageActions";
-import { IModel } from "../../../types";
+import { IModel, IModelOptions } from "../../../types";
 import { Navigate } from "react-router-dom";
 import { RouteNames } from "../../../routes";
 
@@ -11,7 +11,7 @@ interface ModelFormProps {
   modelForm: any | ReturnType<typeof useModelForm>;
   formContent(
     initData?: IModel,
-    modelOptions?: any,
+    modelOptions?: IModelOptions,
     form?: FormInstance
   ): React.ReactNode;
   exitRoute: string;

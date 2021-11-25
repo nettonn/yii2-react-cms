@@ -23,6 +23,7 @@ import {
 } from "../../models/IChunk";
 import AceInput from "../../components/crud/form/AceInput/AceInput";
 import CkeditorInput from "../../components/crud/form/CkeditorInput/CkeditorInput";
+import { IModelOptions } from "../../types";
 
 const modelRoutes = RouteNames.chunk;
 
@@ -30,7 +31,7 @@ const Chunk: FC = () => {
   const { id } = useParams();
   const [type, setType] = useState<number>();
 
-  const modelForm = useModelForm<IChunk>(id, chunkService);
+  const modelForm = useModelForm<IChunk, IModelOptions>(id, chunkService);
 
   const initType = modelForm.initData?.type;
 

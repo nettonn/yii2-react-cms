@@ -15,7 +15,7 @@ const modelRoutes = RouteNames.post;
 const Post: FC = () => {
   const { id } = useParams();
 
-  const modelForm = useModelForm(id, postService);
+  const modelForm = useModelForm<IPost, IPostModelOptions>(id, postService);
 
   const formContent = (initData: IPost, modelOptions: IPostModelOptions) => (
     <Tabs type="card">

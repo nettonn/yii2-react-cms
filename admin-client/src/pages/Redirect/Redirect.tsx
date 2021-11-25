@@ -14,7 +14,10 @@ const modelRoutes = RouteNames.redirect;
 const Redirect: FC = () => {
   const { id } = useParams();
 
-  const modelForm = useModelForm<IRedirect>(id, redirectService);
+  const modelForm = useModelForm<IRedirect, IRedirectModelOptions>(
+    id,
+    redirectService
+  );
 
   const formContent = (
     initData: IRedirect,

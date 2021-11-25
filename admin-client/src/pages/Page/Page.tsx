@@ -16,7 +16,7 @@ const modelRoutes = RouteNames.page;
 const Page: FC = () => {
   const { id } = useParams();
 
-  const modelForm = useModelForm(id, pageService);
+  const modelForm = useModelForm<IPage, IPageModelOptions>(id, pageService);
 
   const formContent = (initData: IPage, modelOptions: IPageModelOptions) => (
     <Tabs type="card">
