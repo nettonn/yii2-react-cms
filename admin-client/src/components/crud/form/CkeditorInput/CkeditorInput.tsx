@@ -48,10 +48,15 @@ const CkeditorInput: FC<CkeditorInputProps> = ({ value, onChange }) => {
         //   ],
         // },
       }}
-      // onReady={(editor) => {
-      //   You can store the "editor" and use when it is needed.
-      // console.log("Editor is ready to use!", editor);
-      // }}
+      onReady={(editor: any) => {
+        editor.editing.view.change((writer: any) => {
+          writer.setStyle(
+            "min-height",
+            "200px",
+            editor.editing.view.document.getRoot()
+          );
+        });
+      }}
       onChange={(event: any, editor: any) => {
         const data: string = editor.getData();
         onChange && onChange(data);

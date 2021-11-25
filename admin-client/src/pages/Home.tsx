@@ -29,6 +29,10 @@ const Home: FC = () => {
       title: "Редиректы",
     },
     {
+      route: RouteNames.seo.index,
+      title: "SEO",
+    },
+    {
       route: RouteNames.setting.index,
       title: "Настройки",
     },

@@ -1,6 +1,7 @@
 <?php namespace app\controllers\admin;
 
 
+use app\controllers\base\RestController;
 use app\models\Todo;
 use Yii;
 use yii\base\InvalidArgumentException;

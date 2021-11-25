@@ -1,4 +1,4 @@
-<?php namespace app\controllers\admin;
+<?php namespace app\controllers\base;
 
 use app\models\User;
 use sizeg\jwt\JwtHttpBearerAuth;
@@ -10,7 +10,7 @@ use yii\filters\VerbFilter;
 use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 
-class BaseApiController extends \yii\rest\Controller
+abstract class BaseApiController extends \yii\rest\Controller
 {
     public function afterAction($action, $result)
     {

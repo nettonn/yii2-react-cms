@@ -13,8 +13,9 @@ interface UpdatePageActionsProps {
   exitRoute: string;
   createRoute: string;
   touched: boolean;
-  afterSaveRedirect?: string;
-  afterSaveViewRedirect?: string;
+  updateRoute?: string;
+  hasViewUrl?: boolean;
+  viewUrl?: string;
 }
 
 interface ButtonConfig {
@@ -23,7 +24,7 @@ interface ButtonConfig {
   label: string;
   redirect?: string;
   replace?: boolean;
-  useLocation?: boolean;
+  external?: boolean;
 }
 
 const UpdatePageActions: FC<UpdatePageActionsProps> = ({
@@ -34,8 +35,9 @@ const UpdatePageActions: FC<UpdatePageActionsProps> = ({
   exitRoute,
   createRoute,
   touched,
-  afterSaveRedirect,
-  afterSaveViewRedirect,
+  updateRoute,
+  hasViewUrl,
+  viewUrl,
 }) => {
   const [lastClickKey, setLastClickKey] = useState<string | null>(null);
   const [isRedirectNeed, setIsRedirectNeed] = useState(false);
@@ -48,7 +50,7 @@ const UpdatePageActions: FC<UpdatePageActionsProps> = ({
         key: "save",
         type: "primary",
         label: "Сохранить",
-        redirect: afterSaveRedirect,
+        redirect: updateRoute,
         replace: true,
       },
       {
@@ -63,17 +65,17 @@ const UpdatePageActions: FC<UpdatePageActionsProps> = ({
       },
     ];
 
-    if (afterSaveViewRedirect !== undefined) {
+    if (hasViewUrl) {
       buttonList.push({
         key: "save-view",
         label: "Сохранить и посмотреть",
-        redirect: afterSaveViewRedirect,
-        useLocation: true,
+        redirect: viewUrl,
+        external: true,
       });
     }
 
     return buttonList;
-  }, [afterSaveRedirect, exitRoute, createRoute, afterSaveViewRedirect]);
+  }, [updateRoute, exitRoute, createRoute, hasViewUrl, viewUrl]);
 
   const buttonClickHandler = (button: ButtonConfig) => {
     if (loading) return;
@@ -96,7 +98,7 @@ const UpdatePageActions: FC<UpdatePageActionsProps> = ({
       pathname !== button.redirect
     ) {
       setIsRedirectNeed(false);
-      if (button.useLocation) {
+      if (button.external) {
         window.location.href = button.redirect;
       } else {
         navigate(button.redirect, { replace: button.replace });

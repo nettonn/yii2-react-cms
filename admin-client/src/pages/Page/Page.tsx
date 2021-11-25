@@ -101,7 +101,7 @@ const Page: FC = () => {
         exitRoute={modelRoutes.index}
         createRoute={modelRoutes.create}
         updateRoute={modelRoutes.update}
-        hasUrl={true}
+        hasViewUrl={true}
       />
     </>
   );

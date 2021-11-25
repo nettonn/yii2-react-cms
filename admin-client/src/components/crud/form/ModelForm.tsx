@@ -17,7 +17,7 @@ interface ModelFormProps {
   exitRoute: string;
   createRoute: string;
   updateRoute: string;
-  hasUrl?: boolean;
+  hasViewUrl?: boolean;
 }
 
 const ModelForm: FC<ModelFormProps> = ({
@@ -26,7 +26,7 @@ const ModelForm: FC<ModelFormProps> = ({
   exitRoute,
   createRoute,
   updateRoute,
-  hasUrl,
+  hasViewUrl,
 }) => {
   const {
     newId,
@@ -83,10 +83,11 @@ const ModelForm: FC<ModelFormProps> = ({
         success={isSaveSuccess}
         exitRoute={exitRoute}
         createRoute={createRoute}
-        afterSaveRedirect={
+        updateRoute={
           newId ? updateRoute.replace(/:id/, newId.toString()) : undefined
         }
-        afterSaveViewRedirect={hasUrl ? viewUrl : undefined}
+        hasViewUrl={hasViewUrl}
+        viewUrl={viewUrl}
       />
     </>
   );

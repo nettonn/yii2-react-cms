@@ -1,5 +1,6 @@
 <?php namespace app\controllers\admin;
 
+use app\controllers\base\BaseApiController;
 use app\models\forms\LoginForm;
 use app\models\forms\RegistrationForm;
 use app\models\User;

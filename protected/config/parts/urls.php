@@ -13,6 +13,7 @@ return [
             'chunks' => 'admin/chunk',
             'redirects' => 'admin/redirect',
             'settings' => 'admin/setting',
+            'seo' => 'admin/seo',
         ]
     ],
     [
@@ -52,6 +53,7 @@ return [
             'chunks' => 'admin/chunk',
             'redirects' => 'admin/redirect',
             'settings' => 'admin/setting',
+            'seo' => 'admin/seo',
         ],
         'prefix' => 'admin-api',
         'extraPatterns' => [

@@ -1,5 +1,6 @@
 <?php namespace app\controllers\admin;
 
+use app\controllers\base\RestController;
 use app\models\User;
 use yii\db\ActiveQuery;
 

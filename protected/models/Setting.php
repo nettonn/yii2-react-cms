@@ -38,12 +38,6 @@ class Setting extends ActiveRecord
         self::TYPE_STRING => 'value_string',
     ];
 
-    public $typeToValueParseOptions = [
-        self::TYPE_BOOL => 'boolval',
-        self::TYPE_INT => 'intval',
-        self::TYPE_STRING => 'strval',
-    ];
-
     /**
      * @inheritdoc
      */
@@ -79,6 +73,8 @@ class Setting extends ActiveRecord
             'value_bool' => 'Значение',
             'value_int' => 'Значение',
             'value_string' => 'Значение',
+            'created_at' => 'Создано',
+            'updated_at' => 'Изменено',
         ];
     }
 
@@ -120,9 +116,21 @@ class Setting extends ActiveRecord
         ];
     }
 
+    public function getValueParseFunction ()
+    {
+        $options = [
+            self::TYPE_BOOL => 'boolval',
+            self::TYPE_INT => 'intval',
+            self::TYPE_STRING => 'strval',
+        ];
+        if(isset($options[$this->type]))
+            return $options[$this->type];
+        return false;
+    }
+
     public function getValue()
     {
-        if($parseFunction = isset($this->typeToValueParseOptions[$this->type])) {
+        if($parseFunction = $this->getValueParseFunction()) {
             if(is_callable($parseFunction)) {
                 return call_user_func($parseFunction, $this->{$this->getValueAttribute()});
             }

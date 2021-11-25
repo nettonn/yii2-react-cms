@@ -22,6 +22,7 @@ const Sidebar: FC = () => {
       RouteNames.chunk.index,
       RouteNames.redirect.index,
       RouteNames.setting.index,
+      RouteNames.seo.index,
     ]) {
       if (pathname.indexOf(route) === 0) {
         setSelectedKeys([route]);
@@ -55,6 +56,10 @@ const Sidebar: FC = () => {
     {
       route: RouteNames.redirect.index,
       title: "Редиректы",
+    },
+    {
+      route: RouteNames.seo.index,
+      title: "SEO",
     },
     {
       route: RouteNames.setting.index,

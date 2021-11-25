@@ -119,11 +119,11 @@ export function useModelForm<
       : modelService.create<T>(values));
 
     if (result.success) {
+      if (result.data && result.data.view_url) {
+        setViewUrl(result.data.view_url);
+      }
       if (isCreateForm) {
         if (result.data && isMounted()) {
-          if (result.data.view_url) {
-            setViewUrl(result.data.view_url);
-          }
           setNewId(result.data.id);
         }
         form.resetFields();

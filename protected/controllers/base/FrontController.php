@@ -1,10 +1,11 @@
-<?php namespace app\controllers;
+<?php namespace app\controllers\base;
 
 use app\filters\FrontOutputFilter;
 use Yii;
+use yii\helpers\Url;
 use yii\web\Controller;
 
-class FrontController extends Controller
+abstract class FrontController extends Controller
 {
     public $layout = '//common';
 
@@ -13,7 +14,7 @@ class FrontController extends Controller
         Yii::$app->seo->setPlaceholders();
 
         if(!Yii::$app->admin->hasAdminLink() && $seoModel = seo()->seoModel) {
-            Yii::$app->admin->setAdminLink(url(['/admin/seo/update', 'id' => $seoModel->id]));
+            Yii::$app->admin->setAdminLink(Url::to(['/admin/seo/update', 'id' => $seoModel->id]));
         }
 
         return parent::afterAction($action, $result);

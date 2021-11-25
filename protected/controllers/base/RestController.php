@@ -1,4 +1,4 @@
-<?php namespace app\controllers\admin;
+<?php namespace app\controllers\base;
 
 use Yii;
 use yii\base\Action;

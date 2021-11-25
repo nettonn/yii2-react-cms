@@ -1,5 +1,6 @@
 <?php namespace app\controllers;
 
+use app\controllers\base\FrontController;
 use app\models\Page;
 use Yii;
 use yii\web\HttpException;

@@ -17,6 +17,7 @@ import {
   redirectRoutes,
 } from "./redirect";
 import { settingRouteIcons, settingRouteNames, settingRoutes } from "./setting";
+import { seoRouteIcons, seoRouteNames, seoRoutes } from "./seo";
 
 const Login = React.lazy(() => import("../pages/Login"));
 const Home = React.lazy(() => import("../pages/Home"));
@@ -35,6 +36,7 @@ export const RouteNames = {
   chunk: chunkRouteNames,
   redirect: redirectRouteNames,
   setting: settingRouteNames,
+  seo: seoRouteNames,
 };
 
 export const publicRoutes: IRoute[] = [
@@ -52,6 +54,7 @@ export const privateRoutes: IRoute[] = [
   ...chunkRoutes,
   ...redirectRoutes,
   ...settingRoutes,
+  ...seoRoutes,
 ];
 
 export const routeIcons = {
@@ -64,4 +67,5 @@ export const routeIcons = {
   ...chunkRouteIcons,
   ...redirectRouteIcons,
   ...settingRouteIcons,
+  ...seoRouteIcons,
 };

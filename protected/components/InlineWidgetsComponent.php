@@ -35,7 +35,7 @@ class InlineWidgetsComponent extends Component
      * @param $text
      * @return mixed
      */
-    public function decodeWidgets($text, $model = null)
+    public function decodeWidgets($text, $model = null, $foolProof = 0)
     {
         if(!$this->hasWidgets($text))
             return $text;
@@ -48,7 +48,8 @@ class InlineWidgetsComponent extends Component
         $text = $this->_processWidgets($text);
         $text = $this->_clearWidgets($text);
 
-        $text = $this->decodeWidgets($text);
+        if($foolProof < 5)
+            $text = $this->decodeWidgets($text, $model, $foolProof);
 
         return $text;
     }

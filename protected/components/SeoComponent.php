@@ -32,12 +32,12 @@ class SeoComponent extends Component
     public function init()
     {
         $this->currentUrl = urldecode(preg_replace('~\?.*?$~i', '', Yii::$app->getRequest()->getUrl()));
-//        $this->seoModel = $this->loadSeoModel();
+        $this->seoModel = $this->loadSeoModel();
     }
 
     protected function loadSeoModel()
     {
-        return Seo::findOne(['url'=>$this->currentUrl]);
+        return Seo::find()->where(['url'=>$this->currentUrl])->active()->one();
     }
 
     public function getCanonicalUri()
