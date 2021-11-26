@@ -21,6 +21,7 @@ class m211125_191645_create_menu_item_table extends Migration
             'name'=>$this->string()->notNull(),
             'menu_id' => $this->integer()->unsigned()->notNull(),
             'parent_id' => $this->integer()->unsigned(),
+            'level' => $this->smallInteger()->unsigned()->notNull(),
             'url'=>$this->string(255)->notNull(),
             'rel'=>$this->string(),
             'title'=>$this->string(),
@@ -31,6 +32,7 @@ class m211125_191645_create_menu_item_table extends Migration
             'updated_at' => $this->integer()->unsigned(),
         ], $tableOptions);
 
+        $this->createIndex('idx-menu_item-level', '{{%menu_item}}', ['level']);
         $this->createIndex('idx-menu_item-url', '{{%menu_item}}', ['url']);
         $this->createIndex('idx-menu_item-sort', '{{%menu_item}}', ['sort']);
         $this->createIndex('idx-menu_item-status', '{{%menu_item}}', ['status']);

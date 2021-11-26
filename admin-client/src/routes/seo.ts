@@ -1,5 +1,6 @@
 import React from "react";
 import { FormOutlined } from "@ant-design/icons";
+import { stringReplace } from "../utils/functions";
 const SeoGrid = React.lazy(() => import("../pages/Seo/SeoGrid"));
 const Seo = React.lazy(() => import("../pages/Seo/Seo"));
 
@@ -7,6 +8,7 @@ export const seoRouteNames = {
   index: "/seo",
   create: "/seo/create",
   update: "/seo/:id",
+  updateUrl: (id?: string | number) => stringReplace("/seo/:id", { ":id": id }),
 };
 
 export const seoRoutes = [

@@ -15,6 +15,7 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property string $name
  * @property int $menu_id
  * @property int|null $parent_id
+ * @property int $level
  * @property string $url
  * @property string|null $rel
  * @property string|null $title
@@ -25,8 +26,8 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property int|null $updated_at
  *
  * @property Menu $menu
- * @property Seo[] $children
- * @property Seo $parent
+ * @property MenuItem[] $children
+ * @property MenuItem $parent
  */
 class MenuItem extends ActiveRecord
 {
@@ -72,6 +73,7 @@ class MenuItem extends ActiveRecord
             'name' => 'Название',
             'menu_id' => 'Меню',
             'parent_id' => 'Родитель',
+            'level' => 'Уровень вложености',
             'url' => 'Url',
             'rel' => 'Rel аттрибут',
             'title' => 'Title аттрибут',

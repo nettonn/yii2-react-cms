@@ -1,5 +1,6 @@
 import React from "react";
 import { FormOutlined } from "@ant-design/icons";
+import { stringReplace } from "../utils/functions";
 const MenuGridPage = React.lazy(() => import("../pages/Menu/MenuGridPage"));
 const MenuPage = React.lazy(() => import("../pages/Menu/MenuPage"));
 
@@ -7,6 +8,8 @@ export const menuRouteNames = {
   index: "/menu",
   create: "/menu/create",
   update: "/menu/:id",
+  updateUrl: (id?: string | number) =>
+    stringReplace("/menu/:id", { ":id": id }),
 };
 
 export const menuRoutes = [

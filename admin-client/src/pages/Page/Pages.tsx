@@ -34,11 +34,7 @@ const Pages: FC = () => {
       // filters: ,
       ellipsis: true,
       render: (text: any, record: IPage) => {
-        return (
-          <Link to={modelRoutes.update.replace(/:id/, record.id.toString())}>
-            {text}
-          </Link>
-        );
+        return <Link to={modelRoutes.updateUrl(record.id)}>{text}</Link>;
       },
     },
     {

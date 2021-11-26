@@ -31,11 +31,7 @@ const Chunks: FC = () => {
       // filters: ,
       ellipsis: true,
       render: (text: any, record: IChunk) => {
-        return (
-          <Link to={modelRoutes.update.replace(/:id/, record.id.toString())}>
-            {text}
-          </Link>
-        );
+        return <Link to={modelRoutes.updateUrl(record.id)}>{text}</Link>;
       },
     },
     {

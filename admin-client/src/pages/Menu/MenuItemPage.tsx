@@ -3,13 +3,11 @@ import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
-import { Form, Input, Switch, Tabs, TreeSelect } from "antd";
+import { Form, Input, Switch, TreeSelect } from "antd";
 import rules from "../../utils/rules";
 import { RouteNames } from "../../routes";
 import { IMenuItem, IMenuItemModelOptions } from "../../models/IMenuItem";
 import { menuItemService } from "../../api/MenuItemService";
-import CkeditorInput from "../../components/crud/form/CkeditorInput/CkeditorInput";
-import { stringReplace } from "../../utils/functions";
 
 const modelRoutes = RouteNames.menuItem;
 
@@ -79,15 +77,15 @@ const MenuItemPage: FC = () => {
     <>
       <PageHeader
         title={`${id ? "Редактирование" : "Создание"} пункта меню`}
-        backPath={stringReplace(modelRoutes.index, { ":menuId": menuId })}
+        backPath={modelRoutes.indexUrl(menuId)}
         breadcrumbItems={[
           { path: RouteNames.menu.index, label: "Меню" },
           {
-            path: stringReplace(RouteNames.menu.update, { ":id": menuId }),
+            path: RouteNames.menu.updateUrl(menuId),
             label: menuId ? menuId : "",
           },
           {
-            path: stringReplace(modelRoutes.index, { ":menuId": menuId }),
+            path: modelRoutes.indexUrl(menuId),
             label: "Пункты меню",
           },
         ]}
@@ -96,9 +94,9 @@ const MenuItemPage: FC = () => {
       <ModelForm
         modelForm={modelForm}
         formContent={formContent}
-        exitRoute={stringReplace(modelRoutes.index, { ":menuId": menuId })}
-        createRoute={stringReplace(modelRoutes.create, { ":menuId": menuId })}
-        updateRoute={stringReplace(modelRoutes.update, { ":menuId": menuId })}
+        exitRoute={modelRoutes.indexUrl(menuId)}
+        createRoute={modelRoutes.createUrl(menuId)}
+        updateRoute={modelRoutes.updateUrl(menuId)}
       />
     </>
   );

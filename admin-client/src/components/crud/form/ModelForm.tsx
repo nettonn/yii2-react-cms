@@ -6,6 +6,7 @@ import UpdatePageActions from "./../../crud/PageActions/UpdatePageActions";
 import { IModel, IModelOptions } from "../../../types";
 import { Navigate } from "react-router-dom";
 import { RouteNames } from "../../../routes";
+import { stringReplace } from "../../../utils/functions";
 
 interface ModelFormProps {
   modelForm: any | ReturnType<typeof useModelForm>;
@@ -16,7 +17,7 @@ interface ModelFormProps {
   ): React.ReactNode;
   exitRoute: string;
   createRoute: string;
-  updateRoute: string;
+  updateRoute: string; // with :id placeholder
   hasViewUrl?: boolean;
 }
 
@@ -84,7 +85,7 @@ const ModelForm: FC<ModelFormProps> = ({
         exitRoute={exitRoute}
         createRoute={createRoute}
         updateRoute={
-          newId ? updateRoute.replace(/:id/, newId.toString()) : undefined
+          newId ? stringReplace(updateRoute, { ":id": newId }) : undefined
         }
         hasViewUrl={hasViewUrl}
         viewUrl={viewUrl}

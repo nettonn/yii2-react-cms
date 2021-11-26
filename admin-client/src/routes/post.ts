@@ -1,5 +1,6 @@
 import React from "react";
 import { FormOutlined } from "@ant-design/icons";
+import { stringReplace } from "../utils/functions";
 const Posts = React.lazy(() => import("../pages/Post/Posts"));
 const Post = React.lazy(() => import("../pages/Post/Post"));
 
@@ -7,6 +8,8 @@ export const postRouteNames = {
   index: "/posts",
   create: "/posts/create",
   update: "/posts/:id",
+  updateUrl: (id?: string | number) =>
+    stringReplace("/posts/:id", { ":id": id }),
 };
 
 export const postRoutes = [

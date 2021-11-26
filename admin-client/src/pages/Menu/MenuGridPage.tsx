@@ -11,9 +11,9 @@ import { menuService } from "../../api/MenuService";
 import { Link } from "react-router-dom";
 import { menuGridActions } from "../../store/reducers/grids/menuGrid";
 import useDataGrid from "../../hooks/dataGrid.hook";
-import { stringReplace } from "../../utils/functions";
 
 const modelRoutes = RouteNames.menu;
+const menuItemRoutes = RouteNames.menuItem;
 
 const MenuGridPage: FC = () => {
   const dataGridHook = useDataGrid<IMenu, IMenuModelOptions>(
@@ -36,11 +36,7 @@ const MenuGridPage: FC = () => {
       // filters: ,
       ellipsis: true,
       render: (text: any, record: IMenu) => {
-        return (
-          <Link to={stringReplace(modelRoutes.update, { ":id": record.id })}>
-            {text}
-          </Link>
-        );
+        return <Link to={modelRoutes.updateUrl(record.id)}>{text}</Link>;
       },
     },
     {
@@ -77,9 +73,7 @@ const MenuGridPage: FC = () => {
         actionButtons={(record: IMenu) => [
           <Link
             key="menuItems"
-            to={stringReplace(RouteNames.menuItem.index, {
-              ":menuId": record.id,
-            })}
+            to={menuItemRoutes.indexUrl(record.id)}
             title="Пункты меню"
           >
             <MenuOutlined />

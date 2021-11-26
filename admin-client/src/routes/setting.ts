@@ -1,5 +1,6 @@
 import React from "react";
 import { SettingOutlined } from "@ant-design/icons";
+import { stringReplace } from "../utils/functions";
 const Settings = React.lazy(() => import("../pages/Setting/Settings"));
 const Setting = React.lazy(() => import("../pages/Setting/Setting"));
 
@@ -7,6 +8,8 @@ export const settingRouteNames = {
   index: "/settings",
   create: "/settings/create",
   update: "/settings/:id",
+  updateUrl: (id?: string | number) =>
+    stringReplace("/settings/:id", { ":id": id }),
 };
 
 export const settingRoutes = [

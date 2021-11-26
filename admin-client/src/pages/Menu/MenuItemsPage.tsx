@@ -10,9 +10,9 @@ import { menuItemService } from "../../api/MenuItemService";
 import { Link, useParams } from "react-router-dom";
 import { menuItemGridActions } from "../../store/reducers/grids/menuItemGrid";
 import useDataGrid from "../../hooks/dataGrid.hook";
-import { stringReplace } from "../../utils/functions";
 
 const modelRoutes = RouteNames.menuItem;
+const menuRoutes = RouteNames.menu;
 
 const MenuItemsPage: FC = () => {
   const { menuId } = useParams();
@@ -42,14 +42,7 @@ const MenuItemsPage: FC = () => {
       ellipsis: true,
       render: (text: any, record: IMenuItem) => {
         return (
-          <Link
-            to={stringReplace(modelRoutes.update, {
-              ":id": record.id,
-              ":menuId": menuId,
-            })}
-          >
-            {text}
-          </Link>
+          <Link to={modelRoutes.updateUrl(menuId, record.id)}>{text}</Link>
         );
       },
     },
@@ -74,11 +67,11 @@ const MenuItemsPage: FC = () => {
     <>
       <PageHeader
         title="Пункты меню"
-        backPath={stringReplace(RouteNames.menu.update, { ":id": menuId })}
+        backPath={menuRoutes.updateUrl(menuId)}
         breadcrumbItems={[
-          { path: RouteNames.menu.index, label: "Меню" },
+          { path: menuRoutes.index, label: "Меню" },
           {
-            path: stringReplace(RouteNames.menu.update, { ":id": menuId }),
+            path: menuRoutes.updateUrl(menuId),
             label: menuId ? menuId : "",
           },
         ]}
@@ -89,9 +82,7 @@ const MenuItemsPage: FC = () => {
         getColumns={getColumns}
         scroll={{ x: 800 }}
       />
-      <IndexPageActions
-        createPath={stringReplace(modelRoutes.create, { ":menuId": menuId })}
-      />
+      <IndexPageActions createPath={modelRoutes.createUrl(menuId)} />
     </>
   );
 };
