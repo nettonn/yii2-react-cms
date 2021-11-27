@@ -48,7 +48,7 @@ class InlineWidgetsComponent extends Component
         $text = $this->_processWidgets($text);
         $text = $this->_clearWidgets($text);
 
-        if($foolProof < 5)
+        if($foolProof < 10)
             $text = $this->decodeWidgets($text, $model, $foolProof);
 
         return $text;
