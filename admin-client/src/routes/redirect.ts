@@ -1,8 +1,8 @@
 import React from "react";
 import { SendOutlined } from "@ant-design/icons";
 import { stringReplace } from "../utils/functions";
-const Redirects = React.lazy(() => import("../pages/Redirect/Redirects"));
-const Redirect = React.lazy(() => import("../pages/Redirect/Redirect"));
+const Redirects = React.lazy(() => import("../pages/Redirect/RedirectsPage"));
+const Redirect = React.lazy(() => import("../pages/Redirect/RedirectPage"));
 
 export const redirectRouteNames = {
   index: "/redirects",

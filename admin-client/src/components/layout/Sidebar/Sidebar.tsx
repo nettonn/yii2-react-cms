@@ -7,6 +7,7 @@ import RouteIcon from "../../ui/RouteIcon";
 import { useAppActions } from "../../../hooks/redux";
 import { authActions } from "../../../store/reducers/auth";
 import { MenuClickEventHandler } from "rc-menu/lib/interface";
+import { LogoutOutlined } from "@ant-design/icons";
 
 interface IItem {
   title: string;
@@ -30,6 +31,7 @@ const Sidebar: FC = () => {
       RouteNames.redirect.index,
       RouteNames.setting.index,
       RouteNames.seo.index,
+      RouteNames.menu.index,
     ]) {
       if (pathname.indexOf(route) === 0) {
         setSelectedKeys([route]);
@@ -105,8 +107,8 @@ const Sidebar: FC = () => {
       <div className="app-sidebar-bottom">
         <Menu theme="dark" mode="inline">
           <Menu.Item
-            key={RouteNames.logout}
-            icon={<RouteIcon route={RouteNames.logout} />}
+            key="logout"
+            icon={<LogoutOutlined />}
             onClick={() => logout()}
           >
             Выйти

@@ -11,7 +11,7 @@ interface IItem {
   icon?: React.ReactNode;
 }
 
-const Home: FC = () => {
+const HomePage: FC = () => {
   const items: IItem[] = [
     {
       route: RouteNames.event,
@@ -74,4 +74,4 @@ const Home: FC = () => {
   );
 };
 
-export default Home;
+export default HomePage;

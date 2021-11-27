@@ -11,7 +11,7 @@ import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = RouteNames.user;
 
-const Users: FC = () => {
+const UsersPage: FC = () => {
   const dataGridHook = useDataGrid(userService, "userGrid", userGridActions);
 
   const getColumns = (modelOptions: IUserModelOptions): ColumnsType<IUser> => [
@@ -54,4 +54,4 @@ const Users: FC = () => {
   );
 };
 
-export default Users;
+export default UsersPage;

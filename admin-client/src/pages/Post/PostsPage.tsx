@@ -13,7 +13,7 @@ import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = RouteNames.post;
 
-const Posts: FC = () => {
+const PostsPage: FC = () => {
   const dataGridHook = useDataGrid(postService, "postGrid", postGridActions);
 
   const getColumns = (modelOptions: IPostModelOptions): ColumnsType<IPost> => [
@@ -65,4 +65,4 @@ const Posts: FC = () => {
   );
 };
 
-export default Posts;
+export default PostsPage;

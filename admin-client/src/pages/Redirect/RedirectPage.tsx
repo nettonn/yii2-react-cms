@@ -11,7 +11,7 @@ import { IRedirect, IRedirectModelOptions } from "../../models/IRedirect";
 
 const modelRoutes = RouteNames.redirect;
 
-const Redirect: FC = () => {
+const RedirectPage: FC = () => {
   const { id } = useParams();
 
   const modelForm = useModelForm<IRedirect, IRedirectModelOptions>(
@@ -72,4 +72,4 @@ const Redirect: FC = () => {
   );
 };
 
-export default Redirect;
+export default RedirectPage;

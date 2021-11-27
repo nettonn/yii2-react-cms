@@ -17,7 +17,7 @@ import {
 
 const modelRoutes = RouteNames.setting;
 
-const Setting: FC = () => {
+const SettingPage: FC = () => {
   const { id } = useParams();
   const [type, setType] = useState<number>();
 
@@ -130,4 +130,4 @@ const Setting: FC = () => {
   );
 };
 
-export default Setting;
+export default SettingPage;

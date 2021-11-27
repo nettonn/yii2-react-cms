@@ -2,14 +2,14 @@ import React, { FC } from "react";
 import { Button, Result } from "antd";
 import { useNavigate } from "react-router-dom";
 
-const Error403: FC = () => {
+const Error500Page: FC = () => {
   const navigate = useNavigate();
 
   return (
     <Result
-      status="403"
-      title="403"
-      subTitle="Доступ запрещен"
+      status="500"
+      title="500"
+      subTitle="Возникла ошибка сервера"
       extra={
         <Button type="primary" onClick={() => navigate(-1)}>
           Вернутся назад
@@ -19,4 +19,4 @@ const Error403: FC = () => {
   );
 };
 
-export default Error403;
+export default Error500Page;

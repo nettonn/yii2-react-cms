@@ -5,19 +5,24 @@ import { RouteNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
 import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
-import { IChunk, IChunkModelOptions } from "../../models/IChunk";
-import { chunkService } from "../../api/ChunkService";
-import { chunkGridActions } from "../../store/reducers/grids/chunkGrid";
+import { IRedirect, IRedirectModelOptions } from "../../models/IRedirect";
+import { redirectService } from "../../api/RedirectService";
+import { redirectGridActions } from "../../store/reducers/grids/redirectGrid";
+import { statusColumn } from "../../components/crud/grid/columns";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
-const modelRoutes = RouteNames.chunk;
+const modelRoutes = RouteNames.redirect;
 
-const Chunks: FC = () => {
-  const dataGridHook = useDataGrid(chunkService, "chunkGrid", chunkGridActions);
+const RedirectsPage: FC = () => {
+  const dataGridHook = useDataGrid(
+    redirectService,
+    "redirectGrid",
+    redirectGridActions
+  );
 
   const getColumns = (
-    modelOptions: IChunkModelOptions
-  ): ColumnsType<IChunk> => [
+    modelOptions: IRedirectModelOptions
+  ): ColumnsType<IRedirect> => [
     {
       title: "Id",
       dataIndex: "id",
@@ -25,27 +30,26 @@ const Chunks: FC = () => {
       width: 80,
     },
     {
-      title: "Название",
-      dataIndex: "name",
+      title: "Откуда",
+      dataIndex: "from",
       sorter: true,
       // filters: ,
       ellipsis: true,
-      render: (text: any, record: IChunk) => {
+      render: (text: any, record: IRedirect) => {
         return <Link to={modelRoutes.updateUrl(record.id)}>{text}</Link>;
       },
     },
     {
-      title: "Ключ",
-      dataIndex: "key",
+      title: "Куда",
+      dataIndex: "to",
       sorter: true,
-      width: 120,
+      ellipsis: true,
     },
     {
-      title: "Создано",
-      dataIndex: "created_at_date",
-      key: "created_at",
+      title: "Код",
+      dataIndex: "code",
       sorter: true,
-      width: 120,
+      width: 70,
     },
     {
       title: "Изменено",
@@ -54,11 +58,12 @@ const Chunks: FC = () => {
       sorter: true,
       width: 120,
     },
+    statusColumn<IRedirect>({ filters: modelOptions.status }),
   ];
 
   return (
     <>
-      <PageHeader title="Чанки" backPath={RouteNames.home} />
+      <PageHeader title="Редиректы" backPath={RouteNames.home} />
 
       <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
 
@@ -67,4 +72,4 @@ const Chunks: FC = () => {
   );
 };
 
-export default Chunks;
+export default RedirectsPage;

@@ -1,8 +1,8 @@
 import React from "react";
 import { FormOutlined } from "@ant-design/icons";
 import { stringReplace } from "../utils/functions";
-const SeoGrid = React.lazy(() => import("../pages/Seo/SeoGrid"));
-const Seo = React.lazy(() => import("../pages/Seo/Seo"));
+const SeoGrid = React.lazy(() => import("../pages/Seo/SeoGridPage"));
+const Seo = React.lazy(() => import("../pages/Seo/SeoPage"));
 
 export const seoRouteNames = {
   index: "/seo",

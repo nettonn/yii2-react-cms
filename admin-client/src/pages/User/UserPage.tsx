@@ -11,7 +11,7 @@ import { userService } from "../../api/UserService";
 
 const modelRoutes = RouteNames.user;
 
-const User: FC = () => {
+const UserPage: FC = () => {
   const { id } = useParams();
 
   const modelForm = useModelForm<IUser, IUserModelOptions>(id, userService);
@@ -82,4 +82,4 @@ const User: FC = () => {
   );
 };
 
-export default User;
+export default UserPage;

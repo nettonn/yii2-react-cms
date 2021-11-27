@@ -12,7 +12,7 @@ import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = RouteNames.setting;
 
-const Settings: FC = () => {
+const SettingsPage: FC = () => {
   const dataGridHook = useDataGrid(
     settingService,
     "settingGrid",
@@ -70,4 +70,4 @@ const Settings: FC = () => {
   );
 };
 
-export default Settings;
+export default SettingsPage;

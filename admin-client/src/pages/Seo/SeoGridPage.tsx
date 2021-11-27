@@ -13,7 +13,7 @@ import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = RouteNames.seo;
 
-const SeoGrid: FC = () => {
+const SeoGridPage: FC = () => {
   const dataGridHook = useDataGrid<ISeo, ISeoModelOptions>(
     seoService,
     "seoGrid",
@@ -70,4 +70,4 @@ const SeoGrid: FC = () => {
   );
 };
 
-export default SeoGrid;
+export default SeoGridPage;

@@ -12,7 +12,7 @@ import CkeditorInput from "../../components/crud/form/CkeditorInput/CkeditorInpu
 
 const modelRoutes = RouteNames.seo;
 
-const Seo: FC = () => {
+const SeoPage: FC = () => {
   const { id } = useParams();
 
   const modelForm = useModelForm<ISeo, ISeoModelOptions>(id, seoService);
@@ -88,4 +88,4 @@ const Seo: FC = () => {
   );
 };
 
-export default Seo;
+export default SeoPage;

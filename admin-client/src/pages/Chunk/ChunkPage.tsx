@@ -27,7 +27,7 @@ import { IModelOptions } from "../../types";
 
 const modelRoutes = RouteNames.chunk;
 
-const Chunk: FC = () => {
+const ChunkPage: FC = () => {
   const { id } = useParams();
   const [type, setType] = useState<number>();
 
@@ -103,4 +103,4 @@ const Chunk: FC = () => {
   );
 };
 
-export default Chunk;
+export default ChunkPage;

@@ -12,7 +12,7 @@ import { postService } from "../../api/PostService";
 
 const modelRoutes = RouteNames.post;
 
-const Post: FC = () => {
+const PostPage: FC = () => {
   const { id } = useParams();
 
   const modelForm = useModelForm<IPost, IPostModelOptions>(id, postService);
@@ -55,16 +55,16 @@ const Post: FC = () => {
         </Form.Item>
       </Tabs.TabPane>
       <Tabs.TabPane tab="SEO" key="seo">
-        <Form.Item label="MenuPage Title" name="seo_title">
+        <Form.Item label="SEO Title" name="seo_title">
           <Input />
         </Form.Item>
-        <Form.Item label="MenuPage H1" name="seo_h1">
+        <Form.Item label="SEO H1" name="seo_h1">
           <Input />
         </Form.Item>
-        <Form.Item label="MenuPage Description" name="seo_description">
+        <Form.Item label="SEO Description" name="seo_description">
           <Input.TextArea />
         </Form.Item>
-        <Form.Item label="MenuPage Keywords" name="seo_keywords">
+        <Form.Item label="SEO Keywords" name="seo_keywords">
           <Input.TextArea />
         </Form.Item>
       </Tabs.TabPane>
@@ -91,4 +91,4 @@ const Post: FC = () => {
   );
 };
 
-export default Post;
+export default PostPage;

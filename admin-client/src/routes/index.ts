@@ -1,10 +1,6 @@
 import React from "react";
 import { IRoute } from "../types";
-import {
-  HomeOutlined,
-  CalendarOutlined,
-  LogoutOutlined,
-} from "@ant-design/icons";
+import { HomeOutlined, CalendarOutlined } from "@ant-design/icons";
 import { errorRouteNames, errorRoutes } from "./error";
 
 import { userRouteIcons, userRouteNames, userRoutes } from "./user";
@@ -25,13 +21,12 @@ import {
   menuItemRoutes,
 } from "./menu-item";
 
-const Login = React.lazy(() => import("../pages/Login"));
-const Home = React.lazy(() => import("../pages/Home"));
-const Event = React.lazy(() => import("../pages/Event"));
+const Login = React.lazy(() => import("../pages/LoginPage"));
+const Home = React.lazy(() => import("../pages/HomePage"));
+const Event = React.lazy(() => import("../pages/EventPage"));
 
 export const RouteNames = {
   login: "/login",
-  logout: "/logout",
   home: "/",
   event: "/event",
 
@@ -70,7 +65,6 @@ export const privateRoutes: IRoute[] = [
 export const routeIcons = {
   [RouteNames.home]: HomeOutlined,
   [RouteNames.event]: CalendarOutlined,
-  [RouteNames.logout]: LogoutOutlined,
   ...userRouteIcons,
   ...postRouteIcons,
   ...pageRouteIcons,

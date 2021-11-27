@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { Button, Result } from "antd";
 import { useNavigate } from "react-router-dom";
 
-const Error404: FC = () => {
+const Error404Page: FC = () => {
   const navigate = useNavigate();
 
   return (
@@ -19,4 +19,4 @@ const Error404: FC = () => {
   );
 };
 
-export default Error404;
+export default Error404Page;

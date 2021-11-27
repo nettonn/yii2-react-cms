@@ -9,7 +9,7 @@ import { useAppActions, useAppSelector } from "../hooks/redux";
 import { IEvent } from "../models/IEvent";
 import { eventActions } from "../store/reducers/event";
 
-const Event: FC = () => {
+const EventPage: FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isInit, setIsInit] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -76,4 +76,4 @@ const Event: FC = () => {
   );
 };
 
-export default Event;
+export default EventPage;

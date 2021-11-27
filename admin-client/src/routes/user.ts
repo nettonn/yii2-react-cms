@@ -2,8 +2,8 @@ import React from "react";
 import { UserOutlined } from "@ant-design/icons";
 import { stringReplace } from "../utils/functions";
 
-const Users = React.lazy(() => import("../pages/User/Users"));
-const User = React.lazy(() => import("../pages/User/User"));
+const Users = React.lazy(() => import("../pages/User/UsersPage"));
+const User = React.lazy(() => import("../pages/User/UserPage"));
 
 export const userRouteNames = {
   index: "/users",

@@ -1,8 +1,8 @@
 import React from "react";
 import { BlockOutlined } from "@ant-design/icons";
 import { stringReplace } from "../utils/functions";
-const Chunks = React.lazy(() => import("../pages/Chunk/Chunks"));
-const Chunk = React.lazy(() => import("../pages/Chunk/Chunk"));
+const Chunks = React.lazy(() => import("../pages/Chunk/ChunksPage"));
+const Chunk = React.lazy(() => import("../pages/Chunk/ChunkPage"));
 
 export const chunkRouteNames = {
   index: "/chunks",
