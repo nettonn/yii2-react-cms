@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { RouteNames } from "../../routes";
@@ -6,10 +6,10 @@ import IndexPageActions from "../../components/crud/PageActions/IndexPageActions
 import { IMenuItem, IMenuItemModelOptions } from "../../models/IMenuItem";
 import { ColumnsType } from "antd/lib/table/interface";
 import { statusColumn } from "../../components/crud/grid/columns";
-import { menuItemService } from "../../api/MenuItemService";
 import { Link, useParams } from "react-router-dom";
 import { menuItemGridActions } from "../../store/reducers/grids/menuItemGrid";
 import useDataGrid from "../../hooks/dataGrid.hook";
+import MenuItemService from "../../api/MenuItemService";
 
 const modelRoutes = RouteNames.menuItem;
 const menuRoutes = RouteNames.menu;
@@ -17,7 +17,7 @@ const menuRoutes = RouteNames.menu;
 const MenuItemsPage: FC = () => {
   const { menuId } = useParams();
 
-  menuItemService.menuId = menuId;
+  const menuItemService = useMemo(() => new MenuItemService(menuId), [menuId]);
 
   const dataGridHook = useDataGrid<IMenuItem, IMenuItemModelOptions>(
     menuItemService,

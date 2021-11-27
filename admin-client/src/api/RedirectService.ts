@@ -1,8 +1,8 @@
 import RestService from "./RestService";
 
 export default class RedirectService extends RestService {
-  name = "redirect";
-  url = "/redirects";
+  protected name = "redirect";
+  protected url = "/redirects";
 }
 
 export const redirectService = new RedirectService();

@@ -2,9 +2,12 @@ import RestService from "./RestService";
 import { AxiosRequestConfig } from "axios";
 
 export default class MenuItemService extends RestService {
-  name = "menu-item";
-  url = "/menu-items";
-  menuId?: number | string;
+  protected name = "menu-item";
+  protected url = "/menu-items";
+
+  constructor(protected menuId?: number | string) {
+    super();
+  }
 
   indexQueryKey() {
     return `${this.name}-index-${this.menuId}`;
@@ -34,4 +37,5 @@ export default class MenuItemService extends RestService {
     };
   }
 }
+
 export const menuItemService = new MenuItemService();

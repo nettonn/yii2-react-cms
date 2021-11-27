@@ -1,20 +1,20 @@
 import ModelForm from "../../components/crud/form/ModelForm";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
 import { Form, Input, Switch, TreeSelect } from "antd";
 import rules from "../../utils/rules";
 import { RouteNames } from "../../routes";
 import { IMenuItem, IMenuItemModelOptions } from "../../models/IMenuItem";
-import { menuItemService } from "../../api/MenuItemService";
+import MenuItemService from "../../api/MenuItemService";
 
 const modelRoutes = RouteNames.menuItem;
 
 const MenuItemPage: FC = () => {
   const { id, menuId } = useParams();
 
-  menuItemService.menuId = menuId;
+  const menuItemService = useMemo(() => new MenuItemService(menuId), [menuId]);
 
   const modelForm = useModelForm<IMenuItem, IMenuItemModelOptions>(
     id,

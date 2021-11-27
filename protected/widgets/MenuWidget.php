@@ -58,7 +58,7 @@ class MenuWidget extends Widget
 
             $items = $treeModelHelper->getItems();
 
-//            Yii::$app->cache->set($cacheKey, $items);
+            Yii::$app->cache->set($cacheKey, $items);
         }
         return $this->renderMenu($items);
     }

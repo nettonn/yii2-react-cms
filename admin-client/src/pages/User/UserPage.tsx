@@ -3,7 +3,7 @@ import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
-import { Form, Input, Radio, Select } from "antd";
+import { Form, Input, Select } from "antd";
 import rules from "../../utils/rules";
 import { IUser, IUserModelOptions } from "../../models/IUser";
 import { RouteNames } from "../../routes";

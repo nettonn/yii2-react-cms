@@ -32,8 +32,8 @@ export interface IRestServicePagination {
 }
 
 export default class RestService {
-  name: string = "";
-  url: string = "";
+  protected name?: string;
+  protected url?: string;
 
   listQueryKey() {
     return `${this.name}-list`;

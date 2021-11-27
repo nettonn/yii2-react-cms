@@ -7,9 +7,9 @@ const tokenStorageName = "auth-token";
 const identityStorageName = "auth-identity";
 
 export default class AuthService {
-  loginUrl = "/auth/login";
-  logoutUrl = "/auth/refresh-token";
-  refreshTokenUrl = "/auth/refresh-token";
+  protected loginUrl = "/auth/login";
+  protected logoutUrl = "/auth/refresh-token";
+  protected refreshTokenUrl = "/auth/refresh-token";
 
   async login(
     email: string,

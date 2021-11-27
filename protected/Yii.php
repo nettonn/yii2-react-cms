@@ -15,6 +15,8 @@ class Yii extends \yii\BaseYii
  * Class BaseApplication
  * Used for properties that are identical for both WebApplication and ConsoleApplication
  *
+ * @property yii\queue\Queue $queue
+ * @property app\components\SettingComponent $settings
  */
 abstract class BaseApplication extends yii\base\Application
 {
@@ -24,16 +26,14 @@ abstract class BaseApplication extends yii\base\Application
  * Class WebApplication
  * Include only Web application related components here
  *
- * @property \app\components\AdminComponent $admin
- * @property \app\components\SeoComponent $seo
- * @property \app\components\ChunkComponent $chunks
- * @property \app\components\SettingComponent $settings
- * @property \app\components\InlineWidgetsComponent $inlineWidgets
- * @property \app\components\PlaceholderComponent $placeholders
- * @property \app\components\AjaxFileUploadComponent $ajaxFileUpload
- * @property \app\components\MicrodataComponent $microdata
- * @property \yii\queue\Queue $queue
- * @property \sizeg\jwt\Jwt $jwt
+ * @property app\components\AdminComponent $admin
+ * @property app\components\SeoComponent $seo
+ * @property app\components\ChunkComponent $chunks
+ * @property app\components\InlineWidgetsComponent $inlineWidgets
+ * @property app\components\PlaceholderComponent $placeholders
+ * @property app\components\AjaxFileUploadComponent $ajaxFileUpload
+ * @property app\components\MicrodataComponent $microdata
+ * @property sizeg\jwt\Jwt $jwt
  */
 class WebApplication extends yii\web\Application
 {
@@ -43,7 +43,6 @@ class WebApplication extends yii\web\Application
  * Class ConsoleApplication
  * Include only Console application related components here
  *
- * @property \yii\queue\Queue $queue
  */
 class ConsoleApplication extends yii\console\Application
 {
