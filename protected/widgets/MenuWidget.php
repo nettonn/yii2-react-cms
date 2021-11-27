@@ -33,7 +33,7 @@ class MenuWidget extends Widget
             $treeModelHelper = new TreeModelHelper([
                 'query' => $query,
                 'maxLevel' => $this->maxLevel,
-                'itemFunction' => function (array $data, TreeModelHelper $helper, $currentLevel) {
+                'itemFunction' => function (TreeModelHelper $helper, array $data, $currentLevel) {
                     $item = [
                         'label' => $data['name'],
                         'url' => $data['url'],

@@ -45,8 +45,6 @@ class Page extends ActiveRecord
         self::STATUS_NOT_ACTIVE => 'Не активно',
     ];
 
-    public static $childrenWith;
-
     /**
      * @inheritdoc
      */
@@ -124,11 +122,7 @@ class Page extends ActiveRecord
 
     public function getChildren()
     {
-        $query = $this->hasMany(self::class, ['parent_id'=>'id'])->notDeleted();
-        if(self::$childrenWith) {
-            $query = $query->with(self::$childrenWith);
-        }
-        return $query;
+        return $this->hasMany(self::class, ['parent_id'=>'id']);
     }
 
     /**
