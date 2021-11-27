@@ -14,7 +14,11 @@ import useDataGrid from "../../hooks/dataGrid.hook";
 const modelRoutes = RouteNames.post;
 
 const PostsPage: FC = () => {
-  const dataGridHook = useDataGrid(postService, "postGrid", postGridActions);
+  const dataGridHook = useDataGrid<IPost, IPostModelOptions>(
+    postService,
+    "postGrid",
+    postGridActions
+  );
 
   const getColumns = (modelOptions: IPostModelOptions): ColumnsType<IPost> => [
     // {
@@ -29,8 +33,8 @@ const PostsPage: FC = () => {
       sorter: true,
       // filters: ,
       ellipsis: true,
-      render: (text: any, record: IPost) => {
-        return <Link to={modelRoutes.updateUrl(record.id)}>{text}</Link>;
+      render: (value, record) => {
+        return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
       },
     },
     {

@@ -40,9 +40,9 @@ const MenuItemsPage: FC = () => {
       sorter: true,
       // filters: ,
       ellipsis: true,
-      render: (text: any, record: IMenuItem) => {
+      render: (value, record) => {
         return (
-          <Link to={modelRoutes.updateUrl(menuId, record.id)}>{text}</Link>
+          <Link to={modelRoutes.updateUrl(menuId, record.id)}>{value}</Link>
         );
       },
     },

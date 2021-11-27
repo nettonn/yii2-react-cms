@@ -1,18 +1,23 @@
 import React, { FC } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
 import { IUser, IUserModelOptions } from "../../models/IUser";
-import { ColumnsType } from "antd/es/table";
+import { ColumnsType } from "antd/lib/table/Table";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { RouteNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
 import { userGridActions } from "../../store/reducers/grids/userGrid";
 import { userService } from "../../api/UserService";
 import useDataGrid from "../../hooks/dataGrid.hook";
+import { Link } from "react-router-dom";
 
 const modelRoutes = RouteNames.user;
 
 const UsersPage: FC = () => {
-  const dataGridHook = useDataGrid(userService, "userGrid", userGridActions);
+  const dataGridHook = useDataGrid<IUser, IUserModelOptions>(
+    userService,
+    "userGrid",
+    userGridActions
+  );
 
   const getColumns = (modelOptions: IUserModelOptions): ColumnsType<IUser> => [
     {
@@ -25,7 +30,10 @@ const UsersPage: FC = () => {
       title: "E-Mail",
       dataIndex: "email",
       sorter: true,
-      // filters: ,
+      ellipsis: true,
+      render: (value, record) => {
+        return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
+      },
     },
     {
       title: "Роль",

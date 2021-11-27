@@ -4,7 +4,7 @@ import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { RouteNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
 import { IPage, IPageModelOptions } from "../../models/IPage";
-import { ColumnsType } from "antd/lib/table/interface";
+import { ColumnsType } from "antd/lib/table/Table";
 import { statusColumn } from "../../components/crud/grid/columns";
 import { pageService } from "../../api/PageService";
 import { Link } from "react-router-dom";
@@ -33,8 +33,8 @@ const Pages: FC = () => {
       sorter: true,
       // filters: ,
       ellipsis: true,
-      render: (text: any, record: IPage) => {
-        return <Link to={modelRoutes.updateUrl(record.id)}>{text}</Link>;
+      render: (value, record) => {
+        return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
       },
     },
     {

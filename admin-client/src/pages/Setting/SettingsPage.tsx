@@ -13,7 +13,7 @@ import useDataGrid from "../../hooks/dataGrid.hook";
 const modelRoutes = RouteNames.setting;
 
 const SettingsPage: FC = () => {
-  const dataGridHook = useDataGrid(
+  const dataGridHook = useDataGrid<ISetting, ISettingModelOptions>(
     settingService,
     "settingGrid",
     settingGridActions
@@ -34,8 +34,8 @@ const SettingsPage: FC = () => {
       sorter: true,
       // filters: ,
       ellipsis: true,
-      render: (text: any, record: ISetting) => {
-        return <Link to={modelRoutes.updateUrl(record.id)}>{text}</Link>;
+      render: (value, record) => {
+        return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
       },
     },
     {

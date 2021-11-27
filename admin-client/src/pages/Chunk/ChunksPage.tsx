@@ -13,7 +13,11 @@ import useDataGrid from "../../hooks/dataGrid.hook";
 const modelRoutes = RouteNames.chunk;
 
 const ChunksPage: FC = () => {
-  const dataGridHook = useDataGrid(chunkService, "chunkGrid", chunkGridActions);
+  const dataGridHook = useDataGrid<IChunk, IChunkModelOptions>(
+    chunkService,
+    "chunkGrid",
+    chunkGridActions
+  );
 
   const getColumns = (
     modelOptions: IChunkModelOptions
@@ -30,8 +34,8 @@ const ChunksPage: FC = () => {
       sorter: true,
       // filters: ,
       ellipsis: true,
-      render: (text: any, record: IChunk) => {
-        return <Link to={modelRoutes.updateUrl(record.id)}>{text}</Link>;
+      render: (value, record) => {
+        return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
       },
     },
     {

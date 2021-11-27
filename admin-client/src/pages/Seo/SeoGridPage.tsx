@@ -33,8 +33,8 @@ const SeoGridPage: FC = () => {
       sorter: true,
       // filters: ,
       ellipsis: true,
-      render: (text: any, record: ISeo) => {
-        return <Link to={modelRoutes.updateUrl(record.id)}>{text}</Link>;
+      render: (value, record) => {
+        return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
       },
     },
     {

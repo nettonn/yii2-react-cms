@@ -14,7 +14,7 @@ import useDataGrid from "../../hooks/dataGrid.hook";
 const modelRoutes = RouteNames.redirect;
 
 const RedirectsPage: FC = () => {
-  const dataGridHook = useDataGrid(
+  const dataGridHook = useDataGrid<IRedirect, IRedirectModelOptions>(
     redirectService,
     "redirectGrid",
     redirectGridActions
@@ -35,8 +35,8 @@ const RedirectsPage: FC = () => {
       sorter: true,
       // filters: ,
       ellipsis: true,
-      render: (text: any, record: IRedirect) => {
-        return <Link to={modelRoutes.updateUrl(record.id)}>{text}</Link>;
+      render: (value, record) => {
+        return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
       },
     },
     {
