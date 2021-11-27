@@ -47,6 +47,12 @@ const MenuItemsPage: FC = () => {
       },
     },
     {
+      title: "Сортировка",
+      dataIndex: "sort",
+      sorter: true,
+      width: 120,
+    },
+    {
       title: "Создано",
       dataIndex: "created_at_date",
       key: "created_at",

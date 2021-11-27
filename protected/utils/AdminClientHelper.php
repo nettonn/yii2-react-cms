@@ -40,13 +40,14 @@ class AdminClientHelper
         if(false === $options = Yii::$app->cache->get($cacheKey)) {
             $treeModelHelper = new TreeModelHelper([
                 'query' => $query,
-                'itemFunction' => function(TreeModelHelper $helper, array $itemData, int $currentLevel) use ($valueParam, $titleParam) {
+                'parentAttribute' => $parentParam,
+                'itemFunction' => function(TreeModelHelper $helper, array $data, int $currentLevel) use ($valueParam, $titleParam) {
                     $item = [
-                        'key' => $itemData[$valueParam],
-                        'title' => $itemData[$titleParam],
-                        'value' => $itemData[$valueParam],
+                        'key' => intval($data[$valueParam]),
+                        'title' => $data[$titleParam],
+                        'value' => intval($data[$valueParam]),
                     ];
-                    if($childrenItems = $helper->getItems($itemData['id'], $currentLevel + 1)) {
+                    if($childrenItems = $helper->getItems($data['id'], $currentLevel + 1)) {
                         $item['children'] = $childrenItems;
                     }
                     return $item;

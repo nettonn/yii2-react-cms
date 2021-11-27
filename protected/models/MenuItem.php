@@ -145,4 +145,19 @@ class MenuItem extends ActiveRecord
 
         parent::init();
     }
+
+    public function beforeSave($insert)
+    {
+        if(!$this->sort && $this->menu_id) {
+            $this->sort = self::find()
+                ->select('MAX(sort)')
+                ->where(['menu_id' => $this->menu_id, 'parent_id' => $this->parent_id])
+                ->scalar()
+                + 10;
+        }
+
+        return parent::beforeSave($insert);
+    }
+
+
 }

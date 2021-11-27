@@ -67,6 +67,10 @@ const MenuItemPage: FC = () => {
         <Input />
       </Form.Item>
 
+      <Form.Item label="Сортировка" name="sort">
+        <Input />
+      </Form.Item>
+
       <Form.Item label="Статус" name="status" valuePropName="checked">
         <Switch checked={false} />
       </Form.Item>

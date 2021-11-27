@@ -34,6 +34,7 @@ class m210902_153857_create_page_table extends Migration
         ], $tableOptions);
 
         $this->createIndex('idx-page-parent', '{{%page}}', ['parent_id']);
+        $this->createIndex('idx-page-level', '{{%page}}', ['level']);
         $this->createIndex('idx-page-url', '{{%page}}', ['_url']);
         $this->createIndex('idx-page-path', '{{%page}}', ['path']);
         $this->createIndex('idx-page-status', '{{%page}}', ['status']);
