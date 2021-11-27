@@ -45,11 +45,11 @@ class TreeModelHelper extends \yii\base\BaseObject
     public function getItems($parent = 'root', $currentLevel = 1)
     {
         if($this->maxLevel && $currentLevel > $this->maxLevel)
-            return false;
+            return [];
 
         $data = $this->getChildrenData($parent);
         if(!$data)
-            return false;
+            return [];
 
         $items = [];
 
