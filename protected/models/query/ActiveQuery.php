@@ -15,7 +15,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
         if(null === $this->hasSoftDelete) {
             /** @var ActiveRecord $modelClass */
             $modelClass = $this->modelClass;
-            $this->hasSoftDelete = !!$modelClass::getTableSchema()->getColumn($this->softDeleteAttribute);
+            $this->hasSoftDelete = isset($modelClass::getTableSchema()->columns[$this->softDeleteAttribute]);
         }
         parent::init();
     }

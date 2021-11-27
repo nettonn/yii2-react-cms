@@ -2,6 +2,7 @@
 
 use app\controllers\base\RestController;
 use app\models\MenuItem;
+use app\utils\AdminClientHelper;
 use Yii;
 use yii\db\ActiveQuery;
 
@@ -34,22 +35,16 @@ class MenuItemController extends RestController
 
     public function modelOptions(): array
     {
-        $instance = MenuItem::instance();
-
         $menuId = Yii::$app->request->get('menuId');
 
-        MenuItem::$childrenWith = ['children'];
-
-        $parentOptions = MenuItem::find()
+        $parentOptionsQuery = MenuItem::find()
             ->notDeleted()
-            ->onlyRoots()
             ->andWhere(['menu_id' => $menuId])
-            ->with(['children'])
-            ->all();
+            ->asArray();
 
         return [
-            'status' => prepare_value_text_options($instance->statusOptions),
-            'parent' => prepare_options_from_models($parentOptions),
+            'status' => AdminClientHelper::getOptionsFromKeyValue(MenuItem::instance()->statusOptions),
+            'parent' => AdminClientHelper::getOptionsFromModelQuery($parentOptionsQuery),
         ];
     }
 }

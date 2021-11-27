@@ -2,6 +2,7 @@
 
 use app\controllers\base\RestController;
 use app\models\Post;
+use app\utils\AdminClientHelper;
 use yii\db\ActiveQuery;
 
 class PostController extends RestController
@@ -25,10 +26,8 @@ class PostController extends RestController
 
     public function modelOptions(): array
     {
-        $instance = Post::instance();
-
         return [
-            'status' => prepare_value_text_options($instance->statusOptions),
+            'status' => AdminClientHelper::getOptionsFromKeyValue(Post::instance()->statusOptions),
         ];
     }
 

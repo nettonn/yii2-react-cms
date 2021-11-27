@@ -2,6 +2,7 @@
 
 use app\controllers\base\RestController;
 use app\models\User;
+use app\utils\AdminClientHelper;
 use yii\db\ActiveQuery;
 
 class UserController extends RestController
@@ -31,8 +32,8 @@ class UserController extends RestController
         $instance = User::instance();
 
         return [
-            'status' => prepare_value_text_options($instance->statusOptions),
-            'role' => prepare_value_text_options($instance->roleOptions),
+            'status' => AdminClientHelper::getOptionsFromKeyValue($instance->statusOptions),
+            'role' => AdminClientHelper::getOptionsFromKeyValue($instance->roleOptions),
         ];
     }
 

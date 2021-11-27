@@ -2,6 +2,7 @@
 
 use app\controllers\base\RestController;
 use app\models\Menu;
+use app\utils\AdminClientHelper;
 use yii\db\ActiveQuery;
 
 class MenuController extends RestController
@@ -19,10 +20,8 @@ class MenuController extends RestController
 
     public function modelOptions(): array
     {
-        $instance = Menu::instance();
-
         return [
-            'status' => prepare_value_text_options($instance->statusOptions),
+            'status' => AdminClientHelper::getOptionsFromKeyValue(Menu::instance()->statusOptions),
         ];
     }
 }

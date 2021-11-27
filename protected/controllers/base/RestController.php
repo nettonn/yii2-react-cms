@@ -1,10 +1,12 @@
 <?php namespace app\controllers\base;
 
+use app\utils\TreeModelHelper;
 use Yii;
 use yii\base\Action;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -17,6 +19,8 @@ abstract class RestController extends BaseApiController
     public $sortDirectionParam = 'sortDirection';
     public $searchQueryParam = 'search';
     public $pageSize = 20;
+    public $defaultSortAttribute = 'id';
+    public $defaultSortDirection = SORT_ASC;
     public $modelOptionsLastModifiedActions = [
         'index',
         'view',
@@ -222,7 +226,6 @@ abstract class RestController extends BaseApiController
                 $query = $query->select($select);
         }
 
-
         $query = $this->prepareQuery($query);
 
         if($ids = $request->get($this->idsParam)) {
@@ -252,13 +255,16 @@ abstract class RestController extends BaseApiController
             }
         }
 
-        $directionConst = $request->get($this->sortDirectionParam, 'ascend') == 'ascend' ? SORT_ASC : SORT_DESC;
-
+        $sortDirection = $request->get($this->sortDirectionParam);
+        $sortDirectionConst = $this->defaultSortDirection;
+        if(in_array($sortDirection, ['ascend', 'descend'])) {
+            $sortDirectionConst = $sortDirection == 'ascend' ? SORT_ASC : SORT_DESC;
+        }
 
         $sortField = $sort = $request->get($this->sortFieldParam);
 
         if(!in_array($sort, $modelColumns)) {
-            $sort = 'id';
+            $sort = $this->defaultSortAttribute;
         }
 
         $pagination = [
@@ -277,18 +283,34 @@ abstract class RestController extends BaseApiController
         } 
         
         if($this->isTree && !$filters && !$isList && !$search && !$sortField) {
-            $query->andWhere('parent_id IS NULL OR parent_id = 0');
-            $with = $this->indexModelWith? array_merge($this->indexModelWith, ['children']) : ['children'];
-            $query->with($with);
-            $modelClass::$childrenWith = $with;
-//            $pagination = false;
+            $treeModelHelper = new TreeModelHelper([
+                'query' => $query,
+                'itemFunction' => function (TreeModelHelper $helper, ActiveRecord $model, int $currentLevel) {
+                    if($childrenModels = $helper->getItems($model->id, $currentLevel + 1)) {
+                        $model->populateRelation('children', $childrenModels);
+                    }
+
+                    return $model;
+            }]);
+
+            $models = $treeModelHelper->getItems();
+
+            return new ArrayDataProvider([
+                'allModels' => $models,
+                'sort' => [
+                    'sortParam' => false,
+                    'defaultOrder' => [$sort => $sortDirectionConst],
+                    'attributes' => [$sort]
+                ],
+                'pagination' => $pagination
+            ]);
         }
 
         return new ActiveDataProvider([
             'query' => $query,
             'sort' => [
                 'sortParam' => false,
-                'defaultOrder' => [$sort => $directionConst]
+                'defaultOrder' => [$sort => $sortDirectionConst]
             ],
             'pagination' => $pagination
         ]);

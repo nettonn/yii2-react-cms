@@ -2,6 +2,7 @@
 
 use app\components\Widget;
 use app\models\MenuItem;
+use app\utils\TreeModelHelper;
 use Yii;
 use yii\helpers\Html;
 use yii\web\ServerErrorHttpException;
@@ -10,7 +11,7 @@ class MenuWidget extends Widget
 {
     public $items;
     public $menuId;
-    public $level;
+    public $maxLevel;
 
     public function run()
     {
@@ -20,12 +21,44 @@ class MenuWidget extends Widget
         if(!$this->menuId)
             throw new ServerErrorHttpException();
 
-        $cacheKey = self::class.'-menuId'.$this->menuId.'-level'.$this->level;
+        $cacheKey = self::class.'-menuId'.$this->menuId.'-level'.$this->maxLevel;
 
         if(false === $items = Yii::$app->cache->get($cacheKey)) {
-            $items = $this->getItems();
+            $query = MenuItem::find()
+                ->andWhere(['menu_id' => $this->menuId])
+                ->active()
+                ->orderBy('sort ASC')
+                ->asArray();
 
-            Yii::$app->cache->set($cacheKey, $items);
+            $treeModelHelper = new TreeModelHelper([
+                'query' => $query,
+                'maxLevel' => $this->maxLevel,
+                'itemFunction' => function (array $data, TreeModelHelper $helper, $currentLevel) {
+                    $item = [
+                        'label' => $data['name'],
+                        'url' => $data['url'],
+                    ];
+
+                    if($childrenItems = $helper->getItems($data['id'], $currentLevel + 1)) {
+                        $item['items'] = $childrenItems;
+                    }
+
+                    $options = [];
+                    if($data['title'])
+                        $options['title'] = $data['title'];
+                    if($data['rel'])
+                        $options['rel'] = $data['rel'];
+
+                    if($options) {
+                        $item['template'] = Html::a('{label}', '{url}', $options);
+                    }
+                    return $item;
+
+            }]);
+
+            $items = $treeModelHelper->getItems();
+
+//            Yii::$app->cache->set($cacheKey, $items);
         }
         return $this->renderMenu($items);
     }
@@ -33,62 +66,5 @@ class MenuWidget extends Widget
     protected function renderMenu($items)
     {
         return \yii\widgets\Menu::widget(['items' => $items]);
-    }
-
-    protected function getItems($parent = 'root', $currentLevel = 1)
-    {
-        $data = $this->getChildrenData($parent);
-        if(!$data)
-            return false;
-
-        $items = [];
-        foreach($data as $one) {
-            $item = [
-                'label' => $one['name'],
-                'url' => $one['url'],
-            ];
-
-            if((!$this->level || $this->level <= $currentLevel)
-                && $childrenItems = $this->getItems($one['id'], $currentLevel + 1)) {
-                $item['items'] = $childrenItems;
-            }
-
-            $options = [];
-            if($one['title'])
-                $options['title'] = $one['title'];
-            if($one['rel'])
-                $options['rel'] = $one['rel'];
-
-            if($options) {
-                $item['template'] = Html::a('{label}', '{url}', $options);
-            }
-
-            $items[] = $item;
-        }
-        return $items;
-    }
-
-    protected $_childrenData;
-
-    protected function getChildrenData($parent = 'root')
-    {
-        if(null === $this->_childrenData) {
-            $menuItems = MenuItem::find()
-                ->andWhere(['menu_id' => $this->menuId])
-                ->active()
-                ->orderBy('sort ASC')
-                ->asArray()
-                ->all();
-
-            $this->_childrenData = [];
-            foreach($menuItems as $menuItem) {
-                $key = $menuItem['parent_id'] ? $menuItem['parent_id'] : 'root';
-                $this->_childrenData[$key][] = $menuItem;
-            }
-        }
-
-        return isset($this->_childrenData[$parent])
-            ? $this->_childrenData[$parent]
-            : false;
     }
 }

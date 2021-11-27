@@ -2,6 +2,7 @@
 
 use app\controllers\base\RestController;
 use app\models\Redirect;
+use app\utils\AdminClientHelper;
 use yii\db\ActiveQuery;
 
 class RedirectController extends RestController
@@ -20,10 +21,8 @@ class RedirectController extends RestController
 
     public function modelOptions(): array
     {
-        $instance = Redirect::instance();
-
         return [
-            'status' => prepare_value_text_options($instance->statusOptions),
+            'status' => AdminClientHelper::getOptionsFromKeyValue(Redirect::instance()->statusOptions),
         ];
     }
 }
