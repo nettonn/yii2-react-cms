@@ -74,7 +74,7 @@ class TodoController extends RestController
 //        return $actions;
 //    }
 
-    protected function verbs()
+    protected function verbs(): array
     {
         $verbs = parent::verbs();
         $verbs['sort'] = ['PUT'];

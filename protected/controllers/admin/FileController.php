@@ -26,7 +26,7 @@ class FileController extends BaseApiController
         ];
     }
 
-    protected function authExcept()
+    protected function authExcept(): array
     {
         return [
             'options',

@@ -24,7 +24,8 @@ abstract class BaseApiController extends \yii\rest\Controller
     /**
      * {@inheritdoc}
      */
-    public function behaviors() {
+    public function behaviors(): array
+    {
         $behaviors = [];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::class,
@@ -70,7 +71,7 @@ abstract class BaseApiController extends \yii\rest\Controller
         return $behaviors;
     }
 
-    protected function authExcept()
+    protected function authExcept(): array
     {
         return [];
     }

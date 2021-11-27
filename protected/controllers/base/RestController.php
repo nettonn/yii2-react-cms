@@ -125,7 +125,7 @@ abstract class RestController extends BaseApiController
     /**
      * {@inheritdoc}
      */
-    protected function verbs()
+    protected function verbs(): array
     {
         return [
             'index' => ['GET', 'HEAD'],
@@ -138,12 +138,11 @@ abstract class RestController extends BaseApiController
         ];
     }
 
-    protected function getModelQuery() : ActiveQuery
+    protected function getModelQuery(): ActiveQuery
     {
         /* @var $modelClass ActiveRecord */
         $modelClass = $this->modelClass;
 
-        /* @var $query ActiveQuery */
         $query = $modelClass::find();
 
         if($modelClass::getTableSchema()->getColumn('is_deleted')) {
@@ -157,12 +156,11 @@ abstract class RestController extends BaseApiController
         return $query;
     }
 
-    protected function getListModelQuery() : ActiveQuery
+    protected function getListModelQuery(): ActiveQuery
     {
         /* @var $modelClass ActiveRecord */
         $modelClass = $this->modelClass;
 
-        /* @var $query ActiveQuery */
         $query = $modelClass::find();
 
         if($modelClass::getTableSchema()->getColumn('is_deleted')) {
@@ -215,7 +213,6 @@ abstract class RestController extends BaseApiController
         $modelClass = $this->modelClass;
         $modelColumns = $modelClass::getTableSchema()->getColumnNames();
 
-        /** @var ActiveQuery $query */
         $query = $this->getListModelQuery();
 
         if($this->indexQuerySelect) {
@@ -321,7 +318,7 @@ abstract class RestController extends BaseApiController
         return [];
     }
 
-    public function modelDefaults()
+    public function modelDefaults(): ActiveRecord
     {
         /** @var ActiveRecord $modelClass */
         $modelClass = $this->modelClass;
@@ -351,7 +348,7 @@ abstract class RestController extends BaseApiController
      * For yii\caching\DbDependency
      * @return string sql
      */
-    protected function getModelLastModifiedSql()
+    protected function getModelLastModifiedSql(): string
     {
         $modelClass = $this->modelClass;
         return 'SELECT MAX(updated_at) from '.$modelClass::tableName();
@@ -361,7 +358,7 @@ abstract class RestController extends BaseApiController
      * Timestamp in seconds
      * @return int | null
      */
-    protected function getModelOptionsLastModified()
+    protected function getModelOptionsLastModified(): ?int
     {
         $modelClass = $this->modelClass;
         return $modelClass::find()->select('MAX(updated_at)')->scalar();

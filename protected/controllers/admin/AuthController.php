@@ -5,6 +5,7 @@ use app\models\forms\LoginForm;
 use app\models\forms\RegistrationForm;
 use app\models\User;
 use app\models\UserRefreshToken;
+use Lcobucci\JWT\Token;
 use Yii;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
@@ -58,7 +59,6 @@ class AuthController extends BaseApiController
         $user = User::findByEmailConfirmToken($token);
 
         if (!$user) {
-
             throw new BadRequestHttpException('Неверный токен.');
         }
 
@@ -116,7 +116,7 @@ class AuthController extends BaseApiController
         throw new BadRequestHttpException('Пользователь не найден.');
     }
 
-    protected function authExcept()
+    protected function authExcept(): array
     {
         return [
             'login',
@@ -127,7 +127,7 @@ class AuthController extends BaseApiController
         ];
     }
 
-    protected function verbs()
+    protected function verbs(): array
     {
         return [
             'registration'  => ['POST'],
@@ -138,7 +138,7 @@ class AuthController extends BaseApiController
         ];
     }
 
-    private function generateJwt(User $user) {
+    private function generateJwt(User $user): Token {
         $jwt = Yii::$app->jwt;
         $signer = $jwt->getSigner('HS256');
         $key = $jwt->getKey();
@@ -159,7 +159,7 @@ class AuthController extends BaseApiController
     /**
      * @throws \yii\base\Exception
      */
-    private function generateRefreshToken(User $user) {
+    private function generateRefreshToken(User $user): UserRefreshToken {
         $refreshToken = Yii::$app->getSecurity()->generateRandomString(200);
 
         $request = Yii::$app->getRequest();
@@ -203,7 +203,6 @@ class AuthController extends BaseApiController
             Yii::$app->getResponse()->setStatusCode(405);
         }
         $headers = Yii::$app->getResponse()->getHeaders();
-
 
         $headers->set('Allow', implode(', ', $verbs[$action]));
         $headers->set('Access-Control-Allow-Methods', implode(', ', $verbs[$action]));
