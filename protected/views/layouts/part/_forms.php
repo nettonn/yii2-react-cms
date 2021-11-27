@@ -1,5 +1,5 @@
 <div style="display: none;">
-    <form id="feedback-form" action="<?= url(['/ajax/feedback']) ?>"  method="post" class="forms ajax-form popup-form">
+    <form id="feedback-form" action="<?= yii\helpers\Url::to(['/ajax/feedback']) ?>"  method="post" class="forms ajax-form popup-form">
         <div class="title" data-default="Связаться с нами"></div>
         <div class="description" data-default="Напишите ваш вопрос или пожелание напрямую создателям сайта."></div>
         <div class="fields">
@@ -22,7 +22,7 @@
         </div>
     </form>
 
-    <form id="error-feedback-form" action="<?= url(['/ajax/error-feedback']) ?>"  method="post" class="forms ajax-form popup-form">
+    <form id="error-feedback-form" action="<?= yii\helpers\Url::to(['/ajax/error-feedback']) ?>"  method="post" class="forms ajax-form popup-form">
         <div class="title" data-default="Нашли ошибку на странице?"></div>
         <div class="description" data-default="Если вы обнаружили какие-то неточности или ошибки напишите нам. Можете оставить свой E-Mail, если вы хотите что то спросить."></div>
         <div class="fields">
@@ -37,6 +37,4 @@
             <div class="text">Спасибо!<br> Ваше сообщение отправлено.</div>
         </div>
     </form>
-
-    <?= \app\modules\aggregator\widgets\OrderFormWidget::widget(['formId' => 'order-form', 'formClasses' => 'popup-form']) ?>
 </div>

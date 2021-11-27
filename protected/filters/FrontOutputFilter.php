@@ -2,6 +2,7 @@
 
 use Yii;
 use yii\base\ActionFilter;
+use yii\helpers\Url;
 
 class FrontOutputFilter extends ActionFilter
 {
@@ -40,7 +41,9 @@ class FrontOutputFilter extends ActionFilter
             $title = 'Редактировать';
         }
         else {
-            $link = url(['/admin/seo/create', 'url'=> Yii::$app->request->getUrl(), 'name'=>seo('h1')]);
+            $link = Url::to(['/admin/seo/create',
+                'url'=> Yii::$app->request->getUrl(),
+                'name'=>Yii::$app->seo->getH1()]);
             $title = 'Добавить SEO';
         }
         $editButton = '<a href="'.$link.'" style="position: fixed; top: 0; left: 0; display: block; z-index: 9999; color: #fff; background: #444">'.$title.'</a>';

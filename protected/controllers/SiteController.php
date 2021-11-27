@@ -3,6 +3,7 @@
 use app\controllers\base\FrontController;
 use app\models\Page;
 use Yii;
+use yii\helpers\Url;
 use yii\web\HttpException;
 
 class SiteController extends FrontController
@@ -15,7 +16,7 @@ class SiteController extends FrontController
     public function actionPage($path = null)
     {
         if($path === null) {
-            $model = Page::find()->active()->where(['id'=>setting_get('main_page_id')])->one();
+            $model = Page::find()->active()->where(['id'=>Yii::$app->settings->get('main_page_id')])->one();
         } else {
             $model = Page::find()->active()->where(['path'=>$path])->one();
         }
@@ -23,7 +24,7 @@ class SiteController extends FrontController
         if($model === null)
             throw new HttpException(404, 'Страница не найдена');
 
-        Yii::$app->admin->setAdminLink(url(['/admin/page/update', 'id' => $model->id]));
+        Yii::$app->admin->setAdminLink(Url::to(['/admin/page/update', 'id' => $model->id]));
 
         $this->setLayout($model->layout);
 

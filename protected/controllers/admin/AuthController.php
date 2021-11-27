@@ -6,6 +6,7 @@ use app\models\forms\RegistrationForm;
 use app\models\User;
 use app\models\UserRefreshToken;
 use Yii;
+use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Cookie;
 use yii\web\ServerErrorHttpException;
@@ -189,7 +190,7 @@ class AuthController extends BaseApiController
             'httpOnly' => true,
             'sameSite' => IS_SECURE && !DEV ? Cookie::SAME_SITE_LAX :  Cookie::SAME_SITE_NONE,
             'secure' => IS_SECURE,
-            'path' => url(['refresh-token']),  //endpoint URI for renewing the JWT token using this refresh-token, or deleting refresh-token
+            'path' => Url::to(['refresh-token']),  //endpoint URI for renewing the JWT token using this refresh-token, or deleting refresh-token
         ]));
 
         return $userRefreshToken;

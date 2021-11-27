@@ -1,4 +1,4 @@
-<div class="field fileupload" data-url="<?= url(['/ajax/file-upload-images']) ?>">
+<div class="field fileupload" data-url="<?= yii\helpers\Url::to(['/ajax/file-upload-images']) ?>">
     <div class="row fileupload-list">
         <div class="col new-image item no-images" data-short-classes="col-md-2 col-3">
             <div class="inner">

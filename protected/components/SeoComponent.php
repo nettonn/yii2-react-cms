@@ -70,7 +70,7 @@ class SeoComponent extends Component
         if($this->paginationPage && $this->paginationPage > 1 && $title) {
             $title = 'Стр. '.$this->paginationPage.' - '.$title;
         }
-        return $title;
+        return trim($title, '., ');
     }
 
     protected function _getTitleInternal()
@@ -96,7 +96,7 @@ class SeoComponent extends Component
         if($this->paginationPage && $this->paginationPage > 1 && $h1) {
             $h1 = $h1 . ' - стр. '.$this->paginationPage;
         }
-        return $h1;
+        return trim($h1, '., ');
     }
 
     protected function _getH1Internal()

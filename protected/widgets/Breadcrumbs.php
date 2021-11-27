@@ -1,6 +1,7 @@
 <?php namespace app\widgets;
 
 use Yii;
+use yii\helpers\Url;
 
 class Breadcrumbs extends \yii\widgets\Breadcrumbs
 {
@@ -10,7 +11,7 @@ class Breadcrumbs extends \yii\widgets\Breadcrumbs
     {
         parent::init();
 
-        $this->homeLink = ['label'=>'Главная', 'url'=>url(['/'])];
+        $this->homeLink = ['label'=>'Главная', 'url'=>Url::to(['/'])];
     }
 
     public function run()
@@ -45,7 +46,7 @@ class Breadcrumbs extends \yii\widgets\Breadcrumbs
                 'position' => $position++,
                 'item' =>
                     [
-                        '@id' => url('/', 'https'),
+                        '@id' => Url::to('/', 'https'),
                         'name' => 'Выкуп авто',
                     ]
             ],
@@ -63,7 +64,7 @@ class Breadcrumbs extends \yii\widgets\Breadcrumbs
                     'position' => $position++,
                     'item' =>
                         [
-                            '@id' => url($link['url'], 'https'),
+                            '@id' => Url::to($link['url'], 'https'),
                             'name' => $link['label']
                         ]
                 ],

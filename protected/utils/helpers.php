@@ -115,32 +115,6 @@ function get_param($name) {
     return Yii::$app->params[$name];
 }
 
-function prepare_value_text_options($array, $valueParam = 'value', $textParam = 'text'): array {
-    $result = [];
-    foreach($array as $value => $text) {
-        $result[] = [$valueParam => $value, $textParam => $text];
-    }
-    return $result;
-}
-
-function prepare_options_from_models($array, $valueParam = 'id', $titleParam = 'name', $childrenRelation = 'children'): array {
-    $result = [];
-
-    foreach($array as $data) {
-        $one = [
-            'key' => $data[$valueParam],
-            'title' => $data[$titleParam],
-            'value' => $data[$valueParam],
-        ];
-        if($data->$childrenRelation) {
-            $one['children'] = prepare_options_from_models($data[$childrenRelation], $valueParam, $titleParam, $childrenRelation);
-        }
-        $result[] = $one;
-    }
-
-    return $result;
-}
-
 function class_basename($class) {
     $class = is_object($class) ? get_class($class) : $class;
 
@@ -202,7 +176,7 @@ function setting_get($key) {
 
 function redirect($url, $statusCode = 301, $checkAjax = true) {
     Yii::$app->getResponse()->redirect($url, $statusCode, $checkAjax)->send();
-    die();
+    Yii::$app->end();
 }
 
 function seo($type = false) {
@@ -210,9 +184,9 @@ function seo($type = false) {
 
     switch($type) {
         case 'title':
-            return trim($seo->getTitle(), '. ');
+            return $seo->getTitle();
         case 'h1':
-            return trim($seo->getH1(), '. ');
+            return $seo->getH1();
         case 'description':
         case 'desc':
             return $seo->getDescription();

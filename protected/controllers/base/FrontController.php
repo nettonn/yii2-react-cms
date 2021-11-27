@@ -13,7 +13,7 @@ abstract class FrontController extends Controller
     {
         Yii::$app->seo->setPlaceholders();
 
-        if(!Yii::$app->admin->hasAdminLink() && $seoModel = seo()->seoModel) {
+        if(!Yii::$app->admin->hasAdminLink() && $seoModel = Yii::$app->seo->seoModel) {
             Yii::$app->admin->setAdminLink(Url::to(['/admin/seo/update', 'id' => $seoModel->id]));
         }
 
