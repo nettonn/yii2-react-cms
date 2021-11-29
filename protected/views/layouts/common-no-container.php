@@ -5,7 +5,7 @@
 
 <?php $this->beginContent('@app/views/layouts/main.php'); ?>
 
-<?= $this->render('part/_breadcrumbs') ?>
+<?= $this->render('part/breadcrumbs') ?>
 
     <?= $content ?>
 
