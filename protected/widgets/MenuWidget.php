@@ -1,16 +1,17 @@
 <?php namespace app\widgets;
 
 use app\components\Widget;
+use app\models\Menu;
 use app\models\MenuItem;
 use app\utils\TreeModelHelper;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\helpers\Html;
-use yii\web\ServerErrorHttpException;
 
 class MenuWidget extends Widget
 {
     public $items;
-    public $menuId;
+    public $key;
     public $maxLevel;
 
     public function run()
@@ -18,14 +19,23 @@ class MenuWidget extends Widget
         if($this->items)
             return $this->renderMenu($this->items);
 
-        if(!$this->menuId)
-            throw new ServerErrorHttpException();
+        if(!$this->key)
+            throw new InvalidConfigException('Menu $key must be set if no items');
 
-        $cacheKey = self::class.'-menuId'.$this->menuId.'-level'.$this->maxLevel;
+        $cacheKey = self::class.'-menuId'.$this->key.'-level'.$this->maxLevel;
 
         if(false === $items = Yii::$app->cache->get($cacheKey)) {
+            $menuId = Menu::find()
+                ->select('id')
+                ->where(['or', ['id' => $this->key], ['key' => $this->key]])
+                ->active()
+                ->scalar();
+
+            if(!$menuId)
+                throw new InvalidConfigException('$key must be `id` or `key` of existed active Menu record');
+
             $query = MenuItem::find()
-                ->andWhere(['menu_id' => $this->menuId])
+                ->andWhere(['menu_id' => $menuId])
                 ->active()
                 ->orderBy('sort ASC')
                 ->asArray();
