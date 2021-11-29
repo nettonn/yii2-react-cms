@@ -6,6 +6,22 @@ export interface IPaginationType {
   total: number;
 }
 
+export interface IApiServiceReturn<T> {
+  success?: boolean;
+  data?: T;
+  status?: number;
+  error?: string;
+  pagination?: IApiServicePagination;
+  validationErrors?: IValidationErrorType[];
+}
+
+export interface IApiServicePagination {
+  currentPage?: number;
+  totalCount?: number;
+  perPage?: number;
+  pageCount?: number;
+}
+
 export interface IValidationErrorType {
   field: string;
   message: string;

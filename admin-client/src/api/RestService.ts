@@ -1,19 +1,10 @@
 import { $api } from "../http/api";
-import { IModel, IValidationErrorType } from "../types";
+import { IApiServicePagination, IApiServiceReturn, IModel } from "../types";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { prepareAxiosConfig, requestErrorHandler } from "../utils/functions";
 import { queryClient } from "../http/query-client";
 
 const axiosClient = $api;
-
-export interface IRestServiceReturn<T> {
-  success?: boolean;
-  data?: T;
-  status?: number;
-  error?: string;
-  pagination?: IRestServicePagination;
-  validationErrors?: IValidationErrorType[];
-}
 
 export interface IRestServiceIndexQueryParams {
   page?: number;
@@ -22,13 +13,6 @@ export interface IRestServiceIndexQueryParams {
   search?: string;
   filters?: any;
   ids?: number[];
-}
-
-export interface IRestServicePagination {
-  currentPage?: number;
-  totalCount?: number;
-  perPage?: number;
-  pageCount?: number;
 }
 
 export default class RestService {
@@ -58,7 +42,7 @@ export default class RestService {
   async list<T extends IModel = IModel>(
     limit?: number,
     signal?: AbortSignal
-  ): Promise<IRestServiceReturn<T[]>> {
+  ): Promise<IApiServiceReturn<T[]>> {
     try {
       const config = prepareAxiosConfig(this.indexConfig(), {
         list: true,
@@ -84,12 +68,12 @@ export default class RestService {
   async index<T extends IModel = IModel>(
     params?: IRestServiceIndexQueryParams,
     signal?: AbortSignal
-  ): Promise<IRestServiceReturn<T[]>> {
+  ): Promise<IApiServiceReturn<T[]>> {
     try {
       const config = prepareAxiosConfig(this.indexConfig(), params);
       if (signal) config.signal = signal;
       const response = await axiosClient.request<T[]>(config);
-      const pagination: IRestServicePagination = {};
+      const pagination: IApiServicePagination = {};
 
       if (response.headers["x-pagination-current-page"] !== undefined)
         pagination.currentPage = parseInt(
@@ -130,7 +114,7 @@ export default class RestService {
   async view<T>(
     id: number | string,
     signal?: AbortSignal
-  ): Promise<IRestServiceReturn<T>> {
+  ): Promise<IApiServiceReturn<T>> {
     try {
       const config = prepareAxiosConfig(this.viewConfig(id));
       if (signal) config.signal = signal;
@@ -150,7 +134,7 @@ export default class RestService {
     }
   }
 
-  async create<T>(values: T): Promise<IRestServiceReturn<T>> {
+  async create<T>(values: T): Promise<IApiServiceReturn<T>> {
     try {
       const config = prepareAxiosConfig(this.createConfig(), null, values);
 
@@ -181,7 +165,7 @@ export default class RestService {
   async update<T>(
     id: number | string,
     values: T
-  ): Promise<IRestServiceReturn<T>> {
+  ): Promise<IApiServiceReturn<T>> {
     try {
       const config = prepareAxiosConfig(this.updateConfig(id), null, values);
 
@@ -209,7 +193,7 @@ export default class RestService {
     }
   }
 
-  async delete(id: number | string): Promise<IRestServiceReturn<null>> {
+  async delete(id: number | string): Promise<IApiServiceReturn<null>> {
     try {
       const response = await axiosClient.request(this.deleteConfig(id));
 
@@ -229,7 +213,7 @@ export default class RestService {
     }
   }
 
-  async modelOptions<T>(signal?: AbortSignal): Promise<IRestServiceReturn<T>> {
+  async modelOptions<T>(signal?: AbortSignal): Promise<IApiServiceReturn<T>> {
     try {
       const config = prepareAxiosConfig(this.modelOptionsConfig());
       if (signal) config.signal = signal;
@@ -245,7 +229,7 @@ export default class RestService {
     }
   }
 
-  async modelDefaults<T>(signal?: AbortSignal): Promise<IRestServiceReturn<T>> {
+  async modelDefaults<T>(signal?: AbortSignal): Promise<IApiServiceReturn<T>> {
     try {
       const config = prepareAxiosConfig(this.modelDefaultsConfig());
       if (signal) config.signal = signal;

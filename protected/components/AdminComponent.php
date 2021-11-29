@@ -2,6 +2,7 @@
 
 use Yii;
 use yii\base\Component;
+use yii\web\Cookie;
 
 class AdminComponent extends Component
 {
@@ -37,6 +38,8 @@ class AdminComponent extends Component
             'expire' => time() + 3600*24,
             'domain' => '',
             'httpOnly' => true,
+            'secure' => IS_SECURE,
+            'sameSite' => IS_SECURE && !DEV ? Cookie::SAME_SITE_LAX :  Cookie::SAME_SITE_NONE,
             'path' => '/',
         ]));
     }

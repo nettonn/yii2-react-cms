@@ -56,7 +56,7 @@ class AdminClientHelper
             $options = $treeModelHelper->getItems();
 
 
-//            Yii::$app->cache->set($cacheKey, $options);
+            Yii::$app->cache->set($cacheKey, $options);
         }
         return $options;
     }

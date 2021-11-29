@@ -34,7 +34,7 @@ abstract class RestController extends BaseApiController
     public $isTree = false;
 
     /**
-     * @var string the model class name. This property must be set.
+     * @var ActiveRecord the model class name. This property must be set.
      */
     public $modelClass;
     /**
@@ -140,7 +140,6 @@ abstract class RestController extends BaseApiController
 
     protected function getModelQuery(): ActiveQuery
     {
-        /* @var $modelClass ActiveRecord */
         $modelClass = $this->modelClass;
 
         $query = $modelClass::find();
@@ -158,7 +157,6 @@ abstract class RestController extends BaseApiController
 
     protected function getListModelQuery(): ActiveQuery
     {
-        /* @var $modelClass ActiveRecord */
         $modelClass = $this->modelClass;
 
         $query = $modelClass::find();
@@ -176,7 +174,6 @@ abstract class RestController extends BaseApiController
 
     public function findModel($id) : ?ActiveRecord
     {
-        /* @var $modelClass ActiveRecord */
         $modelClass = $this->modelClass;
         $keys = $modelClass::primaryKey();
         if (count($keys) > 1) {
@@ -209,7 +206,6 @@ abstract class RestController extends BaseApiController
     public function prepareDataProvider()
     {
         $request = Yii::$app->getRequest();
-        /* @var $modelClass ActiveRecord */
         $modelClass = $this->modelClass;
         $modelColumns = $modelClass::getTableSchema()->getColumnNames();
 
@@ -320,7 +316,6 @@ abstract class RestController extends BaseApiController
 
     public function modelDefaults(): ActiveRecord
     {
-        /** @var ActiveRecord $modelClass */
         $modelClass = $this->modelClass;
         return $modelClass::instance();
     }

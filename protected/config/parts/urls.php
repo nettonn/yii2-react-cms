@@ -21,6 +21,17 @@ return [
     [
         'class' => 'yii\rest\UrlRule',
         'controller' => [
+            'helpers' => 'admin/helper',
+        ],
+        'prefix' => 'admin-api',
+        'patterns' => [
+            'GET,POST <action:.+>' => '<action>',
+            'OPTIONS <action:.+>' => 'options',
+        ],
+    ],
+    [
+        'class' => 'yii\rest\UrlRule',
+        'controller' => [
             'auth' => 'admin/auth',
         ],
         'prefix' => 'admin-api',

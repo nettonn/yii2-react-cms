@@ -173,11 +173,12 @@ class AuthController extends BaseApiController
         if(!$userRefreshToken) {
             $userRefreshToken = new UserRefreshToken([
                 'user_id' => $user->id,
-                'token' => $refreshToken,
                 'ip' => $request->userIP,
                 'user_agent' => $request->userAgent,
             ]);
         }
+
+        $userRefreshToken->token = $refreshToken;
 
         if (!$userRefreshToken->save()) {
             throw new ServerErrorHttpException('Ошибка сохранения refresh token: '. $userRefreshToken->getErrorSummary(true));

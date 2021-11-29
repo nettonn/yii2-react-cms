@@ -9,6 +9,7 @@ import { RouteNames } from "../../routes";
 import { IPost, IPostModelOptions } from "../../models/IPost";
 import FileUpload from "../../components/crud/form/FileUpload/FileUpload";
 import { postService } from "../../api/PostService";
+import useGenerateAlias from "../../hooks/generateAlias.hook";
 
 const modelRoutes = RouteNames.post;
 
@@ -17,13 +18,19 @@ const PostPage: FC = () => {
 
   const modelForm = useModelForm<IPost, IPostModelOptions>(id, postService);
 
+  const [onNameFieldChange, onAliasFieldChange] = useGenerateAlias(
+    modelForm.form,
+    "name",
+    "alias"
+  );
+
   const formContent = (initData: IPost, modelOptions: IPostModelOptions) => (
     <Tabs type="card">
       <Tabs.TabPane tab="Общее" key="common">
         <Row gutter={15}>
           <Col span={24} md={12}>
             <Form.Item label="Название" name="name" rules={[rules.required()]}>
-              <Input />
+              <Input onChange={(e) => onNameFieldChange(e.target.value)} />
             </Form.Item>
           </Col>
           <Col span={24} md={12}>
@@ -32,7 +39,7 @@ const PostPage: FC = () => {
               name="alias"
               rules={[rules.required()]}
             >
-              <Input />
+              <Input onChange={(e) => onAliasFieldChange(e.target.value)} />
             </Form.Item>
           </Col>
         </Row>

@@ -10,6 +10,7 @@ import { IPage, IPageModelOptions } from "../../models/IPage";
 import FileUpload from "../../components/crud/form/FileUpload/FileUpload";
 import { pageService } from "../../api/PageService";
 import CkeditorInput from "../../components/crud/form/CkeditorInput/CkeditorInput";
+import useGenerateAlias from "../../hooks/generateAlias.hook";
 
 const modelRoutes = RouteNames.page;
 
@@ -18,13 +19,19 @@ const Page: FC = () => {
 
   const modelForm = useModelForm<IPage, IPageModelOptions>(id, pageService);
 
+  const [onNameFieldChange, onAliasFieldChange] = useGenerateAlias(
+    modelForm.form,
+    "name",
+    "alias"
+  );
+
   const formContent = (initData: IPage, modelOptions: IPageModelOptions) => (
     <Tabs type="card">
       <Tabs.TabPane tab="Общее" key="common">
         <Row gutter={15}>
           <Col span={24} md={12}>
             <Form.Item label="Название" name="name" rules={[rules.required()]}>
-              <Input />
+              <Input onChange={(e) => onNameFieldChange(e.target.value)} />
             </Form.Item>
           </Col>
           <Col span={24} md={12}>
@@ -33,7 +40,7 @@ const Page: FC = () => {
               name="alias"
               rules={[rules.required()]}
             >
-              <Input />
+              <Input onChange={(e) => onAliasFieldChange(e.target.value)} />
             </Form.Item>
           </Col>
         </Row>
