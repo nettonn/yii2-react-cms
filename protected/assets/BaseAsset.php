@@ -48,6 +48,9 @@ class BaseAsset extends AssetBundle
 
         $filename = $basePath.DIRECTORY_SEPARATOR.$file;
 
+        if(!file_exists($filename))
+            return $file;
+
         $time = filemtime($filename);
 
         $pathInfo = pathinfo($filename);
