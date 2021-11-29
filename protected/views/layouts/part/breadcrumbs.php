@@ -1,3 +1,6 @@
+<?php
+/* @var $this app\components\View */
+?>
 <?php if ($this->breadcrumbs): ?>
     <div class="container">
         <div class="breadcrumbs">

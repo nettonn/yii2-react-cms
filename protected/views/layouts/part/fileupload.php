@@ -1,8 +1,11 @@
+<?php
+/* @var $this app\components\View */
+?>
 <div class="field fileupload" data-url="<?= yii\helpers\Url::to(['/ajax/file-upload-images']) ?>">
     <div class="row fileupload-list">
         <div class="col new-image item no-images" data-short-classes="col-md-2 col-3">
             <div class="inner">
-                <img src="/media/img/1x1-00000000.png" alt="Плейсхолдер для изображения 1х1">
+                <img src="/assets/img/1x1-00000000.png" alt="Плейсхолдер для изображения 1х1">
                 <div class="placeholder">
                     <span class="add">+</span>
                     <span class="add only-new">Добавить фото</span>

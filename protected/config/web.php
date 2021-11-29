@@ -19,6 +19,9 @@ $config = [
     'components' => [
         'authManager' => require(__DIR__ . '/parts/authManager.php'),
         'formatter' => require(__DIR__ . '/parts/formatter.php'),
+        'assetManager' => [
+            'forceCopy' => DEV,
+        ],
         'view' => [
             'class'=>'app\components\View',
         ],

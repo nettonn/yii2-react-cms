@@ -1,12 +1,12 @@
 <?php
 
-/* @var $this \yii\web\View */
+/* @var $this app\components\View */
 /* @var $content string */
 
-use app\assets\AppAsset;
+use app\assets\SiteAsset;
 use yii\helpers\Html;
 
-//AppAsset::register($this);
+SiteAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -35,13 +35,13 @@ use yii\helpers\Html;
 ">
 <?php $this->beginBody() ?>
 
-<?= $this->render('//layouts/part/header') ?>
+<?= $this->render('part/header') ?>
 
 <main role="main">
     <?= $content ?>
 </main>
 
-<?= $this->render('//layouts/part/footer') ?>
+<?= $this->render('part/footer') ?>
 
 <?= chunk_get('counters') ?>
 

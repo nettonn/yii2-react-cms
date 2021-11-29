@@ -1,3 +1,6 @@
+<?php
+/* @var $this app\components\View */
+?>
 <div style="display: none;">
     <form id="feedback-form" action="<?= yii\helpers\Url::to(['/ajax/feedback']) ?>"  method="post" class="forms ajax-form popup-form">
         <div class="title" data-default="Связаться с нами"></div>

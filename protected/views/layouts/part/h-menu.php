@@ -1,3 +1,6 @@
+<?php
+/* @var $this app\components\View */
+?>
 <a class="hamburger open-menu-button" href="#header-menu">
     <?= file_get_contents(DOCROOT.'/media/img/burger.svg') ?>
 </a>

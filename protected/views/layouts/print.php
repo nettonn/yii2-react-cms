@@ -1,3 +1,7 @@
+<?php
+/* @var $this app\components\View */
+/* @var $content string */
+?>
 <html>
 <head>
     <meta charset="<?= app()->charset ?>"/>
