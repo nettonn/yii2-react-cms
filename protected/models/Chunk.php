@@ -31,7 +31,7 @@ class Chunk extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%chunk}}';
     }
@@ -39,7 +39,7 @@ class Chunk extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['name', 'type'], 'required'],
@@ -52,7 +52,7 @@ class Chunk extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -65,7 +65,7 @@ class Chunk extends ActiveRecord
         ];
     }
 
-    public function fields()
+    public function fields(): array
     {
         $fields = parent::fields();
         $fields['type_text'] = function ($model) {
@@ -77,7 +77,7 @@ class Chunk extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'TimestampBehavior' => [

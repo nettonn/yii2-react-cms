@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { routeIcons } from "../../routes";
 
 interface RouteIconProps {
-  route: string;
+  route: keyof typeof routeIcons;
 }
 
 const RouteIcon: FC<RouteIconProps> = ({ route }) => {

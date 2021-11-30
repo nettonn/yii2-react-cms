@@ -3,6 +3,7 @@
 use app\behaviors\TimestampBehavior;
 use app\behaviors\TreeBehavior;
 use app\models\base\ActiveRecord;
+use app\models\query\ActiveQuery;
 use nettonn\yii2filestorage\behaviors\ContentImagesBehavior;
 use nettonn\yii2filestorage\behaviors\FileBehavior;
 use yii\helpers\Url;
@@ -42,7 +43,7 @@ class Seo extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%seo}}';
     }
@@ -50,7 +51,7 @@ class Seo extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['name', 'url'], 'required'],
@@ -66,7 +67,7 @@ class Seo extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -96,12 +97,12 @@ class Seo extends ActiveRecord
         return $fields;
     }
 
-    public function getParent()
+    public function getParent(): ActiveQuery
     {
         return $this->hasOne(self::class, ['id' => 'parent_id']);
     }
 
-    public function getChildren()
+    public function getChildren(): ActiveQuery
     {
         return $this->hasMany(self::class, ['parent_id'=>'id']);
     }
@@ -109,7 +110,7 @@ class Seo extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'TimestampBehavior' => [
@@ -150,18 +151,21 @@ class Seo extends ActiveRecord
         parent::init();
     }
 
-    public function beforeSave($insert)
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert): bool
     {
         $this->url = $this->filterUrl($this->url);
         return parent::beforeSave($insert);
     }
 
-    public function getUrl($scheme = false)
+    public function getUrl($scheme = false): string
     {
         return Url::to($this->url, $scheme);
     }
 
-    protected function filterUrl($url)
+    protected function filterUrl($url): string
     {
         $url = urldecode($url);
         $url = '/'.ltrim($url, '/');

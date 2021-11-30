@@ -3,13 +3,15 @@
 use app\models\query\ActiveQuery;
 use Yii;
 
+/**
+ * @method ActiveQuery hasMany($class, array $link) see [[BaseActiveRecord::hasMany()]] for more info
+ * @method ActiveQuery hasOne($class, array $link) see [[BaseActiveRecord::hasOne()]] for more info
+ */
 abstract class ActiveRecord extends \yii\db\ActiveRecord
 {
     public $flushCache = true;
 
     public static $flushCacheGlobal = true;
-
-    protected static $softDeleteAttribute = 'is_deleted';
 
     public function fields()
     {
@@ -51,7 +53,7 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord
             Yii::$app->getCache()->flush();
     }
 
-    public static function find()
+    public static function find(): ActiveQuery
     {
         return new ActiveQuery(get_called_class());
     }

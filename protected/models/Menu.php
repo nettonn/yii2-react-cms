@@ -4,7 +4,7 @@ namespace app\models;
 
 use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
-use Yii;
+use app\models\query\ActiveQuery;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -33,7 +33,7 @@ class Menu extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%menu}}';
     }
@@ -41,7 +41,7 @@ class Menu extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['name', 'key'], 'required'],
@@ -53,7 +53,7 @@ class Menu extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -66,12 +66,7 @@ class Menu extends ActiveRecord
         ];
     }
 
-    /**
-     * Gets query for [[MenuItems]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getMenuItems()
+    public function getMenuItems(): ActiveQuery
     {
         return $this->hasMany(MenuItem::class, ['menu_id' => 'id']);
     }
@@ -79,7 +74,7 @@ class Menu extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'TimestampBehavior' => [

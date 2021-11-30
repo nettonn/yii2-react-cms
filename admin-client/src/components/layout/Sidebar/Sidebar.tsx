@@ -8,18 +8,26 @@ import { useAppActions } from "../../../hooks/redux";
 import { authActions } from "../../../store/reducers/auth";
 import { MenuClickEventHandler } from "rc-menu/lib/interface";
 import { LogoutOutlined } from "@ant-design/icons";
+import { useLocalStorage } from "usehooks-ts";
 
 interface IItem {
   title: string;
-  route: string;
+  key?: string;
+  route?: string;
+  hideIcon?: boolean;
   icon?: React.ReactNode;
   onClick?: MenuClickEventHandler;
+  children?: IItem[];
 }
 
 const Sidebar: FC = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>();
   const { logout } = useAppActions(authActions);
   const { pathname } = useLocation();
+  const [openKeys, setOpenKeys] = useLocalStorage<string[]>(
+    `admin-sidebar-open-keys`,
+    []
+  );
 
   useEffect(() => {
     for (const route of [
@@ -67,41 +75,104 @@ const Sidebar: FC = () => {
       title: "Меню",
     },
     {
-      route: RouteNames.redirect.index,
-      title: "Редиректы",
-    },
-    {
       route: RouteNames.seo.index,
       title: "SEO",
     },
     {
-      route: RouteNames.setting.index,
-      title: "Настройки",
-    },
-    {
-      route: RouteNames.user.index,
-      title: "Пользователи",
+      key: "service",
+      title: "Сервис",
+      icon: <RouteIcon route={RouteNames.setting.index} />,
+      children: [
+        {
+          hideIcon: true,
+          route: RouteNames.redirect.index,
+          title: "Редиректы",
+        },
+        {
+          hideIcon: true,
+          route: RouteNames.user.index,
+          title: "Пользователи",
+        },
+        {
+          hideIcon: true,
+          route: RouteNames.setting.index,
+          title: "Настройки",
+        },
+      ],
     },
   ];
+
+  const subMenuClickHandler = (e: any) => {
+    if (openKeys.find((i) => i === e.key)) {
+      setOpenKeys((prev) => prev.filter((i) => i !== e.key));
+    } else {
+      setOpenKeys((prev) => [...prev, e.key]);
+    }
+  };
+
+  const getMenuItemIcon = (menuItem: IItem) => {
+    if (menuItem.hideIcon) return null;
+
+    if (menuItem.icon) {
+      return menuItem.icon;
+    }
+    if (menuItem.route) {
+      return <RouteIcon route={menuItem.route} />;
+    }
+  };
+
+  const getMenuItemText = (menuItem: IItem) => {
+    if (menuItem.route)
+      return <Link to={menuItem.route}>{menuItem.title}</Link>;
+    return menuItem.title;
+  };
+
+  const getMenuItemKey = (menuItem: IItem) => {
+    if (menuItem.route) return menuItem.route;
+    if (menuItem.key) return menuItem.key;
+    return menuItem.title;
+  };
+
+  const renderMenuItem = (menuItem: IItem | ReactElement) => {
+    if (React.isValidElement(menuItem)) {
+      return menuItem;
+    }
+
+    if (menuItem.children && menuItem.children.length) {
+      return (
+        <Menu.SubMenu
+          key={getMenuItemKey(menuItem)}
+          icon={getMenuItemIcon(menuItem)}
+          title={menuItem.title}
+          onTitleClick={subMenuClickHandler}
+        >
+          {menuItem.children.map((child) => renderMenuItem(child))}
+        </Menu.SubMenu>
+      );
+    }
+
+    return (
+      <Menu.Item
+        key={getMenuItemKey(menuItem)}
+        icon={getMenuItemIcon(menuItem)}
+        onClick={menuItem.onClick}
+      >
+        {getMenuItemText(menuItem)}
+      </Menu.Item>
+    );
+  };
 
   return (
     <Layout.Sider className="app-sidebar" breakpoint="lg" collapsedWidth="0">
       <div className="app-sidebar-top">
         <div className="logo">DL CMS</div>
-        <Menu theme="dark" mode="inline" selectedKeys={selectedKeys}>
-          {menuItems.map((menuItem) =>
-            React.isValidElement(menuItem) ? (
-              menuItem
-            ) : (
-              <Menu.Item
-                key={menuItem.route}
-                icon={menuItem.icon ?? <RouteIcon route={menuItem.route} />}
-                onClick={menuItem.onClick}
-              >
-                <Link to={menuItem.route}>{menuItem.title}</Link>
-              </Menu.Item>
-            )
-          )}
+        <Menu
+          theme="dark"
+          mode="inline"
+          selectedKeys={selectedKeys}
+          openKeys={openKeys}
+        >
+          {menuItems.map((menuItem) => renderMenuItem(menuItem))}
         </Menu>
       </div>
       <div className="app-sidebar-bottom">

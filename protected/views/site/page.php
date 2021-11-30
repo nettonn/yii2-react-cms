@@ -1,9 +1,9 @@
 <?php
+/* @var $this app\components\View */
+/* @var $model app\models\Page */
+
 seo()->model = $model;
 $this->breadcrumbs = $model->treeGetBreadcrumbs();
-
-echo \app\widgets\MenuWidget::widget(['key' => 'top_menu', 'maxLevel' => 3])
-
 ?>
 
 <?= $model->content ?>

@@ -41,7 +41,7 @@ class Setting extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%setting}}';
     }
@@ -49,7 +49,7 @@ class Setting extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['name', 'key', 'type'], 'required'],
@@ -63,7 +63,7 @@ class Setting extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -78,7 +78,7 @@ class Setting extends ActiveRecord
         ];
     }
 
-    public function fields()
+    public function fields(): array
     {
         $fields = parent::fields();
 
@@ -101,7 +101,7 @@ class Setting extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'TimestampBehavior' => [
@@ -139,7 +139,7 @@ class Setting extends ActiveRecord
         return $this->{$this->getValueAttribute()};
     }
 
-    public function getValueAttribute()
+    public function getValueAttribute(): string
     {
         return $this->typeToValueOptions[$this->type];
     }

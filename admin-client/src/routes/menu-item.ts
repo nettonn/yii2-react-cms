@@ -1,6 +1,7 @@
 import React from "react";
-import { FormOutlined } from "@ant-design/icons";
+import { MenuOutlined } from "@ant-design/icons";
 import { stringReplace } from "../utils/functions";
+import { menuRouteNames } from "./menu";
 const MenuItemsPage = React.lazy(() => import("../pages/Menu/MenuItemsPage"));
 const MenuItemPage = React.lazy(() => import("../pages/Menu/MenuItemPage"));
 
@@ -31,5 +32,5 @@ export const menuItemRoutes = [
 ];
 
 export const menuItemRouteIcons = {
-  [menuItemRouteNames.index]: FormOutlined,
+  [menuRouteNames.index]: MenuOutlined,
 };

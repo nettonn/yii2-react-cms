@@ -7,9 +7,9 @@ import { ValidateErrorEntity } from "rc-field-form/lib/interface";
 import { IModel, IModelOptions } from "../types";
 import { useQuery, useMutation } from "react-query";
 import { queryClient } from "../http/query-client";
-import { useIsMounted } from "./isMounted.hook";
 import { useNavigate } from "react-router-dom";
 import { RouteNames } from "../routes";
+import { useIsMounted } from "usehooks-ts";
 
 export function useModelForm<
   T extends IModel = IModel,

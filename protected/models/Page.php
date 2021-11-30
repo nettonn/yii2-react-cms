@@ -2,6 +2,7 @@
 
 use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
+use app\models\query\ActiveQuery;
 use nettonn\yii2filestorage\behaviors\ContentImagesBehavior;
 use nettonn\yii2filestorage\behaviors\FileBehavior;
 use Yii;
@@ -48,7 +49,7 @@ class Page extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%page}}';
     }
@@ -56,7 +57,7 @@ class Page extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['name', 'alias'], 'required'],
@@ -74,7 +75,7 @@ class Page extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -99,7 +100,7 @@ class Page extends ActiveRecord
         ];
     }
 
-    public function fields()
+    public function fields(): array
     {
         $fields = parent::fields();
 
@@ -115,12 +116,13 @@ class Page extends ActiveRecord
         return $fields;
     }
 
-    public function getParent()
+
+    public function getParent(): ActiveQuery
     {
         return $this->hasOne(self::class, ['id' => 'parent_id']);
     }
 
-    public function getChildren()
+    public function getChildren(): ActiveQuery
     {
         return $this->hasMany(self::class, ['parent_id'=>'id']);
     }
@@ -128,7 +130,7 @@ class Page extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'TimestampBehavior' => [
@@ -172,14 +174,14 @@ class Page extends ActiveRecord
         parent::init();
     }
 
-    public function generateUrl()
+    public function generateUrl(): string
     {
         if(Yii::$app->settings->get('main_page_id') == $this->id)
             return Url::to(['/site/index']);
         return Url::to(['/site/page', 'path'=>$this->treeGetPath()]);
     }
 
-    public function getUrl($scheme = false)
+    public function getUrl($scheme = false): ?string
     {
         return Url::to($this->_url, $scheme);
     }

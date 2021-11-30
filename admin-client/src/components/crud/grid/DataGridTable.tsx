@@ -7,7 +7,7 @@ import React, { FC } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { IModel } from "../../../types";
 import RestService from "../../../api/RestService";
-import useLocalStorage from "../../../hooks/localStorage.hook";
+import { useLocalStorage } from "usehooks-ts";
 
 interface DataGridTableProps {
   dataGridHook: ReturnType<typeof useDataGrid>;
@@ -138,7 +138,7 @@ const DataGridTable: FC<DataGridTableProps> = ({
         expandable={{
           indentSize: 10,
           defaultExpandedRowKeys: expandedRows,
-          onExpandedRowsChange: async (rows) => {
+          onExpandedRowsChange: async (rows: any) => {
             setExpandedRows(rows);
           },
         }}

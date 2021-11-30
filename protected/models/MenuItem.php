@@ -5,7 +5,7 @@ namespace app\models;
 use app\behaviors\TimestampBehavior;
 use app\behaviors\TreeBehavior;
 use app\models\base\ActiveRecord;
-use Yii;
+use app\models\query\ActiveQuery;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -42,7 +42,7 @@ class MenuItem extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%menu_item}}';
     }
@@ -50,7 +50,7 @@ class MenuItem extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['name', 'menu_id', 'url'], 'required'],
@@ -64,7 +64,7 @@ class MenuItem extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -83,18 +83,13 @@ class MenuItem extends ActiveRecord
         ];
     }
 
-    /**
-     * Gets query for [[Menu]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getMenu()
+    public function getMenu(): ActiveQuery
     {
         return $this->hasOne(Menu::class, ['id' => 'menu_id']);
     }
 
 
-    public function fields()
+    public function fields(): array
     {
         $fields = parent::fields();
 
@@ -105,12 +100,12 @@ class MenuItem extends ActiveRecord
         return $fields;
     }
 
-    public function getParent()
+    public function getParent(): ActiveQuery
     {
         return $this->hasOne(self::class, ['id' => 'parent_id']);
     }
 
-    public function getChildren()
+    public function getChildren(): ActiveQuery
     {
         return $this->hasMany(self::class, ['parent_id'=>'id']);
     }
@@ -118,7 +113,7 @@ class MenuItem extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'TimestampBehavior' => [
@@ -146,7 +141,10 @@ class MenuItem extends ActiveRecord
         parent::init();
     }
 
-    public function beforeSave($insert)
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert): bool
     {
         if(!$this->sort && $this->menu_id) {
             $this->sort = self::find()
@@ -158,6 +156,4 @@ class MenuItem extends ActiveRecord
 
         return parent::beforeSave($insert);
     }
-
-
 }

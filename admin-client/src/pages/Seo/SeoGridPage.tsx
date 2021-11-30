@@ -38,6 +38,12 @@ const SeoGridPage: FC = () => {
       },
     },
     {
+      title: "Url",
+      dataIndex: "url",
+      sorter: true,
+      width: 120,
+    },
+    {
       title: "Создано",
       dataIndex: "created_at_date",
       key: "created_at",

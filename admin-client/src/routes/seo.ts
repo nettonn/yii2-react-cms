@@ -1,5 +1,5 @@
 import React from "react";
-import { FormOutlined } from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import { stringReplace } from "../utils/functions";
 const SeoGrid = React.lazy(() => import("../pages/Seo/SeoGridPage"));
 const Seo = React.lazy(() => import("../pages/Seo/SeoPage"));
@@ -26,5 +26,5 @@ export const seoRoutes = [
 ];
 
 export const seoRouteIcons = {
-  [seoRouteNames.index]: FormOutlined,
+  [seoRouteNames.index]: SearchOutlined,
 };

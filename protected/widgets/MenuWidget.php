@@ -8,6 +8,10 @@ use Yii;
 use yii\base\InvalidConfigException;
 use yii\helpers\Html;
 
+/**
+ * use:
+ * \app\widgets\MenuWidget::widget(['key' => 'top_menu', 'maxLevel' => 3])
+ */
 class MenuWidget extends Widget
 {
     public $items;

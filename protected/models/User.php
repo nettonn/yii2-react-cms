@@ -45,7 +45,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%user}}';
     }
@@ -53,7 +53,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
 //            ['username', 'required'],
@@ -76,7 +76,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -93,7 +93,7 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    public function fields()
+    public function fields(): array
     {
         $fields = [
             'id', 'username', 'email', 'role', 'status'
@@ -116,7 +116,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             TimestampBehavior::class,
@@ -148,12 +148,12 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $password password to validate
      * @return boolean if password provided is valid for current user
      */
-    public function validatePassword($password)
+    public function validatePassword($password): bool
     {
         return Yii::$app->getSecurity()->validatePassword($password, $this->password_hash);
     }
 
-    public function getPassword()
+    public function getPassword(): string
     {
         return '';
     }
@@ -168,12 +168,12 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password_hash = Yii::$app->getSecurity()->generatePasswordHash($password);
     }
 
-    public function getAuthKey()
+    public function getAuthKey(): string
     {
         return $this->auth_key;
     }
 
-    public function validateAuthKey($authKey)
+    public function validateAuthKey($authKey): bool
     {
         return $this->getAuthKey() === $authKey;
     }
@@ -186,28 +186,23 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->getPrimaryKey();
     }
 
-    public function afterSave($isInsert, $changedOldAttributes) {
+    /**
+     * @inheritdoc
+     */
+    public function afterSave($insert, $changedAttributes) {
         // Purge the user tokens when the password is changed
-        if (array_key_exists('password_hash', $changedOldAttributes)) {
+        if (array_key_exists('password_hash', $changedAttributes)) {
             UserRefreshToken::deleteAll(['user_id' => $this->id]);
         }
 
-        parent::afterSave($isInsert, $changedOldAttributes);
+        parent::afterSave($insert, $changedAttributes);
     }
 
-    /**
-     * @param string $username
-     * @return ActiveRecord|null
-     */
     public static function findByUsername($username)
     {
         return self::find()->where(['username' => $username])->one();
     }
 
-    /**
-     * @param string $email
-     * @return User|null
-     */
     public static function findByEmail($email)
     {
         return self::find()->where(['email' => $email])->one();
@@ -226,7 +221,7 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $token password reset token
      * @return static|null
      */
-    public static function findByPasswordResetToken($token)
+    public static function findByPasswordResetToken($token): ?static
     {
         if (!static::isPasswordResetTokenValid($token)) {
             return null;
