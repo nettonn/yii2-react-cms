@@ -75,6 +75,7 @@ const DataGridTable: FC<DataGridTableProps> = ({
     render: (_: any, record: IModel) => (
       <Space>
         {actionButtons ? actionButtons(record) : null}
+        {viewButton(record)}
         <Link to={`${pathname}/${record.id}`}>
           <EditOutlined />
         </Link>
@@ -84,7 +85,6 @@ const DataGridTable: FC<DataGridTableProps> = ({
             <DeleteOutlined />
           </a>
         </Popconfirm>
-        {viewButton(record)}
       </Space>
     ),
   };

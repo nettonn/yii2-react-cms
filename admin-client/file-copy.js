@@ -5,10 +5,6 @@ const fsExtra = require("fs-extra");
 ncp.limit = 16;
 
 const tasks = [
-  // {
-  //   src: "./node_modules/bootstrap-icons/icons",
-  //   dest: "./public/icons",
-  // },
   {
     src: "./build",
     dest: "./../public_html/admin",
