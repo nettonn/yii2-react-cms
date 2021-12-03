@@ -11,7 +11,7 @@ class EmailQueueTarget extends \yii\log\EmailTarget
      */
     public function export()
     {
-        if(!CONSOLE_APP && !NotFound::isLoggable()) {
+        if(!CONSOLE_APP /*&& !NotFound::isLoggable()*/) {
             return;
         }
 

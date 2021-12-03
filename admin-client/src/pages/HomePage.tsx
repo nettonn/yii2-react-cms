@@ -34,12 +34,16 @@ const HomePage: FC = () => {
       title: "Меню",
     },
     {
+      route: RouteNames.seo.index,
+      title: "SEO",
+    },
+    {
       route: RouteNames.redirect.index,
       title: "Редиректы",
     },
     {
-      route: RouteNames.seo.index,
-      title: "SEO",
+      route: RouteNames.version.index,
+      title: "Версии",
     },
     {
       route: RouteNames.setting.index,

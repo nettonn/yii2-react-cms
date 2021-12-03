@@ -48,6 +48,11 @@ function dd_str($var, $depth = 10, $highlight = false) {
     return yii\helpers\VarDumper::dumpAsString($var, $depth, $highlight);
 }
 
+function dd_log($var) {
+    Yii::warning(yii\helpers\VarDumper::dumpAsString($var));
+    Yii::$app->getResponse()->getHeaders()->add('X-Development-Log', true);
+}
+
 function dd_plain($var) {
     header('Content-Type: text/plain;');
     print_r($var);

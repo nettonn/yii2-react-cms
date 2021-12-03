@@ -3,6 +3,7 @@ import CONSTANTS from "./constants";
 import { AxiosRequestConfig } from "axios";
 import isEmpty from "lodash/isEmpty";
 import { FieldData } from "rc-field-form/es/interface";
+import { message } from "antd";
 const qsModule = require("qs");
 
 export function sleep(ms: number) {
@@ -153,4 +154,18 @@ export function stringReplace(
   });
 
   return string;
+}
+
+export function logMessage(link: string) {
+  message.info({
+    content: `Debug link: ${link}`,
+    duration: 5,
+    onClick: () =>
+      window.open(process.env.REACT_APP_HOST + link, "_blank")?.focus(),
+  });
+  // notification.open({
+  //   message: "Log",
+  //   description: text,
+  //   duration: 0,
+  // });
 }

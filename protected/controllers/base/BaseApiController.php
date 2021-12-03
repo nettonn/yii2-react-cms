@@ -47,7 +47,7 @@ abstract class BaseApiController extends \yii\rest\Controller
                     'Access-Control-Allow-Headers' => ['Authorization', 'Content-Type', 'Accept', 'X-Requested-With', 'Origin'],
                     'Access-Control-Allow-Credentials' => true,
                     'Access-Control-Max-Age' => 3600,
-                    'Access-Control-Expose-Headers' => ['X-Pagination-Current-Page', 'X-pagination-total-count', 'X-pagination-per-page', 'X-pagination-page-count', 'X-model-options-last-modified'],
+                    'Access-Control-Expose-Headers' => ['X-Pagination-Current-Page', 'X-Pagination-Total-count', 'X-Pagination-Per-Page', 'X-Pagination-Page-Count', 'X-Model-Options-Last-Modified', 'X-Development-Log', 'X-Debug-Link'],
                 ],
             ];
         }

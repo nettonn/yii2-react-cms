@@ -68,3 +68,8 @@ export interface IImageThumbs {
 export interface IFiltersParam {
   [key: string]: string[] | number[];
 }
+
+export interface IValueTextOption {
+  value: number;
+  text: string;
+}

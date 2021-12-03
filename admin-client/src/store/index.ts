@@ -20,6 +20,10 @@ import {
   menuItemGridActions,
   menuItemGridReducer,
 } from "./reducers/grids/menuItemGrid";
+import {
+  versionGridActions,
+  versionGridReducer,
+} from "./reducers/grids/versionGrid";
 
 const rootReducer = combineReducers({
   app: appReducer,
@@ -34,6 +38,7 @@ const rootReducer = combineReducers({
   seoGrid: seoGridReducer,
   menuGrid: menuGridReducer,
   menuItemGrid: menuItemGridReducer,
+  versionGrid: versionGridReducer,
 });
 
 export const setupStore = () => {
@@ -55,7 +60,8 @@ export type DataGridSelector =
   | "settingGrid"
   | "seoGrid"
   | "menuGrid"
-  | "menuItemGrid";
+  | "menuItemGrid"
+  | "versionGrid";
 
 export type DataGridActions =
   | typeof pageGridActions
@@ -66,4 +72,5 @@ export type DataGridActions =
   | typeof settingGridActions
   | typeof seoGridActions
   | typeof menuGridActions
-  | typeof menuItemGridActions;
+  | typeof menuItemGridActions
+  | typeof versionGridActions;

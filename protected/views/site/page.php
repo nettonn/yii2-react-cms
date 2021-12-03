@@ -4,6 +4,13 @@
 
 seo()->model = $model;
 $this->breadcrumbs = $model->treeGetBreadcrumbs();
+
+$model->name = 'test test test';
+
+dd($model->getOldAttributes());
+
+dd($model->getAttributes());
+
 ?>
 
 <?= $model->content ?>

@@ -1,6 +1,6 @@
-import { AxiosRequestConfig } from "axios";
+import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { authService } from "../api/AuthService";
-import { qs, sleep } from "../utils/functions";
+import { logMessage, qs, sleep } from "../utils/functions";
 import { $api, $apiNoAuth } from "./api";
 
 export const authRequest = (config: AxiosRequestConfig) => {
@@ -26,6 +26,17 @@ export const qsParamsSerializerRequest = (config: AxiosRequestConfig) => {
   };
 
   return config;
+};
+
+export const responseInterceptor = (response: AxiosResponse) => {
+  if (
+    process.env.NODE_ENV === "development" &&
+    response.headers["x-development-log"] &&
+    response.headers["x-debug-link"]
+  ) {
+    logMessage(response.headers["x-debug-link"]);
+  }
+  return response;
 };
 
 let isRefreshing = false;

@@ -10,9 +10,9 @@ class EmailTarget extends \yii\log\EmailTarget
      */
     public function export()
     {
-        if(!NotFound::isLoggable()) {
-            return;
-        }
+//        if(!NotFound::isLoggable()) {
+//            return;
+//        }
 
         // moved initialization of subject here because of the following issue
         // https://github.com/yiisoft/yii2/issues/1446

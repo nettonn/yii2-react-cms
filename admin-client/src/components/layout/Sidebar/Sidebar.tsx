@@ -24,10 +24,11 @@ const Sidebar: FC = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>();
   const { logout } = useAppActions(authActions);
   const { pathname } = useLocation();
-  const [openKeys, setOpenKeys] = useLocalStorage<string[]>(
+  const [storedOpenKeys, setStoredOpenKeys] = useLocalStorage<string[]>(
     `admin-sidebar-open-keys`,
     []
   );
+  const [openKeys, setOpenKeys] = useState<string[]>(storedOpenKeys);
 
   useEffect(() => {
     for (const route of [
@@ -40,6 +41,7 @@ const Sidebar: FC = () => {
       RouteNames.setting.index,
       RouteNames.seo.index,
       RouteNames.menu.index,
+      RouteNames.version.index,
     ]) {
       if (pathname.indexOf(route) === 0) {
         setSelectedKeys([route]);
@@ -90,6 +92,11 @@ const Sidebar: FC = () => {
         },
         {
           hideIcon: true,
+          route: RouteNames.version.index,
+          title: "Версии",
+        },
+        {
+          hideIcon: true,
           route: RouteNames.user.index,
           title: "Пользователи",
         },
@@ -102,12 +109,23 @@ const Sidebar: FC = () => {
     },
   ];
 
-  const subMenuClickHandler = (e: any) => {
-    if (openKeys.find((i) => i === e.key)) {
-      setOpenKeys((prev) => prev.filter((i) => i !== e.key));
+  const collapseHandler = (collapsed: boolean) => {
+    if (collapsed) {
+      setOpenKeys([]);
     } else {
-      setOpenKeys((prev) => [...prev, e.key]);
+      setOpenKeys([...storedOpenKeys]);
     }
+  };
+
+  const subMenuClickHandler = (e: any) => {
+    let newOpenKeys = [];
+    if (openKeys.find((i) => i === e.key)) {
+      newOpenKeys = openKeys.filter((i) => i !== e.key);
+    } else {
+      newOpenKeys = [...openKeys, e.key];
+    }
+    setOpenKeys([...newOpenKeys]);
+    setStoredOpenKeys([...newOpenKeys]);
   };
 
   const getMenuItemIcon = (menuItem: IItem) => {
@@ -163,7 +181,12 @@ const Sidebar: FC = () => {
   };
 
   return (
-    <Layout.Sider className="app-sidebar" breakpoint="lg" collapsedWidth="0">
+    <Layout.Sider
+      className="app-sidebar"
+      breakpoint="lg"
+      collapsedWidth="0"
+      onCollapse={collapseHandler}
+    >
       <div className="app-sidebar-top">
         <div className="logo">DL CMS</div>
         <Menu

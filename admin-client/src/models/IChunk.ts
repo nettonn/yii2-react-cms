@@ -1,4 +1,4 @@
-import { IModel, IModelOptions } from "../types";
+import { IModel, IModelOptions, IValueTextOption } from "../types";
 
 export const CHUNK_TYPE_TEXT = 1;
 export const CHUNK_TYPE_HTML = 2;
@@ -11,5 +11,5 @@ export interface IChunk extends IModel {
 }
 
 export interface IChunkModelOptions extends IModelOptions {
-  type: { value: number; text: string }[];
+  type: IValueTextOption[];
 }

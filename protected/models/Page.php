@@ -1,6 +1,7 @@
 <?php namespace app\models;
 
 use app\behaviors\TimestampBehavior;
+use app\behaviors\VersionBehavior;
 use app\models\base\ActiveRecord;
 use app\models\query\ActiveQuery;
 use nettonn\yii2filestorage\behaviors\ContentImagesBehavior;
@@ -153,6 +154,13 @@ class Page extends ActiveRecord
                     'content_images' => [
                         'multiple' => true,
                     ],
+                ]
+            ],
+            'VersionBehavior' => [
+                'class' => VersionBehavior::class,
+                'attributes' => [
+                    'name', 'alias', 'parent_id', 'description', 'content', 'layout', 'status',
+                    'seo_title', 'seo_h1', 'seo_description', 'seo_keywords',
                 ]
             ],
             'SoftDeleteBehavior' => [

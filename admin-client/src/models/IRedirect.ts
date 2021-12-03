@@ -1,4 +1,4 @@
-import { IModel, IModelOptions } from "../types";
+import { IModel, IModelOptions, IValueTextOption } from "../types";
 
 export interface IRedirect extends IModel {
   from: string;
@@ -9,5 +9,5 @@ export interface IRedirect extends IModel {
 }
 
 export interface IRedirectModelOptions extends IModelOptions {
-  status: { value: string | number; text: string }[];
+  status: IValueTextOption[];
 }

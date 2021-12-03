@@ -1,4 +1,4 @@
-import { IModel, IModelOptions } from "../types";
+import { IModel, IModelOptions, IValueTextOption } from "../types";
 
 export interface IMenuItem extends IModel {
   name: string;
@@ -19,6 +19,6 @@ interface ParentOption {
 }
 
 export interface IMenuItemModelOptions extends IModelOptions {
-  status: { value: string | number; text: string }[];
+  status: IValueTextOption[];
   parent: ParentOption[];
 }

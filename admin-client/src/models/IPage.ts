@@ -1,4 +1,4 @@
-import { IModel, IModelOptions } from "../types";
+import { IModel, IModelOptions, IValueTextOption } from "../types";
 import { IFileModel } from "./IFileModel";
 
 export interface IPage extends IModel {
@@ -24,6 +24,6 @@ interface ParentOption {
 }
 
 export interface IPageModelOptions extends IModelOptions {
-  status: { value: string | number; text: string }[];
+  status: IValueTextOption[];
   parent: ParentOption[];
 }

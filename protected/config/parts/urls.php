@@ -15,7 +15,8 @@ return [
             'settings' => 'admin/setting',
             'seo' => 'admin/seo',
             'menu' => 'admin/menu',
-            'menu-items' => 'admin/menu-items',
+            'menu-items' => 'admin/menu-item',
+            'versions' => 'admin/version',
         ]
     ],
     [
@@ -67,8 +68,9 @@ return [
             'redirects' => 'admin/redirect',
             'settings' => 'admin/setting',
             'seo' => 'admin/seo',
-            'menu-items' => 'admin/menu-item',
             'menu' => 'admin/menu',
+            'menu-items' => 'admin/menu-item',
+            'versions' => 'admin/version',
         ],
         'prefix' => 'admin-api',
         'extraPatterns' => [

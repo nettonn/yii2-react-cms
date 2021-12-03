@@ -1,4 +1,4 @@
-import { IModel, IModelOptions } from "../types";
+import { IModel, IModelOptions, IValueTextOption } from "../types";
 
 export interface IUser extends IModel {
   email: string;
@@ -7,6 +7,6 @@ export interface IUser extends IModel {
 }
 
 export interface IUserModelOptions extends IModelOptions {
-  status: { value: string | number; text: string }[];
-  role: { value: string | number; text: string }[];
+  status: IValueTextOption[];
+  role: IValueTextOption[];
 }
