@@ -17,7 +17,9 @@ const modelRoutes = RouteNames.page;
 const Page: FC = () => {
   const { id } = useParams();
 
-  const modelForm = useModelForm<IPage, IPageModelOptions>(id, pageService);
+  const modelForm = useModelForm<IPage, IPageModelOptions>(id, pageService, [
+    "content",
+  ]);
 
   const [onNameFieldChange, onAliasFieldChange] = useGenerateAlias(
     modelForm.form,

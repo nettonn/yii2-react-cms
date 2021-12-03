@@ -60,7 +60,6 @@ const CkeditorInput: FC<CkeditorInputProps> = ({ value, onChange }) => {
       onChange={(event: any, editor: any) => {
         const data: string = editor.getData();
         onChange && onChange(data);
-        // console.log({ event, editor, data });
       }}
       // onBlur={(event, editor) => {
       //   console.log("Blur.", editor);

@@ -1,6 +1,7 @@
 <?php namespace app\models;
 
 use app\behaviors\TimestampBehavior;
+use app\behaviors\VersionBehavior;
 use app\models\base\ActiveRecord;
 use nettonn\yii2filestorage\behaviors\ContentImagesBehavior;
 use nettonn\yii2filestorage\behaviors\FileBehavior;
@@ -83,12 +84,6 @@ class Chunk extends ActiveRecord
             'TimestampBehavior' => [
                 'class' => TimestampBehavior::class,
             ],
-            'SoftDeleteBehavior' => [
-                'class' => SoftDeleteBehavior::class,
-                'softDeleteAttributeValues' => [
-                    'is_deleted' => true
-                ],
-            ],
             'ContentImagesBehavior' => [
                 'class' => ContentImagesBehavior::class,
                 'imagesAttribute' => 'content_images',
@@ -101,6 +96,18 @@ class Chunk extends ActiveRecord
                         'multiple' => true,
                     ],
                 ]
+            ],
+            'VersionBehavior' => [
+                'class' => VersionBehavior::class,
+                'attributes' => [
+                    'name', 'key', 'type', 'content',
+                ]
+            ],
+            'SoftDeleteBehavior' => [
+                'class' => SoftDeleteBehavior::class,
+                'softDeleteAttributeValues' => [
+                    'is_deleted' => true
+                ],
             ],
         ];
     }

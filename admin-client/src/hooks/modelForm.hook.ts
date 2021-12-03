@@ -10,11 +10,16 @@ import { queryClient } from "../http/query-client";
 import { useNavigate } from "react-router-dom";
 import { RouteNames } from "../routes";
 import { useIsMounted } from "usehooks-ts";
+const pretty = require("pretty");
 
 export function useModelForm<
   T extends IModel = IModel,
   M extends IModelOptions = IModelOptions
->(id: number | string | undefined, modelService: RestService) {
+>(
+  id: number | string | undefined,
+  modelService: RestService,
+  makePrettyFields: (keyof T)[] = []
+) {
   const isMounted = useIsMounted();
   const [isInit, setIsInit] = useState(false);
   const [form] = Form.useForm();
@@ -113,6 +118,14 @@ export function useModelForm<
   } = useMutation(async (values: T) => {
     setValidationErrors(null);
     setIsTouchedAfterSubmit(false);
+
+    if (makePrettyFields && makePrettyFields.length) {
+      for (let field of makePrettyFields) {
+        if (values[field]) {
+          values[field] = pretty(values[field]);
+        }
+      }
+    }
 
     const result = await (isUpdateForm
       ? modelService.update<T>(id, values)

@@ -6,11 +6,13 @@ import { RouteNames } from "../../routes";
 import { versionService } from "../../api/VersionService";
 import {
   IVersion,
+  IVersionAttributesCompare,
   IVersionModelOptions,
   VERSION_ACTION_UPDATE,
 } from "../../models/IVersion";
 import { useModelView } from "../../hooks/modelView.hook";
 import "./VersionPage.css";
+import { ColumnsType } from "antd/lib/table/Table";
 
 const modelRoutes = RouteNames.version;
 
@@ -26,7 +28,7 @@ const VersionPage: FC = () => {
 
   if (!data) return null;
 
-  const columns = [
+  const columns: ColumnsType<IVersionAttributesCompare> = [
     {
       title: "Поле",
       dataIndex: "label",
@@ -34,6 +36,9 @@ const VersionPage: FC = () => {
     {
       title: "Данные версии",
       dataIndex: "version_value",
+      render: (value) => {
+        return <pre>{value}</pre>;
+      },
     },
   ];
 
@@ -41,6 +46,9 @@ const VersionPage: FC = () => {
     columns.push({
       title: "Текущая версия",
       dataIndex: "current_value",
+      render: (value) => {
+        return <pre>{value}</pre>;
+      },
     });
   }
 
