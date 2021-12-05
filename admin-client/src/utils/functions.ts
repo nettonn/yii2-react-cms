@@ -4,7 +4,7 @@ import { AxiosRequestConfig } from "axios";
 import isEmpty from "lodash/isEmpty";
 import { FieldData } from "rc-field-form/es/interface";
 import { message } from "antd";
-const qsModule = require("qs");
+import { queryStringStringify } from "./qs";
 
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -89,8 +89,6 @@ export function prepareAntdValidationErrors(
   return fields;
 }
 
-export const qs = qsModule;
-
 export function sortObjectByIds<T extends { id: ID }, ID = number>(
   ids: ID[],
   object: T[]
@@ -156,16 +154,32 @@ export function stringReplace(
   return string;
 }
 
+export function openNewWindow(url: string) {
+  window.open(url, "_blank")?.focus();
+}
+
 export function logMessage(link: string) {
   message.info({
     content: `Debug link: ${link}`,
     duration: 5,
-    onClick: () =>
-      window.open(process.env.REACT_APP_HOST + link, "_blank")?.focus(),
+    onClick: () => openNewWindow(process.env.REACT_APP_HOST + link),
   });
-  // notification.open({
-  //   message: "Log",
-  //   description: text,
-  //   duration: 0,
-  // });
+}
+
+export function withoutBaseUrl(url: string) {
+  const baseurl = process.env.PUBLIC_URL;
+  if (baseurl.length === 0 || url.length === 0 || url.indexOf(baseurl) !== 0) {
+    return url;
+  }
+  return url.substr(baseurl.length);
+}
+
+export function buildUrl(path: string, params?: {}) {
+  if (params) {
+    const queryString = queryStringStringify(params);
+    if (queryString) {
+      path = path + "?" + queryString;
+    }
+  }
+  return path;
 }

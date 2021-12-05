@@ -55,6 +55,7 @@ export interface IModelRouteNames {
 export interface IModel {
   id: number;
   view_url?: string;
+  versions_url?: string;
 }
 
 export interface IModelOptions {}
@@ -70,6 +71,6 @@ export interface IFiltersParam {
 }
 
 export interface IValueTextOption {
-  value: number;
+  value: number | string;
   text: string;
 }

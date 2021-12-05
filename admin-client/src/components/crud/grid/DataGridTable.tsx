@@ -95,9 +95,8 @@ const DataGridTable: FC<DataGridTableProps> = ({
     if (sortField && sortDirection && sortField === columnKey) {
       column.sortOrder = sortDirection;
     }
-    if (filters && filters[columnKey]) {
-      column.filteredValue = filters[columnKey];
-    }
+    column.filteredValue =
+      filters && filters[columnKey] ? filters[columnKey] : null;
 
     column.shouldCellUpdate = (record: any, prevRecord: any) => {
       if (index === 0) return true;

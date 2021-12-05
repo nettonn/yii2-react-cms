@@ -8,6 +8,8 @@ setlocale(LC_ALL, 'ru_RU');
 
 mb_internal_encoding('UTF-8');
 
+defined('ADMIN_URL_PREFIX') || define('ADMIN_URL_PREFIX', '/admin');
+
 defined('DEV_IPS') or define('DEV_IPS', $envars['DEV_IPS']);
 
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);
@@ -27,11 +29,6 @@ if(defined('CONSOLE_APP') && CONSOLE_APP) {
     defined('DOCROOT') || define('DOCROOT', $_SERVER['DOCUMENT_ROOT']);
     defined('DOMAIN') || define('DOMAIN', $_SERVER['SERVER_NAME']);
     defined('HOST') || define('HOST', DOMAIN . ($_SERVER['SERVER_PORT'] != 80 ? ':' . $_SERVER['SERVER_PORT'] : ''));
-    defined('IS_ADMIN_ROUTE') || define('IS_ADMIN_ROUTE',
-        stripos($_SERVER['REQUEST_URI'], '/admin') === 0
-        || stripos($_SERVER['REQUEST_URI'], '/gii') === 0
-        || stripos($_SERVER['REQUEST_URI'], '/debug') === 0
-    );
     defined('HOST_INFO') || define('HOST_INFO',
         (
             (

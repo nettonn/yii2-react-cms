@@ -5,6 +5,7 @@ use Yii;
 use yii\base\Behavior;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
+use yii\helpers\Url;
 use yii\helpers\VarDumper;
 
 /**
@@ -17,6 +18,14 @@ class VersionBehavior extends Behavior
     public $attributes;
 
     public $validateModel = false;
+
+    /**
+     * attribute options in model field $attributeOptions
+     * @var bool
+     */
+    public $useOptions = true;
+
+    public $optionsSuffix = 'Options';
 
     protected $_oldAttributes;
     protected $_attributes;
@@ -82,6 +91,23 @@ class VersionBehavior extends Behavior
         $this->saveVersion(Version::ACTION_DELETE);
     }
 
+    public function versionGetAttributesOptions()
+    {
+        if(!$this->useOptions)
+            return [];
+
+        $result = [];
+        $owner = $this->owner;
+        foreach($this->attributes as $attribute) {
+            $attributeOptionsProp = $attribute.$this->optionsSuffix;
+            if(!$owner->hasProperty($attributeOptionsProp))
+                continue;
+
+            $result[$attribute] = $owner->{$attributeOptionsProp};
+        }
+        return $result;
+    }
+
     public function versionGetWatchedAttributes($old = false): array
     {
         $result = [];
@@ -93,6 +119,17 @@ class VersionBehavior extends Behavior
             $result[$attribute] = $old ? $owner->getOldAttribute($attribute) : $owner->getAttribute($attribute);
         }
         return $result;
+    }
+
+    public function versionGetVersionsUrl()
+    {
+        $owner = $this->owner;
+        return Version::instance()->getAdminIndexUrl([
+            'filters' => [
+                'link_type' => get_class($owner),
+                'link_id' =>  $owner->getPrimaryKey(),
+            ]
+        ]);
     }
 
     protected function isChanged()

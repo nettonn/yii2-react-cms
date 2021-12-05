@@ -1,7 +1,8 @@
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { authService } from "../api/AuthService";
-import { logMessage, qs, sleep } from "../utils/functions";
+import { logMessage, sleep } from "../utils/functions";
 import { $api, $apiNoAuth } from "./api";
+import { queryStringStringify } from "../utils/qs";
 
 export const authRequest = (config: AxiosRequestConfig) => {
   if (config.headers) {
@@ -19,10 +20,7 @@ export const acceptJsonRequest = (config: AxiosRequestConfig) => {
 
 export const qsParamsSerializerRequest = (config: AxiosRequestConfig) => {
   config.paramsSerializer = (params: {}) => {
-    return qs.stringify(params, {
-      encodeValuesOnly: true,
-      arrayFormat: "comma",
-    });
+    return queryStringStringify(params);
   };
 
   return config;

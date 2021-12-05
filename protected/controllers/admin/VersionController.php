@@ -22,8 +22,13 @@ class VersionController extends RestController
 
     public function modelOptions(): array
     {
+        $linkTypeOptions = Version::find()->select('link_type')->indexBy('link_type')->column();
+        $linkIdOptions = Version::find()->select('DISTINCT(link_id)')->indexBy('link_id')->column();
+
         return [
             'action' => AdminClientHelper::getOptionsFromKeyValue( Version::instance()->actionOptions),
+            'link_type' => AdminClientHelper::getOptionsFromKeyValue($linkTypeOptions),
+            'link_id' => AdminClientHelper::getOptionsFromKeyValue($linkIdOptions),
         ];
     }
 

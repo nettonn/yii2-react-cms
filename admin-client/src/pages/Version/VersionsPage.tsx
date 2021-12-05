@@ -41,12 +41,14 @@ const VersionsPage: FC = () => {
       title: "Модель",
       dataIndex: "link_type",
       sorter: true,
+      filters: modelOptions.link_type,
     },
     {
       title: "ID модели",
       dataIndex: "link_id",
       sorter: true,
       width: 120,
+      filters: modelOptions.link_id,
     },
     {
       title: "Действие",

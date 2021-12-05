@@ -5,6 +5,7 @@ namespace app\models;
 use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
 use Yii;
+use yii\helpers\StringHelper;
 
 /**
  * This is the model class for table "version".
@@ -31,7 +32,7 @@ class Version extends ActiveRecord
 
     public $flushCache = false;
 
-    public $version_attributes_array;
+    public $version_attributes_array = [];
 
     /**
      * {@inheritdoc}
@@ -100,9 +101,15 @@ class Version extends ActiveRecord
             return null;
         };
 
+        $fields['owner_update_url'] = function($model) {
+            if($owner = $model->getOwner()) {
+                return $owner->getAdminUpdateUrl();
+            }
+            return null;
+        };
+
         return $fields;
     }
-
 
     public function afterFind()
     {
@@ -133,32 +140,35 @@ class Version extends ActiveRecord
 
     public function getAttributesCompare()
     {
-        $owner = $this->getOwner();
-
-        $currentAttributes =
-            $this->action === self::ACTION_UPDATE
-            && $owner
-            && $owner->hasMethod('versionGetWatchedAttributes')
-            ? $owner->versionGetWatchedAttributes()
-            : [];
-
-
         $versionAttributes = $this->version_attributes_array;
 
-        if(!$versionAttributes) {
-            return [];
+        $owner = $this->getOwner();
+
+        $currentAttributes = $attributesOptions = [];
+
+        if($owner) {
+            if($this->action === self::ACTION_UPDATE && $owner->hasMethod('versionGetWatchedAttributes')) {
+                $currentAttributes = $owner->versionGetWatchedAttributes();
+            }
+            if($owner->hasMethod('versionGetAttributesOptions')) {
+                $attributesOptions = $owner->versionGetAttributesOptions();
+            }
         }
 
         $result = [];
-
         foreach($versionAttributes as $attribute => $value) {
+            $options = $attributesOptions[$attribute] ?? false;
             $item = [
                 'attribute' => $attribute,
                 'label' => $owner ? $owner->getAttributeLabel($attribute) : $attribute,
-                'version_value' => $value,
             ];
+
+            $item['version_value'] = $options[$value] ?? $value;
+
             if(isset($currentAttributes[$attribute])) {
-                $item['current_value'] = $currentAttributes[$attribute];
+                $currentValue = $currentAttributes[$attribute];
+
+                $item['current_value'] = $options[$currentValue] ?? $currentValue;
                 $item['is_diff'] = $currentAttributes[$attribute] != $value;
             }
             $result[] = $item;

@@ -13,14 +13,17 @@ export interface IVersionAttributesCompare {
 
 export interface IVersion extends IModel {
   name: string;
-  type: number;
-  content: string;
   attributes: { [key: string]: string | number | boolean };
   attributes_compare: IVersionAttributesCompare[];
   action: typeof VERSION_ACTION_UPDATE | typeof VERSION_ACTION_DELETE;
   action_text: string;
+  link_type: string;
+  link_id: number;
+  owner_update_url?: string;
 }
 
 export interface IVersionModelOptions extends IModelOptions {
   action: IValueTextOption[];
+  link_type: IValueTextOption[];
+  link_id: IValueTextOption[];
 }

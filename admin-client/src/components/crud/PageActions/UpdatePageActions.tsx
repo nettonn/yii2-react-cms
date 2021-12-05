@@ -4,6 +4,7 @@ import { ButtonType } from "antd/lib/button/button";
 import { CheckOutlined } from "@ant-design/icons";
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { withoutBaseUrl } from "../../../utils/functions";
 
 interface UpdatePageActionsProps {
   save(): void;
@@ -16,6 +17,7 @@ interface UpdatePageActionsProps {
   updateRoute?: string;
   hasViewUrl?: boolean;
   viewUrl?: string;
+  versionsUrl?: string;
 }
 
 interface ButtonConfig {
@@ -38,6 +40,7 @@ const UpdatePageActions: FC<UpdatePageActionsProps> = ({
   updateRoute,
   hasViewUrl,
   viewUrl,
+  versionsUrl,
 }) => {
   const [lastClickKey, setLastClickKey] = useState<string | null>(null);
   const [isRedirectNeed, setIsRedirectNeed] = useState(false);
@@ -71,6 +74,13 @@ const UpdatePageActions: FC<UpdatePageActionsProps> = ({
         label: "Сохранить и посмотреть",
         redirect: viewUrl,
         external: true,
+      });
+    }
+    if (versionsUrl) {
+      buttonList.push({
+        key: "versions",
+        label: "Версии",
+        redirect: withoutBaseUrl(versionsUrl),
       });
     }
 

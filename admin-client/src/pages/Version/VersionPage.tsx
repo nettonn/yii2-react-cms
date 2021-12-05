@@ -1,6 +1,6 @@
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import React, { FC } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Spin, Table } from "antd";
 import { RouteNames } from "../../routes";
 import { versionService } from "../../api/VersionService";
@@ -13,6 +13,7 @@ import {
 import { useModelView } from "../../hooks/modelView.hook";
 import "./VersionPage.css";
 import { ColumnsType } from "antd/lib/table/Table";
+import { withoutBaseUrl } from "../../utils/functions";
 
 const modelRoutes = RouteNames.version;
 
@@ -59,6 +60,16 @@ const VersionPage: FC = () => {
         backPath={modelRoutes.index}
         breadcrumbItems={[{ path: modelRoutes.index, label: "Версии" }]}
       />
+
+      <p>
+        <b>
+          {data.owner_update_url ? (
+            <Link to={withoutBaseUrl(data.owner_update_url)}>{data.name}</Link>
+          ) : (
+            `${data.name} (${data.link_type} - ${data.link_id})`
+          )}
+        </b>
+      </p>
 
       <Table
         columns={columns}

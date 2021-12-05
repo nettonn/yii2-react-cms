@@ -2,6 +2,9 @@
 
 use app\models\query\ActiveQuery;
 use Yii;
+use yii\helpers\Inflector;
+use yii\helpers\StringHelper;
+use yii\helpers\Url;
 
 /**
  * @method ActiveQuery hasMany($class, array $link) see [[BaseActiveRecord::hasMany()]] for more info
@@ -12,6 +15,8 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord
     public $flushCache = true;
 
     public static $flushCacheGlobal = true;
+
+    protected $adminUrlPrefix = ADMIN_URL_PREFIX;
 
     public function fields()
     {
@@ -31,6 +36,12 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord
         if($this->hasMethod('getUrl')) {
             $fields['view_url'] = function($model) {
                 return $model->getUrl();
+            };
+        }
+
+        if($this->hasMethod('versionGetVersionsUrl')) {
+            $fields['versions_url'] = function ($model) {
+                return $model->versionGetVersionsUrl();
             };
         }
 
@@ -56,5 +67,38 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord
     public static function find(): ActiveQuery
     {
         return new ActiveQuery(get_called_class());
+    }
+
+    public static function getClassNameId(): string
+    {
+        return Inflector::camel2id(StringHelper::basename(static::class));
+    }
+
+    public function getAdminIndexUrl($params = [], $scheme = false): string
+    {
+        $name = self::getClassNameId();
+
+        return Url::to(array_merge(["{$this->adminUrlPrefix}/$name"], (array) $params), $scheme);
+    }
+
+    public function getAdminUpdateUrl($params = [], $scheme = false): string
+    {
+        $name = self::getClassNameId();
+
+        return Url::to(array_merge(["{$this->adminUrlPrefix}/$name/update", 'id' => $this->id], (array) $params), $scheme);
+    }
+
+    public function getAdminUpdateUrlById($id, $params = [], $scheme = false): string
+    {
+        $name = self::getClassNameId();
+
+        return Url::to(array_merge(["{$this->adminUrlPrefix}/$name/update", 'id' => $id], (array) $params), $scheme);
+    }
+
+    public function getAdminCreateUrl($params = [], $scheme = false): string
+    {
+        $name = self::getClassNameId();
+
+        return Url::to(array_merge(["{$this->adminUrlPrefix}/$name/create"], (array) $params), $scheme);
     }
 }

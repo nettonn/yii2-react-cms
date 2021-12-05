@@ -24,10 +24,10 @@ class Chunk extends ActiveRecord
     const TYPE_TEXT = 1;
     const TYPE_HTML = 2;
 
-    public $typeOptions = array(
+    public $typeOptions = [
         self::TYPE_TEXT => 'Текст',
         self::TYPE_HTML => 'HTML',
-    );
+    ];
 
     /**
      * @inheritdoc

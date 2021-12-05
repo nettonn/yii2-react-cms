@@ -46,6 +46,7 @@ const ModelForm: FC<ModelFormProps> = ({
     onValuesChange,
     modelOptions,
     isNotFound,
+    versionsUrl,
   } = modelForm;
 
   if (!isInit) return <Spin spinning={true} />;
@@ -89,6 +90,7 @@ const ModelForm: FC<ModelFormProps> = ({
         }
         hasViewUrl={hasViewUrl}
         viewUrl={viewUrl}
+        versionsUrl={versionsUrl}
       />
     </>
   );

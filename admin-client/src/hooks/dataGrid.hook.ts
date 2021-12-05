@@ -8,6 +8,9 @@ import { DataGridActions, DataGridSelector } from "../store";
 import { useEffect, useState } from "react";
 import { appActions } from "../store/reducers/app";
 import { queryClient } from "../http/query-client";
+import { useLocation, useNavigate } from "react-router-dom";
+import { queryStringParse } from "../utils/qs";
+import { buildUrl, withoutBaseUrl } from "../utils/functions";
 
 export default function useDataGrid<
   T extends IModel = IModel,
@@ -17,9 +20,12 @@ export default function useDataGrid<
   dataGridSelector: DataGridSelector,
   dataGridActions: DataGridActions
 ) {
+  const { pathname: locationPathname, search: locationSearch } = useLocation();
   const [isInit, setIsInit] = useState(false);
   const { currentDataGridSelector } = useAppSelector((state) => state.app);
   const { setCurrentDataGridSelector } = useAppActions(appActions);
+  const [allowQueries, setAllowQueries] = useState(false);
+  const navigate = useNavigate();
 
   const {
     currentPage,
@@ -43,6 +49,29 @@ export default function useDataGrid<
     setSortField,
   } = useAppActions(dataGridActions);
 
+  useEffect(() => {
+    if (locationSearch) {
+      const searchParams = queryStringParse(locationSearch);
+      if (
+        searchParams &&
+        searchParams.filters &&
+        typeof searchParams.filters === "object" &&
+        !Array.isArray(searchParams.filters)
+      ) {
+        Object.keys(searchParams.filters).forEach((key) => {
+          if (!Array.isArray(searchParams.filters[key]))
+            searchParams.filters[key] = [searchParams.filters[key]];
+        });
+
+        setFilters(searchParams.filters);
+        delete searchParams.filters;
+      }
+      const newUrl = buildUrl(locationPathname, searchParams);
+      navigate(withoutBaseUrl(newUrl), { replace: true });
+    }
+    setAllowQueries(true);
+  }, [locationSearch, locationPathname, setFilters, navigate]);
+
   const {
     data: modelOptions,
     isFetched: modelOptionsIsFetched,
@@ -60,6 +89,7 @@ export default function useDataGrid<
       throw new Error(result.error);
     },
     {
+      enabled: allowQueries,
       refetchOnMount: false,
     }
   );
@@ -105,6 +135,7 @@ export default function useDataGrid<
       throw new Error(result.error);
     },
     {
+      enabled: allowQueries,
       keepPreviousData: true,
     }
   );
@@ -147,7 +178,7 @@ export default function useDataGrid<
       if (filterKeys.length) {
         const params = {} as IFiltersParam;
         for (const key of filterKeys) {
-          params[`${key}`] = tableFilters[key];
+          params[key] = tableFilters[key];
         }
         setFilters(params);
       } else {
