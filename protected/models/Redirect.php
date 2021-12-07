@@ -70,6 +70,11 @@ class Redirect extends ActiveRecord
         ];
     }
 
+    public static function getModelLabel(): string
+    {
+        return 'Редиректы';
+    }
+
     public function init()
     {
         parent::init();

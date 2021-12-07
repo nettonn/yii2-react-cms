@@ -137,7 +137,7 @@ export function useModelForm<
 
     if (result.success) {
       if (result.data?.view_url) setViewUrl(result.data.view_url);
-      if (result.data?.versions_url) setViewUrl(result.data.versions_url);
+      if (result.data?.versions_url) setVersionsUrl(result.data.versions_url);
 
       if (isCreateForm) {
         if (result.data && isMounted()) {

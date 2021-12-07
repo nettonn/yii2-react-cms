@@ -70,6 +70,7 @@ class Page extends ActiveRecord
             [['layout'], 'string', 'max' => 50],
             [['status'], 'boolean',],
             [['alias'], 'filter', 'filter'=>'generate_alias'],
+            [['images_id'], 'integer', 'allowArray' => true],
         ];
     }
 
@@ -101,6 +102,11 @@ class Page extends ActiveRecord
         ];
     }
 
+    public static function getModelLabel(): string
+    {
+        return 'Страницы';
+    }
+
     public function fields(): array
     {
         $fields = parent::fields();
@@ -116,7 +122,6 @@ class Page extends ActiveRecord
 
         return $fields;
     }
-
 
     public function getParent(): ActiveQuery
     {

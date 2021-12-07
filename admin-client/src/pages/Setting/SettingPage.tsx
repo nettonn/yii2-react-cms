@@ -14,6 +14,7 @@ import {
   SETTING_TYPE_INT,
   SETTING_TYPE_STRING,
 } from "../../models/ISetting";
+import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
 
 const modelRoutes = RouteNames.setting;
 
@@ -70,7 +71,7 @@ const SettingPage: FC = () => {
     form: FormInstance
   ) => (
     <>
-      <Row gutter={15}>
+      <Row gutter={DEFAULT_ROW_GUTTER}>
         <Col span={24} md={12}>
           <Form.Item label="Название" name="name" rules={[rules.required()]}>
             <Input />

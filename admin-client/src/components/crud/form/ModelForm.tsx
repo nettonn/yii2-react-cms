@@ -9,7 +9,7 @@ import { RouteNames } from "../../../routes";
 import { stringReplace } from "../../../utils/functions";
 
 interface ModelFormProps {
-  modelForm: any | ReturnType<typeof useModelForm>;
+  modelForm: any | ReturnType<typeof useModelForm>; // how without any?
   formContent(
     initData?: IModel,
     modelOptions?: IModelOptions,

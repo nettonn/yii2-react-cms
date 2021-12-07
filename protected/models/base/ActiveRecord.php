@@ -18,6 +18,19 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord
 
     protected $adminUrlPrefix = ADMIN_URL_PREFIX;
 
+    public static function getModelLabel(): string
+    {
+        return StringHelper::basename(static::class);
+    }
+
+    public static function getModelLabelForClass($class)
+    {
+        if(!class_exists($class) || !is_subclass_of($class, self::class))
+            return false;
+
+        return $class::getModelLabel();
+    }
+
     public function fields()
     {
         $fields = parent::fields();

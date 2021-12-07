@@ -10,6 +10,7 @@ import { IPost, IPostModelOptions } from "../../models/IPost";
 import FileUpload from "../../components/crud/form/FileUpload/FileUpload";
 import { postService } from "../../api/PostService";
 import useGenerateAlias from "../../hooks/generateAlias.hook";
+import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
 
 const modelRoutes = RouteNames.post;
 
@@ -27,7 +28,7 @@ const PostPage: FC = () => {
   const formContent = (initData: IPost, modelOptions: IPostModelOptions) => (
     <Tabs type="card">
       <Tabs.TabPane tab="Общее" key="common">
-        <Row gutter={15}>
+        <Row gutter={DEFAULT_ROW_GUTTER}>
           <Col span={24} md={12}>
             <Form.Item label="Название" name="name" rules={[rules.required()]}>
               <Input onChange={(e) => onNameFieldChange(e.target.value)} />

@@ -39,7 +39,8 @@ const VersionsPage: FC = () => {
     },
     {
       title: "Модель",
-      dataIndex: "link_type",
+      dataIndex: "link_type_label",
+      key: "link_type",
       sorter: true,
       filters: modelOptions.link_type,
     },

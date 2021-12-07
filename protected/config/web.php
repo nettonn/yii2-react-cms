@@ -61,6 +61,13 @@ $config = [
         ],
         'placeholders' => [
             'class'=> 'app\components\PlaceholderComponent',
+            'placeholders' => [
+                'руб' => '₽',
+                'rub' => '₽',
+            ],
+            'widgets' => [
+                'chunk' => 'app\widgets\ChunkWidget',
+            ],
         ],
         'microdata' => [
             'class'=> 'app\components\MicrodataComponent'
@@ -70,12 +77,6 @@ $config = [
         ],
         'admin' => [
             'class' => 'app\components\AdminComponent',
-        ],
-        'inlineWidgets' => [
-            'class' => 'app\components\InlineWidgetsComponent',
-            'widgets' => [
-                'chunk' => 'app\widgets\ChunkWidget',
-            ],
         ],
         'queue' => require(__DIR__ . '/parts/queue.php'),
         'db' => require (__DIR__ . '/parts/db.php'),

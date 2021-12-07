@@ -93,6 +93,11 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    public static function getModelLabel(): string
+    {
+        return 'Пользователи';
+    }
+
     public function fields(): array
     {
         $fields = [

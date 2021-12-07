@@ -24,9 +24,7 @@ class FrontOutputFilter extends ActionFilter
     {
         if(Yii::$app->admin->isAdminEdit())
             $content = $this->addAdminButton($content);
-        $content = $this->replaceInlineWidgets($content);
         $content = $this->replacePlaceholders($content);
-        $content = $this->replaceRouble($content);
         $content = $this->replaceLazyImages($content);
 
         return $content;
@@ -42,7 +40,7 @@ class FrontOutputFilter extends ActionFilter
         }
         else {
             $link = Url::to(['/admin/seo/create',
-                'url'=> Yii::$app->request->getUrl(),
+                'url'=> Yii::$app->seo->getCanonicalUri(),
                 'name'=>Yii::$app->seo->getH1()]);
             $title = 'Добавить SEO';
         }
@@ -50,26 +48,9 @@ class FrontOutputFilter extends ActionFilter
         return preg_replace('~(<body[^>]*?>)~ui', '$1'.$editButton, $content);
     }
 
-    protected function replaceInlineWidgets($content)
-    {
-        $content = Yii::$app->inlineWidgets->decodeWidgets($content);
-
-        return $content;
-    }
-
     protected function replacePlaceholders($content)
     {
-        $placeholders = Yii::$app->placeholders;
-        $content = $placeholders->replaceAll($content);
-        $content = $placeholders->replaceAll($content);
-        $content = $placeholders->remove_empty($content);
-        return $content;
-    }
-
-    protected function replaceRouble($content)
-    {
-        return preg_replace('~(#руб#|#rub#)~ui', '₽', $content);
-        //    return preg_replace('~(#руб#|#rub#)~ui', '<span class="icon-rouble" title="рублей"><span class="icon-text">рублей</span></span>', $content);
+        return Yii::$app->placeholders->replaceAll($content);
     }
 
     protected function replaceLazyImages($content)

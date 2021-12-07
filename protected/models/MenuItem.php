@@ -83,6 +83,11 @@ class MenuItem extends ActiveRecord
         ];
     }
 
+    public static function getModelLabel(): string
+    {
+        return 'Пункты меню';
+    }
+
     public function getMenu(): ActiveQuery
     {
         return $this->hasOne(Menu::class, ['id' => 'menu_id']);

@@ -11,7 +11,7 @@ return [
     'charset' => 'utf8',
 
     // Schema cache options (for production environment)
-    'enableSchemaCache' => !DEV,
+    'enableSchemaCache' => true,
     'schemaCacheDuration' => 60,
     'schemaCache' => 'cache',
 ];

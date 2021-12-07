@@ -85,7 +85,7 @@ const UpdatePageActions: FC<UpdatePageActionsProps> = ({
     }
 
     return buttonList;
-  }, [updateRoute, exitRoute, createRoute, hasViewUrl, viewUrl]);
+  }, [updateRoute, exitRoute, createRoute, hasViewUrl, viewUrl, versionsUrl]);
 
   const buttonClickHandler = (button: ButtonConfig) => {
     if (loading) return;

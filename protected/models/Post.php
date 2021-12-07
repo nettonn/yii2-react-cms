@@ -56,6 +56,7 @@ class Post extends ActiveRecord
 //            [['options', 'option'], 'string'],
 //            ['images', 'string']
             ['alias', 'filter', 'filter' => 'generate_alias'],
+            [['images_id', 'files_id', 'picture_id'], 'integer', 'allowArray' => true],
         ];
     }
 
@@ -75,6 +76,11 @@ class Post extends ActiveRecord
             'updated_at' => 'Updated At',
             'status' => 'Status',
         ];
+    }
+
+    public static function getModelLabel(): string
+    {
+        return 'Записи';
     }
 
     public function fields(): array

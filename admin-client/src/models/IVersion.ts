@@ -18,6 +18,7 @@ export interface IVersion extends IModel {
   action: typeof VERSION_ACTION_UPDATE | typeof VERSION_ACTION_DELETE;
   action_text: string;
   link_type: string;
+  link_type_label: string;
   link_id: number;
   owner_update_url?: string;
 }

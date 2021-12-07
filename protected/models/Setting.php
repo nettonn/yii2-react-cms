@@ -78,6 +78,11 @@ class Setting extends ActiveRecord
         ];
     }
 
+    public static function getModelLabel(): string
+    {
+        return 'Настройки';
+    }
+
     public function fields(): array
     {
         $fields = parent::fields();

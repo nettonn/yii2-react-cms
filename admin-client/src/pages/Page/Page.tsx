@@ -11,6 +11,7 @@ import FileUpload from "../../components/crud/form/FileUpload/FileUpload";
 import { pageService } from "../../api/PageService";
 import CkeditorInput from "../../components/crud/form/CkeditorInput/CkeditorInput";
 import useGenerateAlias from "../../hooks/generateAlias.hook";
+import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
 
 const modelRoutes = RouteNames.page;
 
@@ -30,7 +31,7 @@ const Page: FC = () => {
   const formContent = (initData: IPage, modelOptions: IPageModelOptions) => (
     <Tabs type="card">
       <Tabs.TabPane tab="Общее" key="common">
-        <Row gutter={15}>
+        <Row gutter={DEFAULT_ROW_GUTTER}>
           <Col span={24} md={12}>
             <Form.Item label="Название" name="name" rules={[rules.required()]}>
               <Input onChange={(e) => onNameFieldChange(e.target.value)} />

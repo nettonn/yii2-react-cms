@@ -86,9 +86,19 @@ class Version extends ActiveRecord
         ];
     }
 
+    public static function getModelLabel(): string
+    {
+        return 'Версии';
+    }
+
     public function fields()
     {
         $fields = parent::fields();
+
+        $fields['link_type_label'] = function($model) {
+            $label = ActiveRecord::getModelLabelForClass($model->link_type);
+            return $label ?? $model->link_type;
+        };
 
         $fields['action_text'] = function($model) {
             return $model->actionOptions[$model->action];
@@ -175,5 +185,25 @@ class Version extends ActiveRecord
         }
 
         return $result;
+    }
+
+    public function getLinkTypeOptions()
+    {
+        $linkTypeOptions = [];
+        foreach(Version::find()->select('link_type')->column() as $linkType) {
+            $label = ActiveRecord::getModelLabelForClass($linkType);
+            $linkTypeOptions[$linkType] = $label ?? $linkType;
+        }
+        asort($linkTypeOptions);
+        return $linkTypeOptions;
+    }
+
+    public function getLinkIdOptions()
+    {
+        return Version::find()
+            ->select('DISTINCT(link_id)')
+            ->orderBy('link_id ASC')
+            ->indexBy('link_id')
+            ->column();
     }
 }

@@ -9,6 +9,7 @@ use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\StringHelper;
 
 abstract class RestController extends BaseApiController
 {
@@ -223,7 +224,7 @@ abstract class RestController extends BaseApiController
 
         if($ids = $request->get($this->idsParam)) {
             if(!is_array($ids))
-                $ids = explode(',', $ids);
+                $ids = StringHelper::explode($ids, ',', true, true);
 
             return $query->andWhere(['in', 'id', $ids])->all();
         }
@@ -239,6 +240,9 @@ abstract class RestController extends BaseApiController
             foreach($filters as $column => $value) {
                 if(!in_array($column, $modelColumns))
                     continue;
+
+                if(strpos($value, ','))
+                    $value = StringHelper::explode($value, ',', true, true);
 
                 $filterWhere[] = ['in', $column, $value];
             }

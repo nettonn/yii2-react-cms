@@ -4,6 +4,7 @@ import RouteIcon from "../components/ui/RouteIcon";
 import PageHeader from "../components/ui/PageHeader/PageHeader";
 import { Card, List, Space } from "antd";
 import { Link } from "react-router-dom";
+import { DEFAULT_ROW_GUTTER } from "../utils/constants";
 
 interface IItem {
   title: string;
@@ -59,7 +60,15 @@ const HomePage: FC = () => {
     <>
       <PageHeader title="Панель управления" />
       <List //xs={12} sm={12} md={8} lg={6}
-        grid={{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 4, xxl: 6 }}
+        grid={{
+          gutter: DEFAULT_ROW_GUTTER,
+          xs: 1,
+          sm: 2,
+          md: 3,
+          lg: 4,
+          xl: 4,
+          xxl: 6,
+        }}
         dataSource={items}
         renderItem={(item) => (
           <List.Item>

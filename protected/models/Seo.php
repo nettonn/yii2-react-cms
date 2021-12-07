@@ -86,6 +86,11 @@ class Seo extends ActiveRecord
         ];
     }
 
+    public static function getModelLabel(): string
+    {
+        return 'SEO';
+    }
+
     public function fields()
     {
         $fields = parent::fields();

@@ -5,6 +5,8 @@ use Yii;
 use yii\base\Behavior;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
+use yii\helpers\Inflector;
+use yii\helpers\StringHelper;
 use yii\helpers\Url;
 use yii\helpers\VarDumper;
 
@@ -21,6 +23,8 @@ class VersionBehavior extends Behavior
 
     /**
      * attribute options in model field $attributeOptions
+     * uses Inflector::variablize()
+     * some_attribute will be someAttributeOptions
      * @var bool
      */
     public $useOptions = true;
@@ -53,6 +57,8 @@ class VersionBehavior extends Behavior
 
         if(!$this->validateModel)
             return;
+
+        $owner = $this->owner;
 
         if(is_array($owner->getPrimaryKey())) {
             throw new InvalidConfigException('Composite primary keys not allowed');
@@ -99,7 +105,7 @@ class VersionBehavior extends Behavior
         $result = [];
         $owner = $this->owner;
         foreach($this->attributes as $attribute) {
-            $attributeOptionsProp = $attribute.$this->optionsSuffix;
+            $attributeOptionsProp = Inflector::variablize($attribute).$this->optionsSuffix;
             if(!$owner->hasProperty($attributeOptionsProp))
                 continue;
 
