@@ -7,6 +7,7 @@ use app\models\query\ActiveQuery;
 use nettonn\yii2filestorage\behaviors\ContentImagesBehavior;
 use nettonn\yii2filestorage\behaviors\FileBehavior;
 use Yii;
+use yii\helpers\Inflector;
 use yii\helpers\Url;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 use app\behaviors\TreeBehavior;
@@ -69,7 +70,7 @@ class Page extends ActiveRecord
             [['seo_keywords', 'seo_description'], 'string', 'max' => 500],
             [['layout'], 'string', 'max' => 50],
             [['status'], 'boolean',],
-            [['alias'], 'filter', 'filter'=>'generate_alias'],
+            [['alias'], 'filter', 'filter'=>[Inflector::class, 'slug']],
             [['images_id'], 'integer', 'allowArray' => true],
         ];
     }

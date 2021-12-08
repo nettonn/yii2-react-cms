@@ -5,7 +5,6 @@
 seo()->model = $model;
 $this->breadcrumbs = $model->treeGetBreadcrumbs();
 
-dd($model->filesThumbGet('images'));
 ?>
 
 <?= $model->content ?>

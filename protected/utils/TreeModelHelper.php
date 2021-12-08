@@ -6,6 +6,10 @@ use yii\db\ActiveRecord;
 
 class TreeModelHelper extends \yii\base\BaseObject
 {
+    /**
+     * Query for all models
+     * @var ActiveQuery
+     */
     public $query;
 
     public $maxLevel;
@@ -41,8 +45,7 @@ class TreeModelHelper extends \yii\base\BaseObject
         parent::init();
     }
 
-
-    public function getItems($parent = 'root', $currentLevel = 1)
+    public function buildTree($parent = null, $currentLevel = 1)
     {
         if($this->maxLevel && $currentLevel > $this->maxLevel)
             return [];
@@ -59,7 +62,7 @@ class TreeModelHelper extends \yii\base\BaseObject
             } else {
                 $item = $oneData;
 
-                $childrenItems = $this->getItems($item[$this->idAttribute], $currentLevel + 1);
+                $childrenItems = $this->buildTree($item[$this->idAttribute], $currentLevel + 1);
 
                 if(is_object($item) && is_a($item, ActiveRecord::class)) {
                     $item->populateRelation($this->itemChildrenAttribute, $childrenItems);
@@ -71,13 +74,12 @@ class TreeModelHelper extends \yii\base\BaseObject
         }
 
         return $items;
-
     }
 
-    public function getChildrenData($parent = 'root')
+    public function getChildrenData($parent = null)
     {
         if(null === $this->_childrenData) {
-            if($this->maxLevel && $this->levelAttribute && $this->queryFilterLevel) {
+            if($this->maxLevel && $this->levelAttribute && $this->queryFilterLevel && !$parent) {
                 $modelClass =  $this->query->modelClass;
                 if(isset($modelClass::getTableSchema()->columns[$this->levelAttribute])) {
                     $this->query->andWhere(['<=', $this->levelAttribute, $this->maxLevel]);
@@ -87,7 +89,7 @@ class TreeModelHelper extends \yii\base\BaseObject
 
             $this->_childrenData = [];
             foreach($models as $model) {
-                $key = $model[$this->parentAttribute] ? $model[$this->parentAttribute] : 'root';
+                $key = $model[$this->parentAttribute] ?? null;
                 $this->_childrenData[$key][] = $model;
             }
         }
@@ -96,5 +98,10 @@ class TreeModelHelper extends \yii\base\BaseObject
             return $this->_childrenData[$parent];
 
         return false;
+    }
+
+    public function getChildrenIds($parent = null)
+    {
+
     }
 }

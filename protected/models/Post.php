@@ -7,6 +7,7 @@ use app\models\base\ActiveRecord;
 use app\models\query\ActiveQuery;
 use nettonn\yii2filestorage\behaviors\FileBehavior;
 use Yii;
+use yii\helpers\Inflector;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -55,7 +56,7 @@ class Post extends ActiveRecord
             [['name', 'alias', 'introtext'], 'string', 'max' => 255],
 //            [['options', 'option'], 'string'],
 //            ['images', 'string']
-            ['alias', 'filter', 'filter' => 'generate_alias'],
+            ['alias', 'filter', 'filter' => [Inflector::class, 'slug']],
             [['images_id', 'files_id', 'picture_id'], 'integer', 'allowArray' => true],
         ];
     }

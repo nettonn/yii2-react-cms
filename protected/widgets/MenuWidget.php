@@ -53,7 +53,7 @@ class MenuWidget extends Widget
                         'url' => $data['url'],
                     ];
 
-                    if($childrenItems = $helper->getItems($data['id'], $currentLevel + 1)) {
+                    if($childrenItems = $helper->buildTree($data['id'], $currentLevel + 1)) {
                         $item['items'] = $childrenItems;
                     }
 
@@ -70,7 +70,7 @@ class MenuWidget extends Widget
 
             }]);
 
-            $items = $treeModelHelper->getItems();
+            $items = $treeModelHelper->buildTree();
 
             Yii::$app->cache->set($cacheKey, $items);
         }

@@ -47,13 +47,13 @@ class AdminClientHelper
                         'title' => $data[$titleParam],
                         'value' => intval($data[$valueParam]),
                     ];
-                    if($childrenItems = $helper->getItems($data['id'], $currentLevel + 1)) {
+                    if($childrenItems = $helper->buildTree($data['id'], $currentLevel + 1)) {
                         $item['children'] = $childrenItems;
                     }
                     return $item;
             }]);
 
-            $options = $treeModelHelper->getItems();
+            $options = $treeModelHelper->buildTree();
 
 
             Yii::$app->cache->set($cacheKey, $options);

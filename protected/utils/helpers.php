@@ -120,57 +120,6 @@ function get_param($name) {
     return Yii::$app->params[$name];
 }
 
-function class_basename($class) {
-    $class = is_object($class) ? get_class($class) : $class;
-
-    return basename(str_replace('\\', '/', $class));
-}
-
-function generate_alias($str) {
-    return \app\utils\UrlHelper::generateAlias($str);
-}
-
-function generate_image($filename, $saveFilename, $toWidth, $toHeight, $adaptive = false, $quality = 80, $watermark = false) {
-    if($adaptive) {
-        $image = \yii\imagine\Image::thumbnail($filename, $toWidth, $toHeight, ManipulatorInterface::THUMBNAIL_OUTBOUND);
-    } else {
-        $image = \yii\imagine\Image::resize($filename, $toWidth, $toHeight);
-    }
-    if ($watermark) {
-        $watermarkObj = \yii\imagine\Image::getImagine()->open(Yii::getAlias($watermark));
-        $iSize = $image->getSize();
-        $wSize = $watermarkObj->getSize();
-        $image->paste($watermarkObj, new \Imagine\Image\Point(($iSize->getWidth() - $wSize->getWidth())/2, ($iSize->getHeight() - $wSize->getHeight())/2));
-    }
-
-    if(class_exists('Imagick', false)) {
-        $imagick = $image->getImagick();
-        $imagick->stripImage();
-        $imagick->setImageCompressionQuality($quality);
-        $format = pathinfo($filename, \PATHINFO_EXTENSION);
-
-        if (in_array($format, array('jpeg', 'jpg', 'pjpeg')))
-        {
-            $imagick->setSamplingFactors(array('2x2', '1x1', '1x1'));
-            $profiles = $imagick->getImageProfiles("icc", true);
-            $imagick->stripImage();
-
-            if(!empty($profiles)) {
-                $imagick->profileImage('icc', $profiles['icc']);
-            }
-
-            $imagick->setInterlaceScheme(\Imagick::INTERLACE_JPEG);
-            $imagick->setColorspace(\Imagick::COLORSPACE_SRGB);
-        }
-        elseif (in_array($format, array('png'))) {
-            $imagick->setimagecompressionquality(75);
-            $imagick->setcompressionquality(75);
-        }
-    }
-
-    $image->save($saveFilename, ['jpeg_quality' => $quality]);
-}
-
 function chunk_get($key) {
     return Yii::$app->chunks->get($key);
 }
@@ -219,33 +168,3 @@ function remove_nbsp($value) {
     return str_ireplace('&nbsp;', ' ', $value);
 }
 
-function asset_with_timestamp($filename, $relativePath = true) {
-    if(!file_exists($filename))
-        return false;
-
-    $fileDir = dirname($filename);
-    $dirRelative = str_replace(DOCROOT, '', $fileDir);
-    if($fileDir == $dirRelative)
-        return false;
-
-    $assetsDir = Yii::$app->assetManager->basePath.$dirRelative;
-
-    if(!is_dir($assetsDir)) {
-        \yii\helpers\FileHelper::createDirectory($assetsDir, 0775, true);
-    }
-
-    $time = filemtime($filename);
-
-    $pathInfo = pathinfo($filename);
-
-    $newFilename = $assetsDir.DS.$pathInfo['filename'].'-t'.$time.'.'.$pathInfo['extension'];
-
-    if(!file_exists($newFilename)) {
-        copy($filename, $newFilename);
-    }
-
-    if($relativePath) {
-        return str_replace(DOCROOT, '', $newFilename);
-    }
-    return $newFilename;
-}

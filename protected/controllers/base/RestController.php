@@ -283,14 +283,14 @@ abstract class RestController extends BaseApiController
             $treeModelHelper = new TreeModelHelper([
                 'query' => $query,
                 'itemFunction' => function (TreeModelHelper $helper, ActiveRecord $model, int $currentLevel) {
-                    if($childrenModels = $helper->getItems($model->id, $currentLevel + 1)) {
+                    if($childrenModels = $helper->buildTree($model->id, $currentLevel + 1)) {
                         $model->populateRelation('children', $childrenModels);
                     }
 
                     return $model;
             }]);
 
-            $models = $treeModelHelper->getItems();
+            $models = $treeModelHelper->buildTree();
 
             return new ArrayDataProvider([
                 'allModels' => $models,

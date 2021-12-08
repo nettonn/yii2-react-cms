@@ -2,6 +2,7 @@
 
 use yii\base\Behavior;
 use yii\db\ActiveRecord;
+use yii\db\BaseActiveRecord;
 
 class TreeBehavior extends Behavior
 {
@@ -40,35 +41,33 @@ class TreeBehavior extends Behavior
     public function events()
     {
         return [
-            ActiveRecord::EVENT_BEFORE_INSERT   => 'beforeSave',
+            BaseActiveRecord::EVENT_BEFORE_INSERT   => 'beforeSave',
 //            ActiveRecord::EVENT_AFTER_INSERT    => 'afterSave',
-            ActiveRecord::EVENT_BEFORE_UPDATE   => 'beforeSave',
-            ActiveRecord::EVENT_AFTER_UPDATE    => 'afterSave',
-            ActiveRecord::EVENT_BEFORE_DELETE   => 'beforeDelete',
-            ActiveRecord::EVENT_AFTER_DELETE    => 'afterDelete',
+            BaseActiveRecord::EVENT_BEFORE_UPDATE   => 'beforeSave',
+            BaseActiveRecord::EVENT_AFTER_UPDATE    => 'afterSave',
+            BaseActiveRecord::EVENT_BEFORE_DELETE   => 'beforeDelete',
+            BaseActiveRecord::EVENT_AFTER_DELETE    => 'afterDelete',
         ];
     }
 
-    /**
-     * @param ActiveRecord $owner
-     */
-    public function attach($owner)
+    protected function getQuery()
     {
-        parent::attach($owner);
-
         if(!$this->query) {
-            $this->query = function($owner) {
-                return get_class($owner)::find();
-            };
+            $this->query = get_class($this->owner)::find();
+            if($this->query->hasMethod('notDeleted')) {
+                $this->query = $this->query->notDeleted();
+            }
         }
+        return clone $this->query;
     }
 
     public function beforeSave()
     {
-        if(!$this->owner->getAttribute($this->parentAttribute) || $this->owner->getAttribute($this->parentAttribute) == $this->owner->{$this->pkAttribute})
-            $this->owner->setAttribute($this->parentAttribute, null);
+        $owner = $this->owner;
+        if(!$owner->getAttribute($this->parentAttribute) || $owner->getAttribute($this->parentAttribute) == $owner->{$this->pkAttribute})
+            $owner->setAttribute($this->parentAttribute, null);
 
-        $this->updateNeededAttributes($this->owner, false);
+        $this->updateNeededAttributes($owner, false);
     }
 
     public function afterSave()
@@ -76,36 +75,38 @@ class TreeBehavior extends Behavior
         if($this->updateChildren) {
             $this->updateChildrenAttributes();
         }
-
     }
 
     public function beforeDelete()
     {
-        $this->_beforeDeleteChildren = $this->owner->{$this->childrenRelation};
-        $this->_beforeDeleteChildrenIds = $this->treeGetChildrenArray($this->owner->{$this->pkAttribute});
+        $owner = $this->owner;
+        $this->_beforeDeleteChildren = $owner->{$this->childrenRelation};
+        $this->_beforeDeleteChildrenIds = $this->treeGetChildrenArray($owner->{$this->pkAttribute});
     }
 
     public function afterDelete()
     {
-        $this->owner->updateAll(
-            [$this->parentAttribute => $this->owner->getAttribute($this->parentAttribute)],
-            [$this->parentAttribute => $this->owner->{$this->pkAttribute}]
+        $owner = $this->owner;
+        $owner->updateAll(
+            [$this->parentAttribute => $owner->getAttribute($this->parentAttribute)],
+            [$this->parentAttribute => $owner->{$this->pkAttribute}]
         );
-//        $modelParent = $this->owner->{$this->parentAttribute};
+//        $modelParent = $owner->{$this->parentAttribute};
         if($this->updateChildren) {
-//            foreach ($this->_beforeDeleteChildren as $child) {
-//                $child->{$this->parentAttribute} = null;
-//                $child->updateAttributes([$this->parentAttribute]);
-//            }
+            foreach ($this->_beforeDeleteChildren as $child) {
+                $child->{$this->parentAttribute} = null;
+                $child->updateAttributes([$this->parentAttribute]);
+            }
             $this->updateChildrenAttributes($this->_beforeDeleteChildrenIds);
         }
     }
 
     public function treeGetPath($separator = '/')
     {
-        $uri = [$this->owner->getAttribute($this->aliasAttribute)];
+        $owner = $this->owner;
+        $uri = [$owner->getAttribute($this->aliasAttribute)];
 
-        $model = $this->owner;
+        $model = $owner;
 
         $i = 10;
 
@@ -120,12 +121,12 @@ class TreeBehavior extends Behavior
 
     /**
      * Returns array of primary keys of children items
-     * @param mixed $parent_id number
+     * @param mixed $parent_id
      * @return array
      */
     public function treeGetChildrenArray($parent_id = null)
     {
-        $items = ($this->query)($this->owner)
+        $items = $this->getQuery()
             ->select([$this->pkAttribute, $this->parentAttribute])
             ->asArray()
             ->all();
@@ -138,8 +139,8 @@ class TreeBehavior extends Behavior
     protected function _childrenArrayRecursive(&$items, &$result, $parent_id)
     {
         foreach ($items as $item){
-            if ($item[$this->parentAttribute] === $parent_id){
-                $result[] = intval($item[$this->pkAttribute]);
+            if ($item[$this->parentAttribute] == $parent_id){
+                $result[] = $item[$this->pkAttribute];
                 $this->_childrenArrayRecursive($items, $result, $item[$this->pkAttribute]);
             }
         }
@@ -157,7 +158,7 @@ class TreeBehavior extends Behavior
         if($query) {
             $items = $query;
         } else {
-            $items = ($this->query)($this->owner);
+            $items = $this->getQuery();
         }
         $items = $items->select([$this->pkAttribute, $this->parentAttribute, $this->nameAttribute])
             ->asArray()
@@ -175,7 +176,7 @@ class TreeBehavior extends Behavior
         if(!$level--) return;
 
         foreach ($items as $item){
-            if ($item[$this->parentAttribute] === $parent_id && !isset($result[$item[$this->pkAttribute]])){
+            if ($item[$this->parentAttribute] == $parent_id && !isset($result[$item[$this->pkAttribute]])){
                 $result[$item[$this->pkAttribute]] = trim(str_repeat('-', $indent) .' '. $item[$this->nameAttribute]);
                 $this->_getTabListRecursive($items, $result, $item[$this->pkAttribute], $indent + 1, $level);
             }
@@ -210,14 +211,14 @@ class TreeBehavior extends Behavior
 
     public function treeRootModels($parentId = null)
     {
-        return ($this->query)($this->owner)->andWhere(['parent_id'=>$parentId])->all();
+        return $this->getQuery()->andWhere(['parent_id'=>$parentId])->all();
     }
 
     protected function updateChildrenAttributes($childrenIds = false)
     {
         if(false === $childrenIds)
             $childrenIds = $this->treeGetChildrenArray($this->owner->{$this->pkAttribute});
-        $children = ($this->query)($this->owner)
+        $children = $this->getQuery()
             ->andWhere(['in', 'id', $childrenIds])->all();
 
         foreach($children as $model) {
@@ -240,6 +241,7 @@ class TreeBehavior extends Behavior
             $model->{$this->urlAttribute} = $model->{$this->urlGenerateMethod}();
             $attributes[] = $this->urlAttribute;
         }
+
         if($save && $attributes)
             $model->updateAttributes($attributes);
     }

@@ -1,8 +1,8 @@
 <?php namespace app\controllers\admin;
 
 use app\controllers\base\BaseApiController;
-use app\utils\UrlHelper;
 use Yii;
+use yii\helpers\Inflector;
 use yii\web\BadRequestHttpException;
 
 class HelperController extends BaseApiController
@@ -12,7 +12,7 @@ class HelperController extends BaseApiController
         if(!$value)
             throw new BadRequestHttpException('Value must be set');
 
-        return UrlHelper::generateAlias($value);
+        return Inflector::slug($value);
     }
 
     protected function authExcept(): array
