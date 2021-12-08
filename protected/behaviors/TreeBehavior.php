@@ -1,7 +1,7 @@
 <?php namespace app\behaviors;
 
+use app\utils\TreeModelHelper;
 use yii\base\Behavior;
-use yii\db\ActiveRecord;
 use yii\db\BaseActiveRecord;
 
 class TreeBehavior extends Behavior
@@ -81,7 +81,7 @@ class TreeBehavior extends Behavior
     {
         $owner = $this->owner;
         $this->_beforeDeleteChildren = $owner->{$this->childrenRelation};
-        $this->_beforeDeleteChildrenIds = $this->treeGetChildrenArray($owner->{$this->pkAttribute});
+        $this->_beforeDeleteChildrenIds = $this->treeGetChildrenIds();
     }
 
     public function afterDelete()
@@ -104,46 +104,23 @@ class TreeBehavior extends Behavior
     public function treeGetPath($separator = '/')
     {
         $owner = $this->owner;
-        $uri = [$owner->getAttribute($this->aliasAttribute)];
+        $parts = [$owner->getAttribute($this->aliasAttribute)];
 
-        $model = $owner;
-
-        $i = 10;
-
-        while ($i-- && $model->{$this->parentRelation}){
-            $uri[] = $model->{$this->parentRelation}->{$this->aliasAttribute};
-            $model = $model->{$this->parentRelation};
-            if($model->parent_id === 0 || $model->parent_id === null)
-                break;
+        foreach($this->treeGetParents(false) as $model) {
+            $parts[] = $model->{$this->aliasAttribute};
         }
-        return implode($separator, array_reverse($uri));
+
+        return implode($separator, array_reverse($parts));
     }
 
-    /**
-     * Returns array of primary keys of children items
-     * @param mixed $parent_id
-     * @return array
-     */
-    public function treeGetChildrenArray($parent_id = null)
+    public function treeGetChildrenIds()
     {
-        $items = $this->getQuery()
-            ->select([$this->pkAttribute, $this->parentAttribute])
-            ->asArray()
-            ->all();
-        $result = [];
-
-        $this->_childrenArrayRecursive($items, $result, $parent_id);
-        return array_unique($result);
-    }
-
-    protected function _childrenArrayRecursive(&$items, &$result, $parent_id)
-    {
-        foreach ($items as $item){
-            if ($item[$this->parentAttribute] == $parent_id){
-                $result[] = $item[$this->pkAttribute];
-                $this->_childrenArrayRecursive($items, $result, $item[$this->pkAttribute]);
-            }
-        }
+        $treeModelHelper = new TreeModelHelper([
+            'pkAttribute' => $this->pkAttribute,
+            'parentAttribute' => $this->parentAttribute,
+            'query' => $this->getQuery(),
+        ]);
+        return $treeModelHelper->getChildrenIds($this->owner->{$this->pkAttribute});
     }
 
     /**
@@ -153,50 +130,33 @@ class TreeBehavior extends Behavior
      * @param \yii\db\ActiveQuery $query
      * @return array
      */
-    public function treeGetTabList($parent_id = null, $level = 9999, $query = false)
+    public function treeGetTabList()
     {
-        if($query) {
-            $items = $query;
-        } else {
-            $items = $this->getQuery();
-        }
-        $items = $items->select([$this->pkAttribute, $this->parentAttribute, $this->nameAttribute])
-            ->asArray()
-            ->all();
-
-        $result = [];
-
-        $this->_getTabListRecursive($items, $result, $parent_id, 0, $level);
-
-        return $result;
-    }
-
-    protected function _getTabListRecursive(&$items, &$result, $parent_id, $indent, $level)
-    {
-        if(!$level--) return;
-
-        foreach ($items as $item){
-            if ($item[$this->parentAttribute] == $parent_id && !isset($result[$item[$this->pkAttribute]])){
-                $result[$item[$this->pkAttribute]] = trim(str_repeat('-', $indent) .' '. $item[$this->nameAttribute]);
-                $this->_getTabListRecursive($items, $result, $item[$this->pkAttribute], $indent + 1, $level);
-            }
-        }
+        $treeModelHelper = new TreeModelHelper([
+            'nameAttribute' => $this->nameAttribute,
+            'pkAttribute' => $this->pkAttribute,
+            'parentAttribute' => $this->parentAttribute,
+            'query' => $this->getQuery(),
+        ]);
+        return $treeModelHelper->getTabList($this->owner->{$this->pkAttribute});
     }
 
     public function treeGetParents($reverse = true)
     {
-        $parents = [];
-        $model = $this->owner;
-        if($model->{$this->parentAttribute} !== null) {
-            while($parent = $model->{$this->parentRelation}) {
-                $parents[] = $parent;
-                $model = $parent;
-            }
+        if(!$this->owner->{$this->parentAttribute}) {
+            return [];
         }
+        $treeModelHelper = new TreeModelHelper([
+            'pkAttribute' => $this->pkAttribute,
+            'parentAttribute' => $this->parentAttribute,
+            'query' => $this->getQuery(),
+        ]);
+
+        $models = $treeModelHelper->getParentModels($this->owner->{$this->pkAttribute});
         if($reverse) {
-            $parents = array_reverse($parents);
+            $models = array_reverse($models);
         }
-        return $parents;
+        return $models;
     }
 
     public function treeGetBreadcrumbs()
@@ -209,15 +169,17 @@ class TreeBehavior extends Behavior
         return $result;
     }
 
-    public function treeRootModels($parentId = null)
+    public function treeRootModels()
     {
-        return $this->getQuery()->andWhere(['parent_id'=>$parentId])->all();
+        return $this->getQuery()->andWhere(['parent_id'=>null])->all();
     }
 
     protected function updateChildrenAttributes($childrenIds = false)
     {
-        if(false === $childrenIds)
-            $childrenIds = $this->treeGetChildrenArray($this->owner->{$this->pkAttribute});
+        if(false === $childrenIds) {
+            $childrenIds = $this->treeGetChildrenIds();
+        }
+
         $children = $this->getQuery()
             ->andWhere(['in', 'id', $childrenIds])->all();
 
