@@ -30,18 +30,10 @@ if(defined('CONSOLE_APP') && CONSOLE_APP) {
     defined('DOCROOT') || define('DOCROOT', $_SERVER['DOCUMENT_ROOT']);
     defined('DOMAIN') || define('DOMAIN', $_SERVER['SERVER_NAME']);
     defined('HOST') || define('HOST', DOMAIN . ($_SERVER['SERVER_PORT'] != 80 ? ':' . $_SERVER['SERVER_PORT'] : ''));
-    defined('HOST_INFO') || define('HOST_INFO',
-        (
-            (
-                !empty($_SERVER['HTTPS'])
-                and $_SERVER['HTTPS'] != 'off'
-            )
-            ||
-            $_SERVER['SERVER_PORT'] == 443
-        )
-        == true ? 'https://' . HOST : 'http://' . HOST);
     defined('IS_SECURE') || define('IS_SECURE',
         (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
         || $_SERVER['SERVER_PORT'] == 443
     );
+    defined('HOST_INFO') || define('HOST_INFO', IS_SECURE ? 'https://' . HOST : 'http://' . HOST);
+
 }

@@ -8,10 +8,10 @@ use yii\helpers\Html;
 $confirmLink = url_abs(get_param(ADMIN_URL_PREFIX)."/auth/email-confirm/{$user->email_confirm_token}");
 ?>
 
-Здравствуйте!
+<p>Здравствуйте!</p>
 
-Для подтверждения E-Mail пройдите по ссылке:
+<p>Для подтверждения E-Mail пройдите по ссылке:</p>
 
-<?= Html::a(e($confirmLink), $confirmLink) ?>
+<p><?= Html::a(e($confirmLink), $confirmLink) ?></p>
 
-Если Вы не регистрировались на нашем сайте, то просто удалите это письмо.
+<p>Если Вы не регистрировались на нашем сайте, то просто удалите это письмо.</p>
