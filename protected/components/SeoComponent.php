@@ -37,7 +37,9 @@ class SeoComponent extends Component
 
     protected function loadSeoModel()
     {
-        return Seo::find()->where(['url'=>$this->currentUrl])->active()->one();
+        if(Yii::$app->request->isAjax)
+            return null;
+        return Seo::find()->where(['url'=>$this->currentUrl])->active()->cache()->one();
     }
 
     public function getCanonicalUri()

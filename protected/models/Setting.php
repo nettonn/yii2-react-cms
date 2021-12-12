@@ -128,9 +128,7 @@ class Setting extends ActiveRecord
             self::TYPE_INT => 'intval',
             self::TYPE_STRING => 'strval',
         ];
-        if(isset($options[$this->type]))
-            return $options[$this->type];
-        return false;
+        return $options[$this->type] ?? false;
     }
 
     public function getValue()

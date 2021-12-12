@@ -24,6 +24,7 @@ import {
   versionGridActions,
   versionGridReducer,
 } from "./reducers/grids/versionGrid";
+import { logGridActions, logGridReducer } from "./reducers/grids/logGrid";
 
 const rootReducer = combineReducers({
   app: appReducer,
@@ -39,6 +40,7 @@ const rootReducer = combineReducers({
   menuGrid: menuGridReducer,
   menuItemGrid: menuItemGridReducer,
   versionGrid: versionGridReducer,
+  logGrid: logGridReducer,
 });
 
 export const setupStore = () => {
@@ -61,7 +63,8 @@ export type DataGridSelector =
   | "seoGrid"
   | "menuGrid"
   | "menuItemGrid"
-  | "versionGrid";
+  | "versionGrid"
+  | "logGrid";
 
 export type DataGridActions =
   | typeof pageGridActions
@@ -73,4 +76,5 @@ export type DataGridActions =
   | typeof seoGridActions
   | typeof menuGridActions
   | typeof menuItemGridActions
-  | typeof versionGridActions;
+  | typeof versionGridActions
+  | typeof logGridActions;

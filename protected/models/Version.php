@@ -186,24 +186,4 @@ class Version extends ActiveRecord
 
         return $result;
     }
-
-    public function getLinkTypeOptions()
-    {
-        $linkTypeOptions = [];
-        foreach(Version::find()->select('link_type')->column() as $linkType) {
-            $label = ActiveRecord::getModelLabelForClass($linkType);
-            $linkTypeOptions[$linkType] = $label ?? $linkType;
-        }
-        asort($linkTypeOptions);
-        return $linkTypeOptions;
-    }
-
-    public function getLinkIdOptions()
-    {
-        return Version::find()
-            ->select('DISTINCT(link_id)')
-            ->orderBy('link_id ASC')
-            ->indexBy('link_id')
-            ->column();
-    }
 }

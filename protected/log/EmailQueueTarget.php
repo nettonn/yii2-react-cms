@@ -1,6 +1,5 @@
 <?php namespace app\log;
 
-use app\modules\error\models\NotFound;
 use app\jobs\MailJob;
 use Yii;
 

@@ -8,6 +8,12 @@ class FrontOutputFilter extends ActionFilter
 {
     public $enabled = true;
 
+    public $arrayResponseContentParams = [
+        'html',
+        'content',
+        'text',
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -22,17 +28,25 @@ class FrontOutputFilter extends ActionFilter
 
     public function modifyOutput($content)
     {
-        if(Yii::$app->admin->isAdminEdit())
-            $content = $this->addAdminButton($content);
-        $content = $this->replacePlaceholders($content);
-        $content = $this->replaceLazyImages($content);
+        if(is_array($content) && $this->arrayResponseContentParams) {
+            foreach ($this->arrayResponseContentParams as $param) {
+                if(!isset($content[$param]) || !is_string($content[$param]))
+                    continue;
+                $content[$param] = $this->modifyOutput($content[$param]);
+            }
+        } elseif(is_string($content)) {
+            if(!Yii::$app->request->isAjax && Yii::$app->admin->isAdminEdit())
+                $content = $this->addAdminButton($content);
+            $content = $this->replacePlaceholders($content);
+            $content = $this->replaceLazyImages($content);
+        }
 
         return $content;
     }
 
     protected function addAdminButton($content)
     {
-        if(!Yii::$app->response->isSuccessful)
+        if(!Yii::$app->response->isSuccessful )
             return $content;
 
         if($link = Yii::$app->admin->getAdminLink()) {
@@ -55,6 +69,9 @@ class FrontOutputFilter extends ActionFilter
 
     protected function replaceLazyImages($content)
     {
+        if(false === stripos($content, 'lazy-image-replace'))
+            return $content;
+
         $images = [];
         preg_match_all("~<img[^>]*lazy-image-replace[^>]*>~i", $content, $images, PREG_PATTERN_ORDER);
         if(isset($images[0])) {

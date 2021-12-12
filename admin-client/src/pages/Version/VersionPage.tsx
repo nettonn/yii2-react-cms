@@ -1,7 +1,7 @@
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import React, { FC } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Spin, Table } from "antd";
+import { Descriptions, Spin, Table } from "antd";
 import { RouteNames } from "../../routes";
 import { versionService } from "../../api/VersionService";
 import {
@@ -61,15 +61,29 @@ const VersionPage: FC = () => {
         breadcrumbItems={[{ path: modelRoutes.index, label: "Версии" }]}
       />
 
-      <p>
-        <b>
-          {data.owner_update_url ? (
+      <Descriptions
+        bordered
+        style={{ marginBottom: "30px" }}
+        title={
+          data.owner_update_url ? (
             <Link to={withoutBaseUrl(data.owner_update_url)}>{data.name}</Link>
           ) : (
             `${data.name} (${data.link_type} - ${data.link_id})`
-          )}
-        </b>
-      </p>
+          )
+        }
+      >
+        <Descriptions.Item label="Модель">
+          {data.link_type_label}
+        </Descriptions.Item>
+        <Descriptions.Item label="ID модели">{data.link_id}</Descriptions.Item>
+        <hr />
+        <Descriptions.Item label="Действие">
+          {data.action_text}
+        </Descriptions.Item>
+        <Descriptions.Item label="Дата и время">
+          {data.created_at_datetime}
+        </Descriptions.Item>
+      </Descriptions>
 
       <Table
         columns={columns}

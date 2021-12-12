@@ -38,11 +38,17 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord
             $fields['created_at_date'] = function($model) {
                 return Yii::$app->getFormatter()->asDate($model->created_at);
             };
+            $fields['created_at_datetime'] = function($model) {
+                return Yii::$app->getFormatter()->asDatetime($model->created_at);
+            };
         }
 
         if($this->hasAttribute('updated_at')) {
             $fields['updated_at_date'] = function($model) {
                 return Yii::$app->getFormatter()->asDate($model->updated_at);
+            };
+            $fields['updated_at_datetime'] = function($model) {
+                return Yii::$app->getFormatter()->asDatetime($model->updated_at);
             };
         }
 

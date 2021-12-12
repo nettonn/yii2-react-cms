@@ -20,6 +20,9 @@ export interface IVersion extends IModel {
   link_type: string;
   link_type_label: string;
   link_id: number;
+  created_at: number;
+  created_at_date: string;
+  created_at_datetime: string;
   owner_update_url?: string;
 }
 

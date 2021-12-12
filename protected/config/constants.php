@@ -9,6 +9,7 @@ setlocale(LC_ALL, 'ru_RU');
 mb_internal_encoding('UTF-8');
 
 defined('ADMIN_URL_PREFIX') || define('ADMIN_URL_PREFIX', '/admin');
+defined('ADMIN_API_PREFIX') || define('ADMIN_API_PREFIX', '/admin-api');
 
 defined('DEV_IPS') or define('DEV_IPS', $envars['DEV_IPS']);
 

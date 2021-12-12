@@ -1,6 +1,5 @@
 <?php namespace app\log;
 
-use app\modules\error\models\NotFound;
 use yii\helpers\VarDumper;
 
 class EmailTarget extends \yii\log\EmailTarget
@@ -10,10 +9,6 @@ class EmailTarget extends \yii\log\EmailTarget
      */
     public function export()
     {
-//        if(!NotFound::isLoggable()) {
-//            return;
-//        }
-
         // moved initialization of subject here because of the following issue
         // https://github.com/yiisoft/yii2/issues/1446
         if (empty($this->message['subject'])) {

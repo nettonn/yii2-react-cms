@@ -23,12 +23,24 @@ class VersionController extends RestController
 
     public function modelOptions(): array
     {
-       $instance = Version::instance();
+        $linkTypeOptions = [];
+        foreach(Version::find()->select('link_type')->notDeleted()->column() as $linkType) {
+            $label = ActiveRecord::getModelLabelForClass($linkType);
+            $linkTypeOptions[$linkType] = $label ?? $linkType;
+        }
+        asort($linkTypeOptions);
+
+        $linkIdOptions = Version::find()
+            ->select('DISTINCT(link_id)')
+            ->orderBy('link_id ASC')
+            ->indexBy('link_id')
+            ->notDeleted()
+            ->column();
 
         return [
-            'action' => AdminClientHelper::getOptionsFromKeyValue( $instance->actionOptions),
-            'link_type' => AdminClientHelper::getOptionsFromKeyValue($instance->getLinkTypeOptions()),
-            'link_id' => AdminClientHelper::getOptionsFromKeyValue($instance->getLinkIdOptions()),
+            'action' => AdminClientHelper::getOptionsFromKeyValue( Version::instance()->actionOptions),
+            'link_type' => AdminClientHelper::getOptionsFromKeyValue($linkTypeOptions),
+            'link_id' => AdminClientHelper::getOptionsFromKeyValue($linkIdOptions),
         ];
     }
 

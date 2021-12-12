@@ -1,5 +1,6 @@
 <?php
 return [
+    'APP_NAME' => 'DL CMS',
     'ADMIN_NAME' => 'Name Lastname',
     'ADMIN_EMAIL' => 'email@email.com',
     'ADMIN_DEFAULT_PASSWORD' => '12345',

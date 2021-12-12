@@ -12,7 +12,7 @@ class View extends \yii\web\View
 
     public function getParam($name)
     {
-        return isset($this->params[$name]) ? $this->params[$name] : null;
+        return $this->params[$name] ?? null;
     }
 
     public function setParam($name, $value)

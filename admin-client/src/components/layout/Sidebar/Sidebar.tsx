@@ -42,6 +42,7 @@ const Sidebar: FC = () => {
       RouteNames.seo.index,
       RouteNames.menu.index,
       RouteNames.version.index,
+      RouteNames.log.index,
     ]) {
       if (pathname.indexOf(route) === 0) {
         setSelectedKeys([route]);
@@ -94,6 +95,11 @@ const Sidebar: FC = () => {
           hideIcon: true,
           route: RouteNames.version.index,
           title: "Версии",
+        },
+        {
+          hideIcon: true,
+          route: RouteNames.log.index,
+          title: "Логи",
         },
         {
           hideIcon: true,

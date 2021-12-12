@@ -21,6 +21,7 @@ import {
   menuItemRoutes,
 } from "./menu-item";
 import { versionRouteIcons, versionRouteNames, versionRoutes } from "./version";
+import { logRouteIcons, logRouteNames, logRoutes } from "./log";
 
 const Login = React.lazy(() => import("../pages/LoginPage"));
 const Home = React.lazy(() => import("../pages/HomePage"));
@@ -42,6 +43,7 @@ export const RouteNames = {
   menu: menuRouteNames,
   menuItem: menuItemRouteNames,
   version: versionRouteNames,
+  log: logRouteNames,
 };
 
 export const publicRoutes: IRoute[] = [
@@ -63,6 +65,7 @@ export const privateRoutes: IRoute[] = [
   ...menuRoutes,
   ...menuItemRoutes,
   ...versionRoutes,
+  ...logRoutes,
 ];
 
 export const routeIcons = {
@@ -78,4 +81,5 @@ export const routeIcons = {
   ...menuRouteIcons,
   ...menuItemRouteIcons,
   ...versionRouteIcons,
+  ...logRouteIcons,
 };

@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $user app\models\User */
 
-$confirmLink = url_abs(get_param('api_prefix')."/auth/email-confirm/{$user->email_confirm_token}");
+$confirmLink = url_abs(get_param(ADMIN_URL_PREFIX)."/auth/email-confirm/{$user->email_confirm_token}");
 ?>
 
 Здравствуйте!

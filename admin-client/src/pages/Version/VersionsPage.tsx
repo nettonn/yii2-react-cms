@@ -61,10 +61,10 @@ const VersionsPage: FC = () => {
     },
     {
       title: "Создано",
-      dataIndex: "created_at_date",
+      dataIndex: "created_at_datetime",
       key: "created_at",
       sorter: true,
-      width: 120,
+      width: 200,
     },
   ];
 

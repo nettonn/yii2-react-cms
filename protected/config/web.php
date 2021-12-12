@@ -1,6 +1,7 @@
 <?php
 require (__DIR__ . '/../utils/helpers.php');
 $envars = require(__DIR__.'/envars.php');
+$params = require (__DIR__ . '/params.php');
 
 $config = [
     'id' => 'Yii2 React CMS',
@@ -83,11 +84,17 @@ $config = [
         'urlManager' => require(__DIR__.'/parts/urlManager.php'),
         'jwt' => require(__DIR__ . '/parts/jwt.php'),
         'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'traceLevel' => DEV ? 3 : 0,
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
+                ],
+                [
+                    'class' => 'app\log\DbLogTarget',
+//                    'except' => ['yii\web\HttpException:401'],
+                    'levels' => ['error', 'warning'],
+                    'exceptUrls' => $params['logExceptUrls']
                 ],
                 [
                     'class' => 'app\log\EmailQueueTarget',
@@ -111,7 +118,7 @@ $config = [
         ],
 
     ],
-    'params' => require (__DIR__ . '/params.php'),
+    'params' => $params,
 ];
 
 if (DEV) {

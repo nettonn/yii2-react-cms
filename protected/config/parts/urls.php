@@ -4,6 +4,7 @@ return [
     [
         'class' => 'app\components\SiteUrlRule',
     ],
+    'ajax/<action:\w+>'=> 'site-ajax/<action>',
     [
         'class' => 'app\components\AdminClientUrlCreateRules',
         'restControllers' => [
@@ -17,6 +18,7 @@ return [
             'menu' => 'admin/menu',
             'menu-items' => 'admin/menu-item',
             'versions' => 'admin/version',
+            'logs' => 'admin/log',
         ]
     ],
     [
@@ -71,6 +73,7 @@ return [
             'menu' => 'admin/menu',
             'menu-items' => 'admin/menu-item',
             'versions' => 'admin/version',
+            'logs' => 'admin/log',
         ],
         'prefix' => 'admin-api',
         'extraPatterns' => [

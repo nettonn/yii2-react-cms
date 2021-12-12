@@ -16,9 +16,9 @@ class SiteController extends FrontController
     public function actionPage($path = null)
     {
         if($path === null) {
-            $model = Page::find()->active()->where(['id'=>Yii::$app->settings->get('main_page_id')])->one();
+            $model = Page::find()->where(['id'=>Yii::$app->settings->get('main_page_id')])->active()->cache()->one();
         } else {
-            $model = Page::find()->active()->where(['path'=>$path])->one();
+            $model = Page::find()->where(['path'=>$path])->active()->cache()->one();
         }
 
         if($model === null)
