@@ -7,7 +7,6 @@ import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
 import { IChunk, IChunkModelOptions } from "../../models/IChunk";
 import { chunkService } from "../../api/ChunkService";
-import { chunkGridActions } from "../../store/reducers/grids/chunkGrid";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = RouteNames.chunk;
@@ -15,8 +14,7 @@ const modelRoutes = RouteNames.chunk;
 const ChunksPage: FC = () => {
   const dataGridHook = useDataGrid<IChunk, IChunkModelOptions>(
     chunkService,
-    "chunkGrid",
-    chunkGridActions
+    "chunk"
   );
 
   const getColumns = (

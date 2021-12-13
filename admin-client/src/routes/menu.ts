@@ -4,7 +4,7 @@ import { stringReplace } from "../utils/functions";
 const MenuGridPage = React.lazy(() => import("../pages/Menu/MenuGridPage"));
 const MenuPage = React.lazy(() => import("../pages/Menu/MenuPage"));
 
-export const menuRouteNames = {
+const names = {
   index: "/menu",
   create: "/menu/create",
   update: "/menu/:id",
@@ -12,20 +12,24 @@ export const menuRouteNames = {
     stringReplace("/menu/:id", { ":id": id }),
 };
 
-export const menuRoutes = [
-  { path: menuRouteNames.index, element: MenuGridPage },
+const routes = [
+  { path: names.index, element: MenuGridPage },
   {
-    path: menuRouteNames.create,
+    path: names.create,
     element: MenuPage,
     elementProps: { key: "create" },
   },
   {
-    path: menuRouteNames.update,
+    path: names.update,
     element: MenuPage,
     elementProps: { key: "update" },
   },
 ];
 
-export const menuRouteIcons = {
-  [menuRouteNames.index]: MenuOutlined,
+const icons = {
+  [names.index]: MenuOutlined,
 };
+
+const all = { names, routes, icons };
+
+export default all;

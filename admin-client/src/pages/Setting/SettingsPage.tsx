@@ -7,7 +7,6 @@ import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
 import { ISetting, ISettingModelOptions } from "../../models/ISetting";
 import { settingService } from "../../api/SettingService";
-import { settingGridActions } from "../../store/reducers/grids/settingGrid";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = RouteNames.setting;
@@ -15,8 +14,7 @@ const modelRoutes = RouteNames.setting;
 const SettingsPage: FC = () => {
   const dataGridHook = useDataGrid<ISetting, ISettingModelOptions>(
     settingService,
-    "settingGrid",
-    settingGridActions
+    "setting"
   );
 
   const getColumns = (

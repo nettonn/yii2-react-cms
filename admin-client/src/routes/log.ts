@@ -4,22 +4,26 @@ import { stringReplace } from "../utils/functions";
 const LogsPage = React.lazy(() => import("../pages/Log/LogsPage"));
 const LogPage = React.lazy(() => import("../pages/Log/LogPage"));
 
-export const logRouteNames = {
+const names = {
   index: "/logs",
   update: "/logs/:id",
   updateUrl: (id?: string | number) =>
     stringReplace("/logs/:id", { ":id": id }),
 };
 
-export const logRoutes = [
-  { path: logRouteNames.index, element: LogsPage },
+const routes = [
+  { path: names.index, element: LogsPage },
   {
-    path: logRouteNames.update,
+    path: names.update,
     element: LogPage,
     elementProps: { key: "update" },
   },
 ];
 
-export const logRouteIcons = {
-  [logRouteNames.index]: BlockOutlined,
+const icons = {
+  [names.index]: BlockOutlined,
 };
+
+const all = { names, routes, icons };
+
+export default all;

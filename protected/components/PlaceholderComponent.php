@@ -23,13 +23,13 @@ class PlaceholderComponent extends Component
      */
     public $clearAutoParagraph = true;
 
-    protected $startQuoted;
-    protected $endQuoted;
+    protected $startInternalQuoted;
+    protected $endInternalQuoted;
 
     public function init()
     {
-        $this->startQuoted = preg_quote($this->startInternal);
-        $this->endQuoted = preg_quote($this->endInternal);
+        $this->startInternalQuoted = preg_quote($this->startInternal);
+        $this->endInternalQuoted = preg_quote($this->endInternal);
     }
 
     public function get($name)
@@ -77,6 +77,14 @@ class PlaceholderComponent extends Component
         return $content;
     }
 
+    public function removeAll($content)
+    {
+        if(!$this->_hasPlaceholders($content))
+            return $content;
+
+        return preg_replace('~'.preg_quote($this->start).'.*?'.preg_quote($this->end).'\s?~ui', '', $content);
+    }
+
     protected function _replaceBlocks($content)
     {
         $content = str_replace($this->start, $this->startInternal, $content);
@@ -87,7 +95,7 @@ class PlaceholderComponent extends Component
     protected function _replaceWidgets($content)
     {
         foreach ($this->widgets as $alias => $class) {
-            preg_match_all('~' . $this->startQuoted . $alias . '(:([^}]*)?)?' . $this->endQuoted .'~is', $content, $matches);
+            preg_match_all('~' . $this->startInternalQuoted . $alias . '(:([^}]*)?)?' . $this->endInternalQuoted .'~is', $content, $matches);
             if(!isset($matches[0]) || !$matches[0])
                 continue;
 
@@ -121,7 +129,7 @@ class PlaceholderComponent extends Component
 
     protected function _removeEmpty($content)
     {
-        return preg_replace('~'.$this->startQuoted.'.*?'.$this->endQuoted.'\s?~ui', '', $content);
+        return preg_replace('~'.$this->startInternalQuoted.'.*?'.$this->endInternalQuoted.'\s?~ui', '', $content);
     }
 
     protected function _hasPlaceholders($content): bool

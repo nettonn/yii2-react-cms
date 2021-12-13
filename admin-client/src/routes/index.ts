@@ -1,27 +1,18 @@
 import React from "react";
 import { IRoute } from "../types";
 import { HomeOutlined, CalendarOutlined } from "@ant-design/icons";
-import { errorRouteNames, errorRoutes } from "./error";
-
-import { userRouteIcons, userRouteNames, userRoutes } from "./user";
-import { postRouteIcons, postRouteNames, postRoutes } from "./post";
-import { pageRouteIcons, pageRouteNames, pageRoutes } from "./page";
-import { chunkRouteIcons, chunkRouteNames, chunkRoutes } from "./chunk";
-import {
-  redirectRouteIcons,
-  redirectRouteNames,
-  redirectRoutes,
-} from "./redirect";
-import { settingRouteIcons, settingRouteNames, settingRoutes } from "./setting";
-import { seoRouteIcons, seoRouteNames, seoRoutes } from "./seo";
-import { menuRouteIcons, menuRouteNames, menuRoutes } from "./menu";
-import {
-  menuItemRouteIcons,
-  menuItemRouteNames,
-  menuItemRoutes,
-} from "./menu-item";
-import { versionRouteIcons, versionRouteNames, versionRoutes } from "./version";
-import { logRouteIcons, logRouteNames, logRoutes } from "./log";
+import error from "./error";
+import user from "./user";
+import post from "./post";
+import page from "./page";
+import chunk from "./chunk";
+import redirect from "./redirect";
+import setting from "./setting";
+import seo from "./seo";
+import menu from "./menu";
+import menuItem from "./menu-item";
+import version from "./version";
+import log from "./log";
 
 const Login = React.lazy(() => import("../pages/LoginPage"));
 const Home = React.lazy(() => import("../pages/HomePage"));
@@ -32,18 +23,18 @@ export const RouteNames = {
   home: "/",
   event: "/event",
 
-  error: errorRouteNames,
-  user: userRouteNames,
-  post: postRouteNames,
-  page: pageRouteNames,
-  chunk: chunkRouteNames,
-  redirect: redirectRouteNames,
-  setting: settingRouteNames,
-  seo: seoRouteNames,
-  menu: menuRouteNames,
-  menuItem: menuItemRouteNames,
-  version: versionRouteNames,
-  log: logRouteNames,
+  error: error.names,
+  user: user.names,
+  post: post.names,
+  page: page.names,
+  chunk: chunk.names,
+  redirect: redirect.names,
+  setting: setting.names,
+  seo: seo.names,
+  menu: menu.names,
+  menuItem: menuItem.names,
+  version: version.names,
+  log: log.names,
 };
 
 export const publicRoutes: IRoute[] = [
@@ -54,32 +45,32 @@ export const privateRoutes: IRoute[] = [
   { path: RouteNames.home, element: Home },
   { path: RouteNames.event, element: Event },
 
-  ...errorRoutes,
-  ...userRoutes,
-  ...postRoutes,
-  ...pageRoutes,
-  ...chunkRoutes,
-  ...redirectRoutes,
-  ...settingRoutes,
-  ...seoRoutes,
-  ...menuRoutes,
-  ...menuItemRoutes,
-  ...versionRoutes,
-  ...logRoutes,
+  ...error.routes,
+  ...user.routes,
+  ...post.routes,
+  ...page.routes,
+  ...chunk.routes,
+  ...redirect.routes,
+  ...setting.routes,
+  ...seo.routes,
+  ...menu.routes,
+  ...menuItem.routes,
+  ...version.routes,
+  ...log.routes,
 ];
 
 export const routeIcons = {
   [RouteNames.home]: HomeOutlined,
   [RouteNames.event]: CalendarOutlined,
-  ...userRouteIcons,
-  ...postRouteIcons,
-  ...pageRouteIcons,
-  ...chunkRouteIcons,
-  ...redirectRouteIcons,
-  ...settingRouteIcons,
-  ...seoRouteIcons,
-  ...menuRouteIcons,
-  ...menuItemRouteIcons,
-  ...versionRouteIcons,
-  ...logRouteIcons,
+  ...user.icons,
+  ...post.icons,
+  ...page.icons,
+  ...chunk.icons,
+  ...redirect.icons,
+  ...setting.icons,
+  ...seo.icons,
+  ...menu.icons,
+  ...menuItem.icons,
+  ...version.icons,
+  ...log.icons,
 };

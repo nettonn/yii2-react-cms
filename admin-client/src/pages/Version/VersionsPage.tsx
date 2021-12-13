@@ -6,7 +6,6 @@ import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
 import { IVersion, IVersionModelOptions } from "../../models/IVersion";
 import { versionService } from "../../api/VersionService";
-import { versionGridActions } from "../../store/reducers/grids/versionGrid";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = RouteNames.version;
@@ -14,8 +13,7 @@ const modelRoutes = RouteNames.version;
 const VersionsPage: FC = () => {
   const dataGridHook = useDataGrid<IVersion, IVersionModelOptions>(
     versionService,
-    "versionGrid",
-    versionGridActions
+    "version"
   );
 
   const getColumns = (

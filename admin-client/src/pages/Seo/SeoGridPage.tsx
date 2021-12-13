@@ -8,17 +8,12 @@ import { ColumnsType } from "antd/lib/table/interface";
 import { statusColumn } from "../../components/crud/grid/columns";
 import { seoService } from "../../api/SeoService";
 import { Link } from "react-router-dom";
-import { seoGridActions } from "../../store/reducers/grids/seoGrid";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = RouteNames.seo;
 
 const SeoGridPage: FC = () => {
-  const dataGridHook = useDataGrid<ISeo, ISeoModelOptions>(
-    seoService,
-    "seoGrid",
-    seoGridActions
-  );
+  const dataGridHook = useDataGrid<ISeo, ISeoModelOptions>(seoService, "seo");
 
   const getColumns = (modelOptions: ISeoModelOptions): ColumnsType<ISeo> => [
     // {

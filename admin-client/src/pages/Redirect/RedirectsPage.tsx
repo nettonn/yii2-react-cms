@@ -7,7 +7,6 @@ import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
 import { IRedirect, IRedirectModelOptions } from "../../models/IRedirect";
 import { redirectService } from "../../api/RedirectService";
-import { redirectGridActions } from "../../store/reducers/grids/redirectGrid";
 import { statusColumn } from "../../components/crud/grid/columns";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
@@ -16,8 +15,7 @@ const modelRoutes = RouteNames.redirect;
 const RedirectsPage: FC = () => {
   const dataGridHook = useDataGrid<IRedirect, IRedirectModelOptions>(
     redirectService,
-    "redirectGrid",
-    redirectGridActions
+    "redirect"
   );
 
   const getColumns = (

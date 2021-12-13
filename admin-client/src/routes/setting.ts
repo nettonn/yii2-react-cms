@@ -4,7 +4,7 @@ import { stringReplace } from "../utils/functions";
 const Settings = React.lazy(() => import("../pages/Setting/SettingsPage"));
 const Setting = React.lazy(() => import("../pages/Setting/SettingPage"));
 
-export const settingRouteNames = {
+const names = {
   index: "/settings",
   create: "/settings/create",
   update: "/settings/:id",
@@ -12,20 +12,24 @@ export const settingRouteNames = {
     stringReplace("/settings/:id", { ":id": id }),
 };
 
-export const settingRoutes = [
-  { path: settingRouteNames.index, element: Settings },
+const routes = [
+  { path: names.index, element: Settings },
   {
-    path: settingRouteNames.create,
+    path: names.create,
     element: Setting,
     elementProps: { key: "create" },
   },
   {
-    path: settingRouteNames.update,
+    path: names.update,
     element: Setting,
     elementProps: { key: "update" },
   },
 ];
 
-export const settingRouteIcons = {
-  [settingRouteNames.index]: SettingOutlined,
+const icons = {
+  [names.index]: SettingOutlined,
 };
+
+const all = { names, routes, icons };
+
+export default all;

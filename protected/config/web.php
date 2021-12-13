@@ -79,6 +79,12 @@ $config = [
         'admin' => [
             'class' => 'app\components\AdminComponent',
         ],
+        'search' => [
+            'class' => 'app\components\SearchComponent',
+            'indexModelClasses' => [
+                'app\models\Page',
+            ],
+        ],
         'queue' => require(__DIR__ . '/parts/queue.php'),
         'db' => require (__DIR__ . '/parts/db.php'),
         'urlManager' => require(__DIR__.'/parts/urlManager.php'),

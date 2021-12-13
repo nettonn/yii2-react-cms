@@ -4,7 +4,7 @@ import { stringReplace } from "../utils/functions";
 const Chunks = React.lazy(() => import("../pages/Chunk/ChunksPage"));
 const Chunk = React.lazy(() => import("../pages/Chunk/ChunkPage"));
 
-export const chunkRouteNames = {
+const names = {
   index: "/chunks",
   create: "/chunks/create",
   update: "/chunks/:id",
@@ -12,20 +12,24 @@ export const chunkRouteNames = {
     stringReplace("/chunks/:id", { ":id": id }),
 };
 
-export const chunkRoutes = [
-  { path: chunkRouteNames.index, element: Chunks },
+const routes = [
+  { path: names.index, element: Chunks },
   {
-    path: chunkRouteNames.create,
+    path: names.create,
     element: Chunk,
     elementProps: { key: "create" },
   },
   {
-    path: chunkRouteNames.update,
+    path: names.update,
     element: Chunk,
     elementProps: { key: "update" },
   },
 ];
 
-export const chunkRouteIcons = {
-  [chunkRouteNames.index]: BlockOutlined,
+const icons = {
+  [names.index]: BlockOutlined,
 };
+
+const all = { names, routes, icons };
+
+export default all;

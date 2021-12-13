@@ -7,7 +7,6 @@ import { IMenuItem, IMenuItemModelOptions } from "../../models/IMenuItem";
 import { ColumnsType } from "antd/lib/table/interface";
 import { statusColumn } from "../../components/crud/grid/columns";
 import { Link, useParams } from "react-router-dom";
-import { menuItemGridActions } from "../../store/reducers/grids/menuItemGrid";
 import useDataGrid from "../../hooks/dataGrid.hook";
 import MenuItemService from "../../api/MenuItemService";
 
@@ -21,8 +20,7 @@ const MenuItemsPage: FC = () => {
 
   const dataGridHook = useDataGrid<IMenuItem, IMenuItemModelOptions>(
     menuItemService,
-    "menuItemGrid",
-    menuItemGridActions
+    "menuItem"
   );
 
   const getColumns = (

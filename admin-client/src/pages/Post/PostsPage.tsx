@@ -7,7 +7,6 @@ import { IPost, IPostModelOptions } from "../../models/IPost";
 import { ColumnsType } from "antd/lib/table/interface";
 import { statusColumn } from "../../components/crud/grid/columns";
 import { Link } from "react-router-dom";
-import { postGridActions } from "../../store/reducers/grids/postGrid";
 import { postService } from "../../api/PostService";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
@@ -16,8 +15,7 @@ const modelRoutes = RouteNames.post;
 const PostsPage: FC = () => {
   const dataGridHook = useDataGrid<IPost, IPostModelOptions>(
     postService,
-    "postGrid",
-    postGridActions
+    "post"
   );
 
   const getColumns = (modelOptions: IPostModelOptions): ColumnsType<IPost> => [

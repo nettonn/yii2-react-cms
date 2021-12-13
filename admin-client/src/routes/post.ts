@@ -4,7 +4,7 @@ import { stringReplace } from "../utils/functions";
 const Posts = React.lazy(() => import("../pages/Post/PostsPage"));
 const Post = React.lazy(() => import("../pages/Post/PostPage"));
 
-export const postRouteNames = {
+const names = {
   index: "/posts",
   create: "/posts/create",
   update: "/posts/:id",
@@ -12,20 +12,24 @@ export const postRouteNames = {
     stringReplace("/posts/:id", { ":id": id }),
 };
 
-export const postRoutes = [
-  { path: postRouteNames.index, element: Posts },
+const routes = [
+  { path: names.index, element: Posts },
   {
-    path: postRouteNames.create,
+    path: names.create,
     element: Post,
     elementProps: { key: "create" },
   },
   {
-    path: postRouteNames.update,
+    path: names.update,
     element: Post,
     elementProps: { key: "update" },
   },
 ];
 
-export const postRouteIcons = {
-  [postRouteNames.index]: FormOutlined,
+const icons = {
+  [names.index]: FormOutlined,
 };
+
+const all = { names, routes, icons };
+
+export default all;

@@ -17,6 +17,7 @@ class Yii extends \yii\BaseYii
  *
  * @property yii\queue\Queue $queue
  * @property app\components\SettingComponent $settings
+ * @property app\components\SearchComponent $search
  */
 abstract class BaseApplication extends yii\base\Application
 {
@@ -29,7 +30,6 @@ abstract class BaseApplication extends yii\base\Application
  * @property app\components\AdminComponent $admin
  * @property app\components\SeoComponent $seo
  * @property app\components\ChunkComponent $chunks
- * @property app\components\InlineWidgetsComponent $inlineWidgets
  * @property app\components\PlaceholderComponent $placeholders
  * @property app\components\AjaxFileUploadComponent $ajaxFileUpload
  * @property app\components\MicrodataComponent $microdata

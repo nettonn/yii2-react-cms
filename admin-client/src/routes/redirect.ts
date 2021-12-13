@@ -4,7 +4,7 @@ import { stringReplace } from "../utils/functions";
 const Redirects = React.lazy(() => import("../pages/Redirect/RedirectsPage"));
 const Redirect = React.lazy(() => import("../pages/Redirect/RedirectPage"));
 
-export const redirectRouteNames = {
+const names = {
   index: "/redirects",
   create: "/redirects/create",
   update: "/redirects/:id",
@@ -12,20 +12,24 @@ export const redirectRouteNames = {
     stringReplace("/redirects/:id", { ":id": id }),
 };
 
-export const redirectRoutes = [
-  { path: redirectRouteNames.index, element: Redirects },
+const routes = [
+  { path: names.index, element: Redirects },
   {
-    path: redirectRouteNames.create,
+    path: names.create,
     element: Redirect,
     elementProps: { key: "create" },
   },
   {
-    path: redirectRouteNames.update,
+    path: names.update,
     element: Redirect,
     elementProps: { key: "update" },
   },
 ];
 
-export const redirectRouteIcons = {
-  [redirectRouteNames.index]: SendOutlined,
+const icons = {
+  [names.index]: SendOutlined,
 };
+
+const all = { names, routes, icons };
+
+export default all;

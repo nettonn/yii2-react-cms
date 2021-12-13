@@ -38,7 +38,7 @@ const VersionPage: FC = () => {
       title: "Данные версии",
       dataIndex: "version_value",
       render: (value) => {
-        return <pre>{value}</pre>;
+        return <pre style={{ whiteSpace: "pre-wrap" }}>{value}</pre>;
       },
     },
   ];
@@ -48,7 +48,7 @@ const VersionPage: FC = () => {
       title: "Текущая версия",
       dataIndex: "current_value",
       render: (value) => {
-        return <pre>{value}</pre>;
+        return <pre style={{ whiteSpace: "pre-wrap" }}>{value}</pre>;
       },
     });
   }

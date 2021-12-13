@@ -4,22 +4,19 @@ import { TablePaginationConfig } from "antd/lib/table/interface";
 import { IFiltersParam, IModel, IModelOptions } from "../types";
 import { useQuery, useMutation } from "react-query";
 import { useAppActions, useAppSelector } from "./redux";
-import { DataGridActions, DataGridSelector } from "../store";
 import { useEffect, useState } from "react";
 import { appActions } from "../store/reducers/app";
 import { queryClient } from "../http/query-client";
 import { useLocation, useNavigate } from "react-router-dom";
 import { queryStringParse } from "../utils/qs";
 import { buildUrl, withoutBaseUrl } from "../utils/functions";
+import { DataGridSelector, gridActions } from "../store/reducers/grid";
 
 export default function useDataGrid<
   T extends IModel = IModel,
   M extends IModelOptions = any
->(
-  modelService: RestService,
-  dataGridSelector: DataGridSelector,
-  dataGridActions: DataGridActions
-) {
+>(modelService: RestService, dataGridSelector: DataGridSelector) {
+  const dataGridActions = gridActions[dataGridSelector];
   const { pathname: locationPathname, search: locationSearch } = useLocation();
   const [isInit, setIsInit] = useState(false);
   const { currentDataGridSelector } = useAppSelector((state) => state.app);

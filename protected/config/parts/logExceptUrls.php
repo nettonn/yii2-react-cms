@@ -14,4 +14,6 @@ return [
     '/feeds*',
     '/files*',
     '/pma*',
+    '/gii*',
+    '/favicon.ico*',
 ];

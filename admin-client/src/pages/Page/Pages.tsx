@@ -8,7 +8,6 @@ import { ColumnsType } from "antd/lib/table/Table";
 import { statusColumn } from "../../components/crud/grid/columns";
 import { pageService } from "../../api/PageService";
 import { Link } from "react-router-dom";
-import { pageGridActions } from "../../store/reducers/grids/pageGrid";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = RouteNames.page;
@@ -16,8 +15,7 @@ const modelRoutes = RouteNames.page;
 const Pages: FC = () => {
   const dataGridHook = useDataGrid<IPage, IPageModelOptions>(
     pageService,
-    "pageGrid",
-    pageGridActions
+    "page"
   );
 
   const getColumns = (modelOptions: IPageModelOptions): ColumnsType<IPage> => [

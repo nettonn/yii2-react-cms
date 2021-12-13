@@ -9,7 +9,6 @@ import { MenuOutlined } from "@ant-design/icons";
 import { statusColumn } from "../../components/crud/grid/columns";
 import { menuService } from "../../api/MenuService";
 import { Link } from "react-router-dom";
-import { menuGridActions } from "../../store/reducers/grids/menuGrid";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = RouteNames.menu;
@@ -18,8 +17,7 @@ const menuItemRoutes = RouteNames.menuItem;
 const MenuGridPage: FC = () => {
   const dataGridHook = useDataGrid<IMenu, IMenuModelOptions>(
     menuService,
-    "menuGrid",
-    menuGridActions
+    "menu"
   );
 
   const getColumns = (modelOptions: IMenuModelOptions): ColumnsType<IMenu> => [

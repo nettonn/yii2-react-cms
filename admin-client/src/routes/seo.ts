@@ -4,27 +4,31 @@ import { stringReplace } from "../utils/functions";
 const SeoGrid = React.lazy(() => import("../pages/Seo/SeoGridPage"));
 const Seo = React.lazy(() => import("../pages/Seo/SeoPage"));
 
-export const seoRouteNames = {
+const names = {
   index: "/seo",
   create: "/seo/create",
   update: "/seo/:id",
   updateUrl: (id?: string | number) => stringReplace("/seo/:id", { ":id": id }),
 };
 
-export const seoRoutes = [
-  { path: seoRouteNames.index, element: SeoGrid },
+const routes = [
+  { path: names.index, element: SeoGrid },
   {
-    path: seoRouteNames.create,
+    path: names.create,
     element: Seo,
     elementProps: { key: "create" },
   },
   {
-    path: seoRouteNames.update,
+    path: names.update,
     element: Seo,
     elementProps: { key: "update" },
   },
 ];
 
-export const seoRouteIcons = {
-  [seoRouteNames.index]: SearchOutlined,
+const icons = {
+  [names.index]: SearchOutlined,
 };
+
+const all = { names, routes, icons };
+
+export default all;

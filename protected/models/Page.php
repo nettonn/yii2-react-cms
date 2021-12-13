@@ -1,5 +1,6 @@
 <?php namespace app\models;
 
+use app\behaviors\SearchBehavior;
 use app\behaviors\TimestampBehavior;
 use app\behaviors\VersionBehavior;
 use app\models\base\ActiveRecord;
@@ -175,6 +176,12 @@ class Page extends ActiveRecord
                     'is_deleted' => true
                 ],
             ],
+            'SearchBehavior' => [
+                'class' => SearchBehavior::class,
+                'attributes' => [
+                    'content',
+                ]
+            ]
         ];
     }
 

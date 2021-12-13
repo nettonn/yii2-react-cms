@@ -54,6 +54,9 @@ $config = [
         'placeholders' => [
             'class'=> 'app\components\PlaceholderComponent',
         ],
+        'search' => [
+            'class' => 'app\components\SearchComponent',
+        ],
         'queue' => require(__DIR__ . '/parts/queue.php'),
         'db' => require (__DIR__ . '/parts/db.php'),
         'urlManager' => array_merge(require(__DIR__.'/parts/urlManager.php'), [

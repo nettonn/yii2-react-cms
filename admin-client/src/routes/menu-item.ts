@@ -1,11 +1,11 @@
 import React from "react";
 import { MenuOutlined } from "@ant-design/icons";
 import { stringReplace } from "../utils/functions";
-import { menuRouteNames } from "./menu";
+import menu from "./menu";
 const MenuItemsPage = React.lazy(() => import("../pages/Menu/MenuItemsPage"));
 const MenuItemPage = React.lazy(() => import("../pages/Menu/MenuItemPage"));
 
-export const menuItemRouteNames = {
+const names = {
   index: "/menu/:menuId/items",
   create: "/menu/:menuId/items/create",
   update: "/menu/:menuId/items/:id",
@@ -17,20 +17,24 @@ export const menuItemRouteNames = {
     stringReplace("/menu/:menuId/items/:id", { ":menuId": menuId, ":id": id }),
 };
 
-export const menuItemRoutes = [
-  { path: menuItemRouteNames.index, element: MenuItemsPage },
+const routes = [
+  { path: names.index, element: MenuItemsPage },
   {
-    path: menuItemRouteNames.create,
+    path: names.create,
     element: MenuItemPage,
     elementProps: { key: "create" },
   },
   {
-    path: menuItemRouteNames.update,
+    path: names.update,
     element: MenuItemPage,
     elementProps: { key: "update" },
   },
 ];
 
-export const menuItemRouteIcons = {
-  [menuRouteNames.index]: MenuOutlined,
+const icons = {
+  [menu.names.index]: MenuOutlined,
 };
+
+const all = { names, routes, icons };
+
+export default all;
