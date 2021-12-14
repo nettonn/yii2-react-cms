@@ -35,11 +35,11 @@ class AdminComponent extends Component
         Yii::$app->getResponse()->getCookies()->add(new \yii\web\Cookie([
             'name' => $this->adminCookieName,
             'value' => intval($value),
-            'expire' => time() + 3600*24,
+            'expire' => time() + 3600 * 24,
             'domain' => '',
             'httpOnly' => true,
             'secure' => IS_SECURE,
-            'sameSite' => IS_SECURE && !DEV ? Cookie::SAME_SITE_LAX :  Cookie::SAME_SITE_NONE,
+            'sameSite' => IS_SECURE && !DEV ? Cookie::SAME_SITE_LAX : Cookie::SAME_SITE_NONE,
             'path' => '/',
         ]));
     }

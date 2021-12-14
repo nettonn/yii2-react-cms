@@ -28,7 +28,7 @@ class m211125_171645_create_seo_table extends Migration
             'keywords'=>$this->string(500),
             'top_content'=>$this->text(),
             'bottom_content'=>$this->text(),
-            'status' => $this->boolean()->notNull(),
+            'status' => $this->boolean()->notNull()->defaultValue(false),
             'is_deleted' => $this->boolean()->notNull()->defaultValue(false),
             'created_at' => $this->integer()->unsigned(),
             'updated_at' => $this->integer()->unsigned(),

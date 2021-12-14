@@ -1,9 +1,9 @@
 import React from "react";
 import { UserOutlined } from "@ant-design/icons";
-import { stringReplace } from "../utils/functions";
+import { stringReplace } from "../../utils/functions";
 
-const Users = React.lazy(() => import("../pages/User/UsersPage"));
-const User = React.lazy(() => import("../pages/User/UserPage"));
+const Users = React.lazy(() => import("../../pages/User/UsersPage"));
+const User = React.lazy(() => import("../../pages/User/UserPage"));
 
 const names = {
   index: "/users",
@@ -31,6 +31,6 @@ const icons = {
   [names.index]: UserOutlined,
 };
 
-const all = { names, routes, icons };
+const user = { names, routes, icons };
 
-export default all;
+export default user;

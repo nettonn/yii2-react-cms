@@ -43,6 +43,10 @@ const HomePage: FC = () => {
       title: "Редиректы",
     },
     {
+      route: RouteNames.log.index,
+      title: "Логи",
+    },
+    {
       route: RouteNames.version.index,
       title: "Версии",
     },

@@ -1,8 +1,8 @@
 import React from "react";
 import { SettingOutlined } from "@ant-design/icons";
-import { stringReplace } from "../utils/functions";
-const Settings = React.lazy(() => import("../pages/Setting/SettingsPage"));
-const Setting = React.lazy(() => import("../pages/Setting/SettingPage"));
+import { stringReplace } from "../../utils/functions";
+const Settings = React.lazy(() => import("../../pages/Setting/SettingsPage"));
+const Setting = React.lazy(() => import("../../pages/Setting/SettingPage"));
 
 const names = {
   index: "/settings",
@@ -30,6 +30,6 @@ const icons = {
   [names.index]: SettingOutlined,
 };
 
-const all = { names, routes, icons };
+const setting = { names, routes, icons };
 
-export default all;
+export default setting;

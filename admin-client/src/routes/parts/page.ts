@@ -1,8 +1,8 @@
 import React from "react";
 import { FormOutlined } from "@ant-design/icons";
-import { stringReplace } from "../utils/functions";
-const Pages = React.lazy(() => import("../pages/Page/Pages"));
-const Page = React.lazy(() => import("../pages/Page/Page"));
+import { stringReplace } from "../../utils/functions";
+const Pages = React.lazy(() => import("../../pages/Page/Pages"));
+const Page = React.lazy(() => import("../../pages/Page/Page"));
 
 const names = {
   index: "/pages",
@@ -30,6 +30,6 @@ const icons = {
   [names.index]: FormOutlined,
 };
 
-const all = { names, routes, icons };
+const page = { names, routes, icons };
 
-export default all;
+export default page;

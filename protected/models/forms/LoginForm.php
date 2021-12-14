@@ -49,10 +49,8 @@ class LoginForm extends Model
 
             if (!$user || !$user->validatePassword($this->password)) {
                 $this->addError('password', 'Неверные данные.');
-            } elseif ($user && $user->status == User::STATUS_BLOCKED) {
+            } elseif ($user && $user->status == User::STATUS_NOT_ACTIVE) {
                 $this->addError('email', 'Ваш аккаунт заблокирован.');
-            } elseif ($user && $user->status == User::STATUS_WAIT) {
-                $this->addError('email', 'Ваш аккаунт не подтвежден.');
             }
         }
     }
@@ -78,7 +76,7 @@ class LoginForm extends Model
     public function getUser()
     {
         if ($this->_user === false) {
-            $this->_user = User::findByEmail($this->email);
+            $this->_user = User::find()->where(['email' => $this->email])->active()->one();
         }
 
         return $this->_user;

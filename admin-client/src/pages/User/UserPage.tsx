@@ -3,7 +3,7 @@ import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
-import { Form, Input, Select } from "antd";
+import { Form, Input, Select, Switch } from "antd";
 import rules from "../../utils/rules";
 import { IUser, IUserModelOptions } from "../../models/IUser";
 import { RouteNames } from "../../routes";
@@ -33,33 +33,10 @@ const UserPage: FC = () => {
           ))}
         </Select>
       </Form.Item>
-      <Form.Item label="Статус" name="status" rules={[rules.required()]}>
-        <Select style={{ width: "100%" }} placeholder="Выберите статус">
-          {modelOptions.status.map((status) => (
-            <Select.Option key={status.value} value={status.value}>
-              {status.text}
-            </Select.Option>
-          ))}
-        </Select>
+
+      <Form.Item label="Статус" name="status" valuePropName="checked">
+        <Switch checked={false} />
       </Form.Item>
-      {/*<Form.Item label="Роль" name="role" rules={[rules.required()]}>*/}
-      {/*  <Radio.Group optionType="button">*/}
-      {/*    {modelOptions?.role.map((i) => (*/}
-      {/*      <Radio.Button key={i.value} value={i.value}>*/}
-      {/*        {i.text}*/}
-      {/*      </Radio.Button>*/}
-      {/*    ))}*/}
-      {/*  </Radio.Group>*/}
-      {/*</Form.Item>*/}
-      {/*<Form.Item label="Статус" name="status" rules={[rules.required()]}>*/}
-      {/*  <Radio.Group optionType="button">*/}
-      {/*    {modelOptions?.status.map((i) => (*/}
-      {/*      <Radio.Button key={i.value} value={i.value}>*/}
-      {/*        {i.text}*/}
-      {/*      </Radio.Button>*/}
-      {/*    ))}*/}
-      {/*  </Radio.Group>*/}
-      {/*</Form.Item>*/}
     </>
   );
 

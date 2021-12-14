@@ -1,8 +1,10 @@
 import React from "react";
 import { HistoryOutlined } from "@ant-design/icons";
-import { stringReplace } from "../utils/functions";
-const VersionsPage = React.lazy(() => import("../pages/Version/VersionsPage"));
-const VersionPage = React.lazy(() => import("../pages/Version/VersionPage"));
+import { stringReplace } from "../../utils/functions";
+const VersionsPage = React.lazy(
+  () => import("../../pages/Version/VersionsPage")
+);
+const VersionPage = React.lazy(() => import("../../pages/Version/VersionPage"));
 
 const names = {
   index: "/versions",
@@ -24,6 +26,6 @@ const icons = {
   [names.index]: HistoryOutlined,
 };
 
-const all = { names, routes, icons };
+const version = { names, routes, icons };
 
-export default all;
+export default version;

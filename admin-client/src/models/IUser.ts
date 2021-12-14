@@ -3,7 +3,7 @@ import { IModel, IModelOptions, IValueTextOption } from "../types";
 export interface IUser extends IModel {
   email: string;
   role: string;
-  status: number;
+  status: boolean;
 }
 
 export interface IUserModelOptions extends IModelOptions {

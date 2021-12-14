@@ -1,8 +1,10 @@
 import React from "react";
 import { SendOutlined } from "@ant-design/icons";
-import { stringReplace } from "../utils/functions";
-const Redirects = React.lazy(() => import("../pages/Redirect/RedirectsPage"));
-const Redirect = React.lazy(() => import("../pages/Redirect/RedirectPage"));
+import { stringReplace } from "../../utils/functions";
+const Redirects = React.lazy(
+  () => import("../../pages/Redirect/RedirectsPage")
+);
+const Redirect = React.lazy(() => import("../../pages/Redirect/RedirectPage"));
 
 const names = {
   index: "/redirects",
@@ -30,6 +32,6 @@ const icons = {
   [names.index]: SendOutlined,
 };
 
-const all = { names, routes, icons };
+const redirect = { names, routes, icons };
 
-export default all;
+export default redirect;

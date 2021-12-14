@@ -1,8 +1,8 @@
 import React from "react";
 import { BlockOutlined } from "@ant-design/icons";
-import { stringReplace } from "../utils/functions";
-const LogsPage = React.lazy(() => import("../pages/Log/LogsPage"));
-const LogPage = React.lazy(() => import("../pages/Log/LogPage"));
+import { stringReplace } from "../../utils/functions";
+const LogsPage = React.lazy(() => import("../../pages/Log/LogsPage"));
+const LogPage = React.lazy(() => import("../../pages/Log/LogPage"));
 
 const names = {
   index: "/logs",
@@ -24,6 +24,6 @@ const icons = {
   [names.index]: BlockOutlined,
 };
 
-const all = { names, routes, icons };
+const log = { names, routes, icons };
 
-export default all;
+export default log;

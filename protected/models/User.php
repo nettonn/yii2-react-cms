@@ -18,20 +18,18 @@ use yii\web\IdentityInterface;
  * @property string $email
  * @property string|null $email_confirm_token
  * @property string $role
- * @property int $status
+ * @property boolean $status
  * @property int $created_at
  * @property int $updated_at
  */
 class User extends ActiveRecord implements IdentityInterface
 {
-    const STATUS_BLOCKED = 0;
-    const STATUS_ACTIVE = 1;
-    const STATUS_WAIT = 2;
+    const STATUS_ACTIVE = true;
+    const STATUS_NOT_ACTIVE = false;
 
     public $statusOptions = [
-        self::STATUS_BLOCKED => 'Заблокирован',
-        self::STATUS_ACTIVE => 'Активен',
-        self::STATUS_WAIT => 'Ожидает подтверждения',
+        self::STATUS_ACTIVE => 'Активно',
+        self::STATUS_NOT_ACTIVE => 'Не активно',
     ];
 
     const ROLE_ADMIN = 'admin';
@@ -68,7 +66,7 @@ class User extends ActiveRecord implements IdentityInterface
 
             ['password', 'string', 'min' => 2, 'max' => 255],
 
-            ['status', 'integer'],
+            [['status'], 'boolean',],
             ['role', 'safe'],
         ];
     }
@@ -205,18 +203,18 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function findByUsername($username)
     {
-        return self::find()->where(['username' => $username])->one();
+        return self::find()->where(['username' => $username]);
     }
 
     public static function findByEmail($email)
     {
-        return self::find()->where(['email' => $email])->one();
+        return self::find()->where(['email' => $email]);
     }
 
     public static function findIdentityByAccessToken($token, $type = null) {
         return static::find()
             ->where(['id' => (string) $token->getClaim('uid') ])
-            ->andWhere(['status' => self::STATUS_ACTIVE])  //adapt this to your needs
+            ->active()  //adapt this to your needs
             ->one();
     }
 
@@ -224,17 +222,17 @@ class User extends ActiveRecord implements IdentityInterface
      * Finds user by password reset token
      *
      * @param string $token password reset token
-     * @return static|null
+     * @return User|null
      */
-    public static function findByPasswordResetToken($token): ?static
+    public static function findByPasswordResetToken($token)
     {
-        if (!static::isPasswordResetTokenValid($token)) {
+        if (!User::isPasswordResetTokenValid($token)) {
             return null;
         }
-        return static::findOne([
-            'password_reset_token' => $token,
-            'status' => self::STATUS_ACTIVE,
-        ]);
+        return User::find()
+            ->where(['password_reset_token' => $token,])
+            ->active()
+            ->one();
     }
 
     /**
@@ -278,7 +276,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return static::findOne([
             'email_confirm_token' => $email_confirm_token,
-            'status' => self::STATUS_WAIT
+            'status' => self::STATUS_NOT_ACTIVE
         ]);
     }
 

@@ -1,8 +1,8 @@
 import React from "react";
 import { MenuOutlined } from "@ant-design/icons";
-import { stringReplace } from "../utils/functions";
-const MenuGridPage = React.lazy(() => import("../pages/Menu/MenuGridPage"));
-const MenuPage = React.lazy(() => import("../pages/Menu/MenuPage"));
+import { stringReplace } from "../../utils/functions";
+const MenuGridPage = React.lazy(() => import("../../pages/Menu/MenuGridPage"));
+const MenuPage = React.lazy(() => import("../../pages/Menu/MenuPage"));
 
 const names = {
   index: "/menu",
@@ -30,6 +30,6 @@ const icons = {
   [names.index]: MenuOutlined,
 };
 
-const all = { names, routes, icons };
+const menu = { names, routes, icons };
 
-export default all;
+export default menu;

@@ -27,7 +27,7 @@ class m210901_172352_create_user_table extends Migration
             'email' => $this->string()->notNull(),
             'email_confirm_token' => $this->string(),
             'role' => $this->string()->notNull(),
-            'status' => $this->smallInteger()->notNull()->defaultValue(0),
+            'status' => $this->boolean()->notNull()->defaultValue(false),
             'created_at' => $this->integer()->notNull()->unsigned(),
             'updated_at' => $this->integer()->notNull()->unsigned(),
         ], $tableOptions);

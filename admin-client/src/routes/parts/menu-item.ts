@@ -1,9 +1,11 @@
 import React from "react";
 import { MenuOutlined } from "@ant-design/icons";
-import { stringReplace } from "../utils/functions";
+import { stringReplace } from "../../utils/functions";
 import menu from "./menu";
-const MenuItemsPage = React.lazy(() => import("../pages/Menu/MenuItemsPage"));
-const MenuItemPage = React.lazy(() => import("../pages/Menu/MenuItemPage"));
+const MenuItemsPage = React.lazy(
+  () => import("../../pages/Menu/MenuItemsPage")
+);
+const MenuItemPage = React.lazy(() => import("../../pages/Menu/MenuItemPage"));
 
 const names = {
   index: "/menu/:menuId/items",
@@ -35,6 +37,6 @@ const icons = {
   [menu.names.index]: MenuOutlined,
 };
 
-const all = { names, routes, icons };
+const menuItem = { names, routes, icons };
 
-export default all;
+export default menuItem;

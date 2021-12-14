@@ -1,28 +1,20 @@
-import React from "react";
+import common from "./parts/common";
+import error from "./parts/error";
+import user from "./parts/user";
+import post from "./parts/post";
+import page from "./parts/page";
+import chunk from "./parts/chunk";
+import redirect from "./parts/redirect";
+import setting from "./parts/setting";
+import seo from "./parts/seo";
+import menu from "./parts/menu";
+import menuItem from "./parts/menu-item";
+import version from "./parts/version";
+import log from "./parts/log";
 import { IRoute } from "../types";
-import { HomeOutlined, CalendarOutlined } from "@ant-design/icons";
-import error from "./error";
-import user from "./user";
-import post from "./post";
-import page from "./page";
-import chunk from "./chunk";
-import redirect from "./redirect";
-import setting from "./setting";
-import seo from "./seo";
-import menu from "./menu";
-import menuItem from "./menu-item";
-import version from "./version";
-import log from "./log";
-
-const Login = React.lazy(() => import("../pages/LoginPage"));
-const Home = React.lazy(() => import("../pages/HomePage"));
-const Event = React.lazy(() => import("../pages/EventPage"));
 
 export const RouteNames = {
-  login: "/login",
-  home: "/",
-  event: "/event",
-
+  ...common.names,
   error: error.names,
   user: user.names,
   post: post.names,
@@ -37,13 +29,10 @@ export const RouteNames = {
   log: log.names,
 };
 
-export const publicRoutes: IRoute[] = [
-  { path: RouteNames.login, element: Login },
-];
+export const publicRoutes: IRoute[] = [...common.publicRoutes];
 
 export const privateRoutes: IRoute[] = [
-  { path: RouteNames.home, element: Home },
-  { path: RouteNames.event, element: Event },
+  ...common.routes,
 
   ...error.routes,
   ...user.routes,
@@ -60,8 +49,7 @@ export const privateRoutes: IRoute[] = [
 ];
 
 export const routeIcons = {
-  [RouteNames.home]: HomeOutlined,
-  [RouteNames.event]: CalendarOutlined,
+  ...common.icons,
   ...user.icons,
   ...post.icons,
   ...page.icons,

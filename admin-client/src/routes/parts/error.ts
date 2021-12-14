@@ -1,7 +1,7 @@
 import React from "react";
-const Error403 = React.lazy(() => import("../pages/Error/Error403Page"));
-const Error404 = React.lazy(() => import("../pages/Error/Error404Page"));
-const Error500 = React.lazy(() => import("../pages/Error/Error500Page"));
+const Error403 = React.lazy(() => import("../../pages/Error/Error403Page"));
+const Error404 = React.lazy(() => import("../../pages/Error/Error404Page"));
+const Error500 = React.lazy(() => import("../../pages/Error/Error500Page"));
 
 const names = {
   e403: "/error403",

@@ -8,6 +8,7 @@ import IndexPageActions from "../../components/crud/PageActions/IndexPageActions
 import { userService } from "../../api/UserService";
 import useDataGrid from "../../hooks/dataGrid.hook";
 import { Link } from "react-router-dom";
+import { statusColumn } from "../../components/crud/grid/columns";
 
 const modelRoutes = RouteNames.user;
 
@@ -40,13 +41,7 @@ const UsersPage: FC = () => {
       sorter: true,
       filters: modelOptions.role,
     },
-    {
-      title: "Статус",
-      dataIndex: "status_text",
-      key: "status",
-      sorter: true,
-      filters: modelOptions.status,
-    },
+    statusColumn<IUser>({ filters: modelOptions.status }),
   ];
 
   return (

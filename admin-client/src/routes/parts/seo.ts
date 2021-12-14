@@ -1,8 +1,8 @@
 import React from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { stringReplace } from "../utils/functions";
-const SeoGrid = React.lazy(() => import("../pages/Seo/SeoGridPage"));
-const Seo = React.lazy(() => import("../pages/Seo/SeoPage"));
+import { stringReplace } from "../../utils/functions";
+const SeoGrid = React.lazy(() => import("../../pages/Seo/SeoGridPage"));
+const Seo = React.lazy(() => import("../../pages/Seo/SeoPage"));
 
 const names = {
   index: "/seo",
@@ -29,6 +29,6 @@ const icons = {
   [names.index]: SearchOutlined,
 };
 
-const all = { names, routes, icons };
+const seo = { names, routes, icons };
 
-export default all;
+export default seo;
