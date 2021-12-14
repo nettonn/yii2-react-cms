@@ -1,6 +1,7 @@
 <?php namespace app\models;
 
 use app\behaviors\TimestampBehavior;
+use app\behaviors\VersionBehavior;
 use app\models\base\ActiveRecord;
 use nettonn\yii2filestorage\behaviors\ContentImagesBehavior;
 use nettonn\yii2filestorage\behaviors\FileBehavior;
@@ -23,15 +24,15 @@ class Chunk extends ActiveRecord
     const TYPE_TEXT = 1;
     const TYPE_HTML = 2;
 
-    public $typeOptions = array(
+    public $typeOptions = [
         self::TYPE_TEXT => 'Текст',
         self::TYPE_HTML => 'HTML',
-    );
+    ];
 
     /**
      * @inheritdoc
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%chunk}}';
     }
@@ -39,7 +40,7 @@ class Chunk extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['name', 'type'], 'required'],
@@ -52,7 +53,7 @@ class Chunk extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -65,7 +66,12 @@ class Chunk extends ActiveRecord
         ];
     }
 
-    public function fields()
+    public static function getModelLabel(): string
+    {
+        return 'Чанки';
+    }
+
+    public function fields(): array
     {
         $fields = parent::fields();
         $fields['type_text'] = function ($model) {
@@ -77,17 +83,11 @@ class Chunk extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'TimestampBehavior' => [
                 'class' => TimestampBehavior::class,
-            ],
-            'SoftDeleteBehavior' => [
-                'class' => SoftDeleteBehavior::class,
-                'softDeleteAttributeValues' => [
-                    'is_deleted' => true
-                ],
             ],
             'ContentImagesBehavior' => [
                 'class' => ContentImagesBehavior::class,
@@ -101,6 +101,18 @@ class Chunk extends ActiveRecord
                         'multiple' => true,
                     ],
                 ]
+            ],
+            'VersionBehavior' => [
+                'class' => VersionBehavior::class,
+                'attributes' => [
+                    'name', 'key', 'type', 'content',
+                ]
+            ],
+            'SoftDeleteBehavior' => [
+                'class' => SoftDeleteBehavior::class,
+                'softDeleteAttributeValues' => [
+                    'is_deleted' => true
+                ],
             ],
         ];
     }

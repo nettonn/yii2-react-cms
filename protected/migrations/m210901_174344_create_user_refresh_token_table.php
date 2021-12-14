@@ -23,10 +23,12 @@ class m210901_174344_create_user_refresh_token_table extends Migration
             'ip' => $this->string(50)->notNUll(),
             'user_agent' => $this->string(1000)->notNull(),
             'created_at' => $this->integer()->notNull()->unsigned(),
+            'updated_at' => $this->integer()->notNull()->unsigned(),
         ], $tableOptions);
 
         $this->createIndex('idx-user_refresh_token-token', '{{%user_refresh_token}}', 'token');
         $this->createIndex('idx-user_refresh_token-created_at', '{{%user_refresh_token}}', 'created_at');
+        $this->createIndex('idx-user_refresh_token-updated_at', '{{%user_refresh_token}}', 'updated_at');
 
         if ($this->db->driverName !== 'sqlite') {
 
@@ -53,15 +55,6 @@ class m210901_174344_create_user_refresh_token_table extends Migration
                 '{{%user_refresh_token}}'
             );
         }
-
-        $this->dropIndex(
-            'idx-user_refresh_token-token',
-            '{{%user_refresh_token}}'
-        );
-        $this->dropIndex(
-            'idx-user_refresh_token-created_at',
-            '{{%user_refresh_token}}'
-        );
 
         $this->dropTable('{{%user_refresh_token}}');
     }

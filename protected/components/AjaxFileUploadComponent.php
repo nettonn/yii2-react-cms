@@ -1,9 +1,11 @@
 <?php namespace app\components;
 
-use app\utils\UrlHelper;
+use nettonn\yii2filestorage\Module;
+use Yii;
 use yii\base\Component;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
+use yii\helpers\Inflector;
 
 class AjaxFileUploadComponent extends Component
 {
@@ -23,7 +25,7 @@ class AjaxFileUploadComponent extends Component
 
     public function init()
     {
-        $this->uploadPath = path_alias($this->uploadPath);
+        $this->uploadPath = Yii::getAlias($this->uploadPath);
     }
 
     protected function getCurrentPath($token)
@@ -51,7 +53,7 @@ class AjaxFileUploadComponent extends Component
         $currentPath = $this->getCurrentPath($token);
         $thumbPath = $this->getThumbPath($token);
 
-        $name = UrlHelper::transliterate($uploadedFile->baseName);
+        $name = Inflector::slug($uploadedFile->baseName);
         $ext = strtolower($uploadedFile->extension);
         $nameExt = $name.'.'.$ext;
 
@@ -60,8 +62,8 @@ class AjaxFileUploadComponent extends Component
 
             $filename = $currentPath.DS.$nameExt;
             $thumbName = $thumbPath.DS.$nameExt;
-            generate_image($uploadedFile->tempName, $filename, 1280, 1280);
-            generate_image($uploadedFile->tempName, $thumbName, 100, 100, true);
+            Yii::$app->getModule('file-storage')->generateImage($uploadedFile->tempName, $filename, 1280, 1280);
+            Yii::$app->getModule('file-storage')->generateImage($uploadedFile->tempName, $thumbName, 100, 100, true);
         } elseif(!$onlyImages) {
             $isImage = false;
             $filename = $currentPath.DS.$nameExt;

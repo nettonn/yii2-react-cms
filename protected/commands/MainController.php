@@ -1,12 +1,13 @@
 <?php namespace app\commands;
 
 use app\jobs\SitemapJob;
+use Yii;
 use yii\console\Controller;
 
 class MainController extends Controller
 {
     public function actionSitemap()
     {
-        app()->queue->push(new SitemapJob());
+        Yii::$app->queue->push(new SitemapJob());
     }
 }

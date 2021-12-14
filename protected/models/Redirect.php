@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
+use Yii;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -34,7 +35,7 @@ class Redirect extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%redirect}}';
     }
@@ -42,7 +43,7 @@ class Redirect extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['from', 'to', 'status'], 'required'],
@@ -55,7 +56,7 @@ class Redirect extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -67,6 +68,11 @@ class Redirect extends ActiveRecord
             'created_at' => 'Создано',
             'updated_at' => 'Изменено',
         ];
+    }
+
+    public static function getModelLabel(): string
+    {
+        return 'Редиректы';
     }
 
     public function init()
@@ -99,12 +105,13 @@ class Redirect extends ActiveRecord
 
     public static function handleRedirects()
     {
-        $path = '/'.ltrim(get_request()->getPathInfo(), '/');
+        $path = '/'.ltrim(Yii::$app->getRequest()->getPathInfo(), '/');
 
         foreach(self::find()->active()->orderBy('sort ASC')->asArray()->all() as $one) {
             if(preg_match("~{$one['from']}~ui", $path)) {
                 $to = preg_replace('~'.$one['from'].'~ui', $one['to'], $path);
-                redirect($to, $one['code']);
+                Yii::$app->getResponse()->redirect($to, 301, true)->send();
+                Yii::$app->end();
             }
         }
     }
@@ -112,7 +119,7 @@ class Redirect extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'TimestampBehavior' => [

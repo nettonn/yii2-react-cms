@@ -1,46 +1,61 @@
 <?php namespace app\filters;
 
+use Yii;
 use yii\base\ActionFilter;
+use yii\helpers\Url;
 
 class FrontOutputFilter extends ActionFilter
 {
-    public $isAdminEdit = false;
+    public $enabled = true;
 
-    protected $adminLink;
+    public $arrayResponseContentParams = [
+        'html',
+        'content',
+        'text',
+    ];
 
     /**
      * {@inheritdoc}
      */
     public function afterAction($action, $result)
     {
-        $content = $result;
-        $content = $this->replaceRouble($content);
-        if($this->isAdminEdit)
-            $content = $this->addAdminButton($content);
-        $content = $this->replacePlaceholders($content);
-        $content = $this->replaceLazyImages($content);
+        if($this->enabled) {
+            $result = $this->modifyOutput($result);
+        }
 
-        return parent::afterAction($action, $content);
+        return parent::afterAction($action, $result);
     }
 
-    public function addAdminLink($link)
+    public function modifyOutput($content)
     {
-        $this->adminLink = $link;
-    }
+        if(is_array($content) && $this->arrayResponseContentParams) {
+            foreach ($this->arrayResponseContentParams as $param) {
+                if(!isset($content[$param]) || !is_string($content[$param]))
+                    continue;
+                $content[$param] = $this->modifyOutput($content[$param]);
+            }
+        } elseif(is_string($content)) {
+            if(!Yii::$app->request->isAjax && Yii::$app->admin->isAdminEdit())
+                $content = $this->addAdminButton($content);
+            $content = $this->replacePlaceholders($content);
+            $content = $this->replaceLazyImages($content);
+        }
 
-    protected function replaceRouble($content)
-    {
-        return preg_replace('~(#руб#|#rub#)~ui', '₽', $content);
-        //    return preg_replace('~(#руб#|#rub#)~ui', '<span class="icon-rouble" title="рублей"><span class="icon-text">рублей</span></span>', $content);
+        return $content;
     }
 
     protected function addAdminButton($content)
     {
-        if($link = $this->adminLink) {
+        if(!Yii::$app->response->isSuccessful )
+            return $content;
+
+        if($link = Yii::$app->admin->getAdminLink()) {
             $title = 'Редактировать';
         }
         else {
-            $link = url(['/seo/seo-admin/create', 'url'=>get_request()->getUrl(), 'name'=>seo('h1')]);
+            $link = Url::to(['/admin/seo/create',
+                'url'=> Yii::$app->seo->getCanonicalUri(),
+                'name'=>Yii::$app->seo->getH1()]);
             $title = 'Добавить SEO';
         }
         $editButton = '<a href="'.$link.'" style="position: fixed; top: 0; left: 0; display: block; z-index: 9999; color: #fff; background: #444">'.$title.'</a>';
@@ -49,15 +64,14 @@ class FrontOutputFilter extends ActionFilter
 
     protected function replacePlaceholders($content)
     {
-        $placeholders = \Yii::$app->placeholders;
-        $content = $placeholders->replaceAll($content);
-        $content = $placeholders->replaceAll($content);
-        $content = $placeholders->remove_empty($content);
-        return $content;
+        return Yii::$app->placeholders->replaceAll($content);
     }
 
     protected function replaceLazyImages($content)
     {
+        if(false === stripos($content, 'lazy-image-replace'))
+            return $content;
+
         $images = [];
         preg_match_all("~<img[^>]*lazy-image-replace[^>]*>~i", $content, $images, PREG_PATTERN_ORDER);
         if(isset($images[0])) {
@@ -68,6 +82,4 @@ class FrontOutputFilter extends ActionFilter
         }
         return $content;
     }
-
-
 }

@@ -5,3 +5,5 @@ const enum CONSTANTS {
 }
 
 export default CONSTANTS;
+
+export const DEFAULT_ROW_GUTTER = 15;

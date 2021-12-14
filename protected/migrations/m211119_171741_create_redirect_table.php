@@ -21,7 +21,7 @@ class m211119_171741_create_redirect_table extends Migration
             'from'=>$this->string(1000)->notNull(),
             'to'=>$this->string(1000)->notNull(),
             'code' => $this->smallInteger(4)->unsigned(),
-            'status' => $this->boolean()->notNull(),
+            'status' => $this->boolean()->notNull()->defaultValue(false),
             'sort' => $this->integer()->unsigned(),
             'is_deleted' => $this->boolean()->notNull()->defaultValue(false),
             'created_at' => $this->integer()->unsigned(),

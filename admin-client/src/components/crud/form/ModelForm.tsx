@@ -3,20 +3,22 @@ import { Form, FormInstance, Spin } from "antd";
 import _isEmpty from "lodash/isEmpty";
 import { useModelForm } from "../../../hooks/modelForm.hook";
 import UpdatePageActions from "./../../crud/PageActions/UpdatePageActions";
-import { IModel } from "../../../types";
+import { IModel, IModelOptions } from "../../../types";
 import { Navigate } from "react-router-dom";
 import { RouteNames } from "../../../routes";
+import { stringReplace } from "../../../utils/functions";
 
 interface ModelFormProps {
-  modelForm: any | ReturnType<typeof useModelForm>;
+  modelForm: any | ReturnType<typeof useModelForm>; // how without any?
   formContent(
     initData?: IModel,
-    modelOptions?: any,
+    modelOptions?: IModelOptions,
     form?: FormInstance
   ): React.ReactNode;
   exitRoute: string;
   createRoute: string;
-  viewRoute: string;
+  updateRoute: string; // with :id placeholder
+  hasViewUrl?: boolean;
 }
 
 const ModelForm: FC<ModelFormProps> = ({
@@ -24,10 +26,12 @@ const ModelForm: FC<ModelFormProps> = ({
   formContent,
   exitRoute,
   createRoute,
-  viewRoute,
+  updateRoute,
+  hasViewUrl,
 }) => {
   const {
     newId,
+    viewUrl,
     form,
     initData,
     isDataLoading,
@@ -42,6 +46,7 @@ const ModelForm: FC<ModelFormProps> = ({
     onValuesChange,
     modelOptions,
     isNotFound,
+    versionsUrl,
   } = modelForm;
 
   if (!isInit) return <Spin spinning={true} />;
@@ -80,9 +85,12 @@ const ModelForm: FC<ModelFormProps> = ({
         success={isSaveSuccess}
         exitRoute={exitRoute}
         createRoute={createRoute}
-        afterSaveRedirect={
-          newId ? viewRoute.replace(/:id/, newId.toString()) : undefined
+        updateRoute={
+          newId ? stringReplace(updateRoute, { ":id": newId }) : undefined
         }
+        hasViewUrl={hasViewUrl}
+        viewUrl={viewUrl}
+        versionsUrl={versionsUrl}
       />
     </>
   );

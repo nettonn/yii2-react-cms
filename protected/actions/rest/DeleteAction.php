@@ -1,5 +1,6 @@
 <?php namespace app\actions\rest;
 
+use Yii;
 use yii\db\ActiveRecord;
 use yii\web\ServerErrorHttpException;
 
@@ -21,6 +22,6 @@ class DeleteAction extends \yii\rest\DeleteAction
             throw new ServerErrorHttpException('Failed to delete the object for unknown reason.');
         }
 
-        \Yii::$app->getResponse()->setStatusCode(204);
+        Yii::$app->getResponse()->setStatusCode(204);
     }
 }

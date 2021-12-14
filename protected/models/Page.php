@@ -1,9 +1,15 @@
 <?php namespace app\models;
 
+use app\behaviors\SearchBehavior;
 use app\behaviors\TimestampBehavior;
+use app\behaviors\VersionBehavior;
 use app\models\base\ActiveRecord;
+use app\models\query\ActiveQuery;
 use nettonn\yii2filestorage\behaviors\ContentImagesBehavior;
 use nettonn\yii2filestorage\behaviors\FileBehavior;
+use Yii;
+use yii\helpers\Inflector;
+use yii\helpers\Url;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 use app\behaviors\TreeBehavior;
 
@@ -14,7 +20,9 @@ use app\behaviors\TreeBehavior;
  * @property string $name
  * @property string $alias
  * @property string $_url
+ * @property string $path
  * @property integer $parent_id
+ * @property integer $level
  * @property string $description
  * @property string $content
  * @property string $layout
@@ -27,23 +35,24 @@ use app\behaviors\TreeBehavior;
  * @property string $seo_keywords
  * @property string $seo_description
  * @property string $data
+ *
+ * @property Page[] $children
+ * @property Page $parent
  */
 class Page extends ActiveRecord
 {
-    const STATUS_ACTIVE = 1;
-    const STATUS_NOT_ACTIVE = 0;
+    const STATUS_ACTIVE = true;
+    const STATUS_NOT_ACTIVE = false;
 
     public $statusOptions = [
         self::STATUS_ACTIVE => 'Активно',
         self::STATUS_NOT_ACTIVE => 'Не активно',
     ];
 
-    public static $childrenWith;
-
     /**
      * @inheritdoc
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%page}}';
     }
@@ -51,7 +60,7 @@ class Page extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['name', 'alias'], 'required'],
@@ -62,21 +71,24 @@ class Page extends ActiveRecord
             [['seo_keywords', 'seo_description'], 'string', 'max' => 500],
             [['layout'], 'string', 'max' => 50],
             [['status'], 'boolean',],
-            [['alias'], 'filter', 'filter'=>'generate_alias'],
+            [['alias'], 'filter', 'filter'=>[Inflector::class, 'slug']],
+            [['images_id'], 'integer', 'allowArray' => true],
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
             'name' => 'Название',
             'alias' => 'Псевдоним',
             '_url' => 'Url',
+            'path' => 'Path',
             'parent_id' => 'Родитель',
+            'level' => 'Level',
             'description' => 'Описание',
             'content' => 'Содержимое',
             'layout' => 'Шаблон',
@@ -89,12 +101,15 @@ class Page extends ActiveRecord
             'seo_keywords' => 'Seo Keywords',
             'image'=>'Главное изображение',
             'images'=>'Изображения',
-            'imgback'=>'Фон шапки',
-
         ];
     }
 
-    public function fields()
+    public static function getModelLabel(): string
+    {
+        return 'Страницы';
+    }
+
+    public function fields(): array
     {
         $fields = parent::fields();
 
@@ -110,24 +125,20 @@ class Page extends ActiveRecord
         return $fields;
     }
 
-    public function getParent()
+    public function getParent(): ActiveQuery
     {
         return $this->hasOne(self::class, ['id' => 'parent_id']);
     }
 
-    public function getChildren()
+    public function getChildren(): ActiveQuery
     {
-        $query = $this->hasMany(self::class, ['parent_id'=>'id'])->notDeleted();
-        if(self::$childrenWith) {
-            $query = $query->with(self::$childrenWith);
-        }
-        return $query;
+        return $this->hasMany(self::class, ['parent_id'=>'id']);
     }
 
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'TimestampBehavior' => [
@@ -152,12 +163,25 @@ class Page extends ActiveRecord
                     ],
                 ]
             ],
+            'VersionBehavior' => [
+                'class' => VersionBehavior::class,
+                'attributes' => [
+                    'name', 'alias', 'parent_id', 'description', 'content', 'layout', 'status',
+                    'seo_title', 'seo_h1', 'seo_description', 'seo_keywords',
+                ]
+            ],
             'SoftDeleteBehavior' => [
                 'class' => SoftDeleteBehavior::class,
                 'softDeleteAttributeValues' => [
                     'is_deleted' => true
                 ],
             ],
+            'SearchBehavior' => [
+                'class' => SearchBehavior::class,
+                'attributes' => [
+                    'content',
+                ]
+            ]
         ];
     }
 
@@ -171,16 +195,16 @@ class Page extends ActiveRecord
         parent::init();
     }
 
-    public function generateUrl()
+    public function generateUrl(): string
     {
-//        if(setting_get('mainpage') == $this->id)
-//            return url(['/page/default/index']);
-        return url(['/page/default/view', 'path'=>$this->treeGetPath()]);
+        if(Yii::$app->settings->get('main_page_id') == $this->id)
+            return Url::to(['/site/index']);
+        return Url::to(['/site/page', 'path'=>$this->treeGetPath()]);
     }
 
-    public function getUrl($scheme = false)
+    public function getUrl($scheme = false): ?string
     {
-        return url($this->_url, $scheme);
+        return Url::to($this->_url, $scheme);
     }
 
 }

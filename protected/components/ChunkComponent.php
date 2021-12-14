@@ -1,6 +1,7 @@
 <?php namespace app\components;
 
 use app\models\Chunk;
+use Yii;
 use yii\base\Component;
 
 class ChunkComponent extends Component
@@ -13,17 +14,17 @@ class ChunkComponent extends Component
 
         $cacheKey = self::class.'-data';
 
-        $this->data = \Yii::$app->getCache()->get($cacheKey);
+        $this->data = Yii::$app->getCache()->get($cacheKey);
 
         if(false === $this->data) {
             $models = Chunk::find()->notDeleted()->all();
             foreach($models as $model) {
                 if($model->key) {
-                    $this->data['keys'][$model->key] = intval($model->id);
+                    $this->data['keys'][$model->key] = $model->id;
                 }
-                $this->data['content'][intval($model->id)] = $model->content;
+                $this->data['content'][$model->id] = strval($model->content);
             }
-            \Yii::$app->getCache()->set($cacheKey, $this->data);
+            Yii::$app->getCache()->set($cacheKey, $this->data);
         }
     }
 
@@ -34,7 +35,7 @@ class ChunkComponent extends Component
 
         if (isset($this->data['content'][$key]))
             return $this->data['content'][$key];
-        \Yii::error("Нет такого чанка {$key}");
+        Yii::warning("Нет такого чанка {$key}");
         return '';
     }
 }

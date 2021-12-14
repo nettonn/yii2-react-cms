@@ -1,7 +1,10 @@
 <?php
 return [
-    '' => 'site/index',
-    'files/<_path:.+>'=>'file-storage/thumb/get',
+    'files/<_path:.+>'=>'file-thumb/get',
+    [
+        'class' => 'app\components\SiteUrlRule',
+    ],
+    'ajax/<action:\w+>'=> 'site-ajax/<action>',
     [
         'class' => 'app\components\AdminClientUrlCreateRules',
         'restControllers' => [
@@ -11,7 +14,23 @@ return [
             'chunks' => 'admin/chunk',
             'redirects' => 'admin/redirect',
             'settings' => 'admin/setting',
+            'seo' => 'admin/seo',
+            'menu' => 'admin/menu',
+            'menu-items' => 'admin/menu-item',
+            'versions' => 'admin/version',
+            'logs' => 'admin/log',
         ]
+    ],
+    [
+        'class' => 'yii\rest\UrlRule',
+        'controller' => [
+            'helpers' => 'admin/helper',
+        ],
+        'prefix' => 'admin-api',
+        'patterns' => [
+            'GET,POST <action:.+>' => '<action>',
+            'OPTIONS <action:.+>' => 'options',
+        ],
     ],
     [
         'class' => 'yii\rest\UrlRule',
@@ -50,6 +69,11 @@ return [
             'chunks' => 'admin/chunk',
             'redirects' => 'admin/redirect',
             'settings' => 'admin/setting',
+            'seo' => 'admin/seo',
+            'menu' => 'admin/menu',
+            'menu-items' => 'admin/menu-item',
+            'versions' => 'admin/version',
+            'logs' => 'admin/log',
         ],
         'prefix' => 'admin-api',
         'extraPatterns' => [

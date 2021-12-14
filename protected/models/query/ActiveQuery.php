@@ -1,10 +1,25 @@
 <?php namespace app\models\query;
 
+use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 
 class ActiveQuery extends \yii\db\ActiveQuery
 {
+    public $softDeleteAttribute = 'is_deleted';
+
+    protected $hasSoftDelete;
+
+    public function init()
+    {
+        if(null === $this->hasSoftDelete) {
+            /** @var ActiveRecord $modelClass */
+            $modelClass = $this->modelClass;
+            $this->hasSoftDelete = isset($modelClass::getTableSchema()->columns[$this->softDeleteAttribute]);
+        }
+        parent::init();
+    }
+
     public function onlyRoots()
     {
         return $this->andWhere('parent_id IS NULL OR parent_id = 0');
@@ -12,12 +27,17 @@ class ActiveQuery extends \yii\db\ActiveQuery
 
     public function notDeleted()
     {
-        return $this->andWhere(['is_deleted' => false]);
+        if($this->hasSoftDelete)
+            return $this->andWhere([$this->softDeleteAttribute => false]);
+        return $this;
     }
 
     public function active($state = true)
     {
-        return $this->andWhere(['status' => $state])->andWhere(['is_deleted' => false]);
+        $query = $this->andWhere(['status' => $state]);
+        if($this->hasSoftDelete)
+            $query = $query->andWhere(['is_deleted' => false]);
+        return $query;
     }
 
     public function orderSort($desc = false)

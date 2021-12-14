@@ -7,14 +7,19 @@ import { ValidateErrorEntity } from "rc-field-form/lib/interface";
 import { IModel, IModelOptions } from "../types";
 import { useQuery, useMutation } from "react-query";
 import { queryClient } from "../http/query-client";
-import { useIsMounted } from "./isMounted.hook";
 import { useNavigate } from "react-router-dom";
 import { RouteNames } from "../routes";
+import { useIsMounted } from "usehooks-ts";
+const pretty = require("pretty");
 
 export function useModelForm<
   T extends IModel = IModel,
   M extends IModelOptions = IModelOptions
->(id: number | string | undefined, modelService: RestService) {
+>(
+  id: number | string | undefined,
+  modelService: RestService,
+  makePrettyFields: (keyof T)[] = []
+) {
   const isMounted = useIsMounted();
   const [isInit, setIsInit] = useState(false);
   const [form] = Form.useForm();
@@ -23,6 +28,9 @@ export function useModelForm<
     null
   );
   const [newId, setNewId] = useState<number | string | null>(null);
+  const [viewUrl, setViewUrl] = useState<string | undefined>();
+  const [versionsUrl, setVersionsUrl] = useState<string | undefined>();
+
   const navigate = useNavigate();
 
   const isCreateForm = !id;
@@ -85,6 +93,12 @@ export function useModelForm<
       const result = await modelService.view<T>(id, signal);
 
       if (result.success) {
+        if (result.data?.view_url) {
+          setViewUrl(result.data.view_url);
+        }
+        if (result.data?.versions_url) {
+          setVersionsUrl(result.data.versions_url);
+        }
         return result.data;
       }
       if (result.status === 404) {
@@ -109,13 +123,26 @@ export function useModelForm<
     setValidationErrors(null);
     setIsTouchedAfterSubmit(false);
 
+    if (makePrettyFields && makePrettyFields.length) {
+      for (let field of makePrettyFields) {
+        if (values[field]) {
+          values[field] = pretty(values[field]);
+        }
+      }
+    }
+
     const result = await (isUpdateForm
       ? modelService.update<T>(id, values)
       : modelService.create<T>(values));
 
     if (result.success) {
+      if (result.data?.view_url) setViewUrl(result.data.view_url);
+      if (result.data?.versions_url) setVersionsUrl(result.data.versions_url);
+
       if (isCreateForm) {
-        if (result.data && isMounted()) setNewId(result.data.id);
+        if (result.data && isMounted()) {
+          setNewId(result.data.id);
+        }
         form.resetFields();
       } else {
         form.setFieldsValue(result.data);
@@ -207,6 +234,8 @@ export function useModelForm<
   return {
     id,
     newId,
+    viewUrl,
+    versionsUrl,
     isCreateForm,
     isUpdateForm,
     form,

@@ -1,4 +1,4 @@
-import { IModel, IModelOptions } from "../types";
+import { IModel, IModelOptions, IValueTextOption } from "../types";
 
 export const SETTING_TYPE_BOOL = 1;
 export const SETTING_TYPE_INT = 2;
@@ -12,5 +12,5 @@ export interface ISetting extends IModel {
 }
 
 export interface ISettingModelOptions extends IModelOptions {
-  type: { value: number; text: string }[];
+  type: IValueTextOption[];
 }

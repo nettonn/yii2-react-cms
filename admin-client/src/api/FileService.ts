@@ -2,8 +2,8 @@ import RestService from "./RestService";
 import { AxiosRequestConfig } from "axios";
 
 export default class FileService extends RestService {
-  name = "file";
-  url = "/files";
+  protected name = "file";
+  protected url = "/files";
 
   createImageConfig(): AxiosRequestConfig {
     return {

@@ -4,7 +4,10 @@ namespace app\models;
 
 use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
+use app\models\query\ActiveQuery;
 use nettonn\yii2filestorage\behaviors\FileBehavior;
+use Yii;
+use yii\helpers\Inflector;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -36,7 +39,7 @@ class Post extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%post}}';
     }
@@ -44,7 +47,7 @@ class Post extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['name', 'alias'], 'required'],
@@ -53,14 +56,15 @@ class Post extends ActiveRecord
             [['name', 'alias', 'introtext'], 'string', 'max' => 255],
 //            [['options', 'option'], 'string'],
 //            ['images', 'string']
-            ['alias', 'filter', 'filter' => 'generate_alias'],
+            ['alias', 'filter', 'filter' => [Inflector::class, 'slug']],
+            [['images_id', 'files_id', 'picture_id'], 'integer', 'allowArray' => true],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -75,7 +79,12 @@ class Post extends ActiveRecord
         ];
     }
 
-    public function fields()
+    public static function getModelLabel(): string
+    {
+        return 'Записи';
+    }
+
+    public function fields(): array
     {
         $fields = parent::fields();
 
@@ -100,20 +109,12 @@ class Post extends ActiveRecord
         return $fields;
     }
 
-    public function extraFields()
-    {
-        $fields = [];
-
-        return $fields;
-    }
-
-
-    public function getUser()
+    public function getUser(): ActiveQuery
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'TimestampBehavior' => [
@@ -154,10 +155,13 @@ class Post extends ActiveRecord
         parent::init();
     }
 
-    public function beforeSave($insert)
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert): bool
     {
         if (!$this->user_id) {
-            $this->user_id = app()->user->id;
+            $this->user_id = Yii::$app->user->id;
         }
         return parent::beforeSave($insert);
     }

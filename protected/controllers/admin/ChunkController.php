@@ -1,6 +1,8 @@
 <?php namespace app\controllers\admin;
 
+use app\controllers\base\RestController;
 use app\models\Chunk;
+use app\utils\AdminClientHelper;
 use yii\db\ActiveQuery;
 
 class ChunkController extends RestController
@@ -20,10 +22,8 @@ class ChunkController extends RestController
 
     public function modelOptions(): array
     {
-        $instance = Chunk::instance();
-
         return [
-            'type' => prepare_value_text_options($instance->typeOptions),
+            'type' => AdminClientHelper::getOptionsFromKeyValue( Chunk::instance()->typeOptions),
         ];
     }
 }

@@ -4,6 +4,7 @@ import {
   authRequest,
   qsParamsSerializerRequest,
   refreshTokenResponse,
+  responseInterceptor,
 } from "./interceptors";
 
 export const API_URL = process.env.REACT_APP_API_URL;
@@ -21,7 +22,7 @@ $api.interceptors.request.use(authRequest);
 $api.interceptors.request.use(acceptJsonRequest);
 $api.interceptors.request.use(qsParamsSerializerRequest);
 
-$api.interceptors.response.use(undefined, refreshTokenResponse);
+$api.interceptors.response.use(responseInterceptor, refreshTokenResponse);
 
 $apiNoAuth.interceptors.request.use(acceptJsonRequest);
 $apiNoAuth.interceptors.request.use(qsParamsSerializerRequest);

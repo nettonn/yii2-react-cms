@@ -2,13 +2,14 @@
 
 use Yii;
 use yii\console\Controller;
+use yii\console\ExitCode;
 
 class RbacController extends Controller
 {
     public function actionInit()
     {
         if (!$this->confirm("Are you sure? It will re-create permissions tree.")) {
-            return self::EXIT_CODE_NORMAL;
+            return ExitCode::OK;
         }
         $auth = Yii::$app->authManager;
         $auth->removeAll();

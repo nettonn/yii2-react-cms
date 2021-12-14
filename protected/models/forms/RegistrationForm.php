@@ -52,7 +52,7 @@ class RegistrationForm extends Model
 //            $user->username = $this->username;
             $user->email = $this->email;
             $user->setPassword($this->password);
-            $user->status = User::STATUS_WAIT;
+            $user->status = User::STATUS_NOT_ACTIVE;
             $user->generateEmailConfirmToken();
 
             if ($user->save()) {

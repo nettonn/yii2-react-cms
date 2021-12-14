@@ -1,10 +1,25 @@
 import React, { Attributes } from "react";
-import { MenuClickEventHandler } from "rc-menu/lib/interface";
 
 export interface IPaginationType {
   current: number;
   pageSize: number;
   total: number;
+}
+
+export interface IApiServiceReturn<T> {
+  success?: boolean;
+  data?: T;
+  status?: number;
+  error?: string;
+  pagination?: IApiServicePagination;
+  validationErrors?: IValidationErrorType[];
+}
+
+export interface IApiServicePagination {
+  currentPage?: number;
+  totalCount?: number;
+  perPage?: number;
+  pageCount?: number;
 }
 
 export interface IValidationErrorType {
@@ -39,6 +54,8 @@ export interface IModelRouteNames {
 
 export interface IModel {
   id: number;
+  view_url?: string;
+  versions_url?: string;
 }
 
 export interface IModelOptions {}
@@ -53,16 +70,7 @@ export interface IFiltersParam {
   [key: string]: string[] | number[];
 }
 
-export interface IMenuItem {
-  title: string;
-  route: string;
-  icon?: React.ReactNode;
-  onClick?: MenuClickEventHandler;
-}
-
-export interface IMenuItem {
-  title: string;
-  route: string;
-  icon?: React.ReactNode;
-  onClick?: MenuClickEventHandler;
+export interface IValueTextOption {
+  value: number | string;
+  text: string;
 }

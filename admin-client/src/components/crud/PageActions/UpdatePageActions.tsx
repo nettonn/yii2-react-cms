@@ -4,6 +4,7 @@ import { ButtonType } from "antd/lib/button/button";
 import { CheckOutlined } from "@ant-design/icons";
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { withoutBaseUrl } from "../../../utils/functions";
 
 interface UpdatePageActionsProps {
   save(): void;
@@ -13,7 +14,10 @@ interface UpdatePageActionsProps {
   exitRoute: string;
   createRoute: string;
   touched: boolean;
-  afterSaveRedirect?: string;
+  updateRoute?: string;
+  hasViewUrl?: boolean;
+  viewUrl?: string;
+  versionsUrl?: string;
 }
 
 interface ButtonConfig {
@@ -22,6 +26,7 @@ interface ButtonConfig {
   label: string;
   redirect?: string;
   replace?: boolean;
+  external?: boolean;
 }
 
 const UpdatePageActions: FC<UpdatePageActionsProps> = ({
@@ -32,20 +37,23 @@ const UpdatePageActions: FC<UpdatePageActionsProps> = ({
   exitRoute,
   createRoute,
   touched,
-  afterSaveRedirect,
+  updateRoute,
+  hasViewUrl,
+  viewUrl,
+  versionsUrl,
 }) => {
   const [lastClickKey, setLastClickKey] = useState<string | null>(null);
   const [isRedirectNeed, setIsRedirectNeed] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const buttons: ButtonConfig[] = useMemo(
-    () => [
+  const buttons = useMemo(() => {
+    const buttonList: ButtonConfig[] = [
       {
         key: "save",
         type: "primary",
         label: "Сохранить",
-        redirect: afterSaveRedirect,
+        redirect: updateRoute,
         replace: true,
       },
       {
@@ -58,9 +66,26 @@ const UpdatePageActions: FC<UpdatePageActionsProps> = ({
         label: "Сохранить и добавить",
         redirect: createRoute,
       },
-    ],
-    [afterSaveRedirect, exitRoute, createRoute]
-  );
+    ];
+
+    if (hasViewUrl) {
+      buttonList.push({
+        key: "save-view",
+        label: "Сохранить и посмотреть",
+        redirect: viewUrl,
+        external: true,
+      });
+    }
+    if (versionsUrl) {
+      buttonList.push({
+        key: "versions",
+        label: "Версии",
+        redirect: withoutBaseUrl(versionsUrl),
+      });
+    }
+
+    return buttonList;
+  }, [updateRoute, exitRoute, createRoute, hasViewUrl, viewUrl, versionsUrl]);
 
   const buttonClickHandler = (button: ButtonConfig) => {
     if (loading) return;
@@ -83,7 +108,11 @@ const UpdatePageActions: FC<UpdatePageActionsProps> = ({
       pathname !== button.redirect
     ) {
       setIsRedirectNeed(false);
-      navigate(button.redirect, { replace: button.replace });
+      if (button.external) {
+        window.location.href = button.redirect;
+      } else {
+        navigate(button.redirect, { replace: button.replace });
+      }
     } else {
       setIsRedirectNeed(false);
     }

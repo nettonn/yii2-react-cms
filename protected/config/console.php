@@ -1,12 +1,15 @@
 <?php
 require (__DIR__ . '/../utils/helpers.php');
+$envars = require (__DIR__.'/envars.php');
 
 $config = [
     'id' => 'Yii2 React CMS console',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log',],
     'controllerNamespace' => 'app\commands',
-    'aliases' => require(__DIR__ . '/parts/aliases.php'),
+    'aliases' => array_merge(require(__DIR__ . '/parts/aliases.php'), [
+        '@runnerScript' => '@app/yii'
+    ]),
     'modules' => [
         'file-storage' => [
             'class' => 'nettonn\yii2filestorage\Module',
@@ -15,12 +18,20 @@ $config = [
     'language'=>'ru-RU',
     'timeZone' => 'Europe/Moscow',
     'controllerMap' => [
+        'cron' => [
+            'class' => 'denisog\cronjobs\CronController',
+            'interpreterPath' => $envars['PHP_INTERPRETER_PATH'],
+        ],
+        'main' => [
+            'class' => 'app\commands\MainController'
+        ],
         'migrate' => [
             'class' => 'yii\console\controllers\MigrateController',
             'migrationPath' => null,
             'migrationNamespaces' => [
                 'app\migrations',
                 'nettonn\yii2filestorage\migrations',
+                'yii\queue\db\migrations',
             ],
         ],
     ],
@@ -32,8 +43,7 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'errorHandler' => [
-            'class'=>'app\components\ErrorHandlerConsole',
-//            'errorAction' => 'main/default/error',
+            'class'=>'app\errors\ErrorHandlerConsole',
         ],
         'chunks' => [
             'class'=>'app\components\ChunkComponent'
@@ -44,40 +54,28 @@ $config = [
         'placeholders' => [
             'class'=> 'app\components\PlaceholderComponent',
         ],
+        'search' => [
+            'class' => 'app\components\SearchComponent',
+        ],
         'queue' => require(__DIR__ . '/parts/queue.php'),
         'db' => require (__DIR__ . '/parts/db.php'),
         'urlManager' => array_merge(require(__DIR__.'/parts/urlManager.php'), [
             'baseUrl' => 'https://'.HOST.'/',
         ]),
-//        'urlManager' => [
-//            'class'=> 'app\components\UrlManager',
-//            'baseUrl' => 'https://'.HOST.'/',
-//            'enablePrettyUrl' => true,
-//            'showScriptName' => false,
-//            'enableStrictParsing' => true,
-//            'normalizer' => [
-//                'class' => 'yii\web\UrlNormalizer',
-//                'action' => \yii\web\UrlNormalizer::ACTION_REDIRECT_PERMANENT,
-//            ],
-//            'rules' => require (__DIR__ . '/parts/urls.php'),
-//        ],
         'log' => [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
                 ],
+                [
+                    'class' => 'yii\log\DbTarget',
+                    'levels' => ['error', 'warning'],
+                ],
             ],
         ],
     ],
     'params' => (require __DIR__ . '/params.php'),
-    /*
-    'controllerMap' => [
-        'fixture' => [ // Fixture generation command line.
-            'class' => 'yii\faker\FixtureController',
-        ],
-    ],
-    */
 ];
 
 if (DEV) {

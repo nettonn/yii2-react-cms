@@ -1,6 +1,7 @@
 <?php
 require (__DIR__ . '/../utils/helpers.php');
 $envars = require(__DIR__.'/envars.php');
+$params = require (__DIR__ . '/params.php');
 
 $config = [
     'id' => 'Yii2 React CMS',
@@ -19,6 +20,12 @@ $config = [
     'components' => [
         'authManager' => require(__DIR__ . '/parts/authManager.php'),
         'formatter' => require(__DIR__ . '/parts/formatter.php'),
+        'assetManager' => [
+            'forceCopy' => DEV,
+        ],
+        'view' => [
+            'class'=>'app\components\View',
+        ],
         'request' => [
             'enableCsrfValidation' => false,
             'enableCsrfCookie' => false,
@@ -40,6 +47,7 @@ $config = [
             'enableSession' => false,
         ],
         'errorHandler' => [
+            'class'=>'app\errors\ErrorHandler',
             'errorAction' => 'site/error',
         ],
         'mailer' => require(__DIR__ . '/parts/mailer.php'),
@@ -54,6 +62,13 @@ $config = [
         ],
         'placeholders' => [
             'class'=> 'app\components\PlaceholderComponent',
+            'placeholders' => [
+                'руб' => '₽',
+                'rub' => '₽',
+            ],
+            'widgets' => [
+                'chunk' => 'app\widgets\ChunkWidget',
+            ],
         ],
         'microdata' => [
             'class'=> 'app\components\MicrodataComponent'
@@ -64,19 +79,31 @@ $config = [
         'admin' => [
             'class' => 'app\components\AdminComponent',
         ],
+        'search' => [
+            'class' => 'app\components\SearchComponent',
+            'indexModelClasses' => [
+                'app\models\Page',
+            ],
+        ],
         'queue' => require(__DIR__ . '/parts/queue.php'),
         'db' => require (__DIR__ . '/parts/db.php'),
         'urlManager' => require(__DIR__.'/parts/urlManager.php'),
         'jwt' => require(__DIR__ . '/parts/jwt.php'),
         'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'traceLevel' => DEV ? 3 : 0,
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
                 ],
                 [
-                    'class' => 'app\components\EmailQueueTarget',
+                    'class' => 'app\log\DbLogTarget',
+//                    'except' => ['yii\web\HttpException:401'],
+                    'levels' => ['error', 'warning'],
+                    'exceptUrls' => $params['logExceptUrls']
+                ],
+                [
+                    'class' => 'app\log\EmailQueueTarget',
                     'except' => ['yii\web\HttpException:404',],
                     'levels' => ['error', 'warning'],
                     'message' => [
@@ -85,7 +112,7 @@ $config = [
                     ],
                 ],
 //                [
-//                    'class' => 'app\modules\main\components\EmailQueueTarget',
+//                    'class' => 'app\log\EmailQueueTarget',
 //                    'categories' => ['yii\web\HttpException:404'],
 //                    'levels' => ['error', 'warning'],
 //                    'message' => [
@@ -97,7 +124,7 @@ $config = [
         ],
 
     ],
-    'params' => require (__DIR__ . '/params.php'),
+    'params' => $params,
 ];
 
 if (DEV) {
@@ -113,7 +140,7 @@ if (DEV) {
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => array_merge(['127.0.0.1', '::1'], @array_map('trim', explode(',', $envars['DEV_IPS']))),
     ];
 }
 

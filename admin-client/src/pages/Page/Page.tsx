@@ -10,21 +10,31 @@ import { IPage, IPageModelOptions } from "../../models/IPage";
 import FileUpload from "../../components/crud/form/FileUpload/FileUpload";
 import { pageService } from "../../api/PageService";
 import CkeditorInput from "../../components/crud/form/CkeditorInput/CkeditorInput";
+import useGenerateAlias from "../../hooks/generateAlias.hook";
+import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
 
 const modelRoutes = RouteNames.page;
 
 const Page: FC = () => {
   const { id } = useParams();
 
-  const modelForm = useModelForm(id, pageService);
+  const modelForm = useModelForm<IPage, IPageModelOptions>(id, pageService, [
+    "content",
+  ]);
+
+  const [onNameFieldChange, onAliasFieldChange] = useGenerateAlias(
+    modelForm.form,
+    "name",
+    "alias"
+  );
 
   const formContent = (initData: IPage, modelOptions: IPageModelOptions) => (
     <Tabs type="card">
       <Tabs.TabPane tab="Общее" key="common">
-        <Row gutter={15}>
+        <Row gutter={DEFAULT_ROW_GUTTER}>
           <Col span={24} md={12}>
             <Form.Item label="Название" name="name" rules={[rules.required()]}>
-              <Input />
+              <Input onChange={(e) => onNameFieldChange(e.target.value)} />
             </Form.Item>
           </Col>
           <Col span={24} md={12}>
@@ -33,7 +43,7 @@ const Page: FC = () => {
               name="alias"
               rules={[rules.required()]}
             >
-              <Input />
+              <Input onChange={(e) => onAliasFieldChange(e.target.value)} />
             </Form.Item>
           </Col>
         </Row>
@@ -71,16 +81,16 @@ const Page: FC = () => {
         </Form.Item>
       </Tabs.TabPane>
       <Tabs.TabPane tab="SEO" key="seo">
-        <Form.Item label="Seo Title" name="seo_title">
+        <Form.Item label="SEO Title" name="seo_title">
           <Input />
         </Form.Item>
-        <Form.Item label="Seo H1" name="seo_h1">
+        <Form.Item label="SEO H1" name="seo_h1">
           <Input />
         </Form.Item>
-        <Form.Item label="Seo Description" name="seo_description">
+        <Form.Item label="SEO Description" name="seo_description">
           <Input.TextArea autoSize={{ minRows: 3, maxRows: 10 }} />
         </Form.Item>
-        <Form.Item label="Seo Keywords" name="seo_keywords">
+        <Form.Item label="SEO Keywords" name="seo_keywords">
           <Input.TextArea autoSize={{ minRows: 3, maxRows: 10 }} />
         </Form.Item>
       </Tabs.TabPane>
@@ -100,7 +110,8 @@ const Page: FC = () => {
         formContent={formContent}
         exitRoute={modelRoutes.index}
         createRoute={modelRoutes.create}
-        viewRoute={modelRoutes.view}
+        updateRoute={modelRoutes.update}
+        hasViewUrl={true}
       />
     </>
   );

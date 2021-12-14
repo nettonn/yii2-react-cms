@@ -1,27 +1,17 @@
 <?php
-
 /* @var $this yii\web\View */
 /* @var $name string */
 /* @var $message string */
 /* @var $exception Exception */
 
-use yii\helpers\Html;
+$statusCode = property_exists($exception, 'statusCode') ? $exception->statusCode : false;
 
-$this->title = $name;
+if($statusCode === 404) {
+    seo()->title = seo()->h1 = '404 - Страница не найдена.';
+} else {
+    seo()->title = seo()->h1 = $statusCode . ' - Произошла ошибка.';
+}
 ?>
-<div class="site-error">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <div class="alert alert-danger">
-        <?= nl2br(Html::encode($message)) ?>
-    </div>
-
-    <p>
-        The above error occurred while the Web server was processing your request.
-    </p>
-    <p>
-        Please contact us if you think this is a server error. Thank you.
-    </p>
-
-</div>
+<?php if ($statusCode !== 404): ?>
+    <?= nl2br(e($message)) ?>
+<?php endif ?>

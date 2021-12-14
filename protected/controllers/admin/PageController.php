@@ -1,6 +1,8 @@
 <?php namespace app\controllers\admin;
 
+use app\controllers\base\RestController;
 use app\models\Page;
+use app\utils\AdminClientHelper;
 use yii\db\ActiveQuery;
 
 class PageController extends RestController
@@ -29,15 +31,9 @@ class PageController extends RestController
 
     public function modelOptions(): array
     {
-        $instance = Page::instance();
-
-        Page::$childrenWith = ['children'];
-
-        $parentOptions = Page::find()->notDeleted()->onlyRoots()->with(['children'])->all();
-
         return [
-            'status' => prepare_value_text_options($instance->statusOptions),
-            'parent' => prepare_options_from_models($parentOptions),
+            'status' => AdminClientHelper::getOptionsFromKeyValue(Page::instance()->statusOptions),
+            'parent' => AdminClientHelper::getOptionsFromModelQuery(Page::find()->notDeleted()->asArray()),
         ];
     }
 }

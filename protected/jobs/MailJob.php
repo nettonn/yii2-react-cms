@@ -2,6 +2,7 @@
 
 namespace app\jobs;
 
+use Yii;
 use yii\base\BaseObject;
 use yii\queue\JobInterface;
 
@@ -15,7 +16,7 @@ class MailJob extends BaseObject implements JobInterface
 
     public function execute($queue)
     {
-        $mail = app()->mailer
+        $mail = Yii::$app->mailer
             ->compose()
             ->setSubject($this->subject)
             ->setHtmlBody($this->htmlBody)

@@ -1,7 +1,9 @@
 <?php namespace app\controllers\admin;
 
 
+use app\controllers\base\RestController;
 use app\models\Todo;
+use Yii;
 use yii\base\InvalidArgumentException;
 use yii\data\ActiveDataProvider;
 
@@ -21,7 +23,7 @@ class TodoController extends RestController
         $sortedIds = array_map('intval', $sortedIds);
 
         $models = Todo::find()
-            ->where(['user_id' => app()->user->id])
+            ->where(['user_id' => Yii::$app->getUser()->id])
             ->andWhere(['in', 'id', $sortedIds])
             ->indexBy('id')
             ->all();
@@ -72,7 +74,7 @@ class TodoController extends RestController
 //        return $actions;
 //    }
 
-    protected function verbs()
+    protected function verbs(): array
     {
         $verbs = parent::verbs();
         $verbs['sort'] = ['PUT'];

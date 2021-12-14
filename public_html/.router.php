@@ -1,7 +1,7 @@
 <?php
 
 $filePath = realpath(__DIR__.$_SERVER["REQUEST_URI"]);
-if(strpos($_SERVER["REQUEST_URI"], '/admin') === 0) {
+if(strpos($_SERVER["REQUEST_URI"], '/admin/') === 0) {
     return false;
 }
 

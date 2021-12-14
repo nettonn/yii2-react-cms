@@ -32,6 +32,20 @@ module.exports = function (app) {
       },
     })
   );
+  app.use(
+    createProxyMiddleware("/debug/", {
+      target: process.env.REACT_APP_HOST,
+      logLevel: "debug",
+      changeOrigin: true,
+      secure: process.env.REACT_APP_HOST_SECURE,
+      timeout: TIMEOUT,
+      xfwd: true,
+      // proxyTimeout: 1000,
+      headers: {
+        Connection: "keep-alive",
+      },
+    })
+  );
   // app.use(
   //   "/admin-api",
   //   php({

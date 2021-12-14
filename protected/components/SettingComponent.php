@@ -1,6 +1,7 @@
 <?php namespace app\components;
 
 use app\models\Setting;
+use Yii;
 use yii\base\Component;
 use yii\web\ServerErrorHttpException;
 
@@ -14,7 +15,7 @@ class SettingComponent extends Component
 
         $cacheKey = self::class.'-data';
 
-        $this->data = \Yii::$app->getCache()->get($cacheKey);
+        $this->data = Yii::$app->getCache()->get($cacheKey);
 
         if(false === $this->data) {
             $models = Setting::find()->notDeleted()->all();
@@ -23,9 +24,9 @@ class SettingComponent extends Component
                     $this->data['keys'][$model->key] = $model->id;
                 }
 
-                $this->data['value'][intval($model->id)] = $model->getValue();
+                $this->data['value'][$model->id] = $model->getValue();
             }
-            \Yii::$app->getCache()->set($cacheKey, $this->data);
+            Yii::$app->getCache()->set($cacheKey, $this->data);
         }
     }
 
@@ -37,7 +38,7 @@ class SettingComponent extends Component
         if (isset($this->data['value'][$key]))
             return $this->data['value'][$key];
 
-        \Yii::error("Нет такого параметра {$key}");
+        Yii::error("Нет такого параметра {$key}");
         throw new ServerErrorHttpException("Нет такого параметра {$key}");
     }
 }

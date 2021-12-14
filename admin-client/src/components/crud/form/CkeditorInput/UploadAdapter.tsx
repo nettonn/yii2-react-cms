@@ -17,7 +17,6 @@ export class UploadAdapter {
 
   // Starts the upload process.
   async upload() {
-    console.log(111);
     try {
       const formData = new FormData();
       const file = await this.loader.file;

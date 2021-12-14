@@ -1,4 +1,4 @@
-import { IModel, IModelOptions } from "../types";
+import { IModel, IModelOptions, IValueTextOption } from "../types";
 import { IFileModel } from "./IFileModel";
 
 export interface IPost extends IModel {
@@ -18,5 +18,5 @@ export interface IPost extends IModel {
 }
 
 export interface IPostModelOptions extends IModelOptions {
-  status: { value: string | number; text: string }[];
+  status: IValueTextOption[];
 }

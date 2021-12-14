@@ -41,7 +41,7 @@ class Setting extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%setting}}';
     }
@@ -49,7 +49,7 @@ class Setting extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['name', 'key', 'type'], 'required'],
@@ -63,7 +63,7 @@ class Setting extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -73,10 +73,17 @@ class Setting extends ActiveRecord
             'value_bool' => 'Значение',
             'value_int' => 'Значение',
             'value_string' => 'Значение',
+            'created_at' => 'Создано',
+            'updated_at' => 'Изменено',
         ];
     }
 
-    public function fields()
+    public static function getModelLabel(): string
+    {
+        return 'Настройки';
+    }
+
+    public function fields(): array
     {
         $fields = parent::fields();
 
@@ -99,7 +106,7 @@ class Setting extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'TimestampBehavior' => [
@@ -114,12 +121,28 @@ class Setting extends ActiveRecord
         ];
     }
 
+    public function getValueParseFunction ()
+    {
+        $options = [
+            self::TYPE_BOOL => 'boolval',
+            self::TYPE_INT => 'intval',
+            self::TYPE_STRING => 'strval',
+        ];
+        return $options[$this->type] ?? false;
+    }
+
     public function getValue()
     {
+        if($parseFunction = $this->getValueParseFunction()) {
+            if(is_callable($parseFunction)) {
+                return call_user_func($parseFunction, $this->{$this->getValueAttribute()});
+            }
+        }
+
         return $this->{$this->getValueAttribute()};
     }
 
-    public function getValueAttribute()
+    public function getValueAttribute(): string
     {
         return $this->typeToValueOptions[$this->type];
     }

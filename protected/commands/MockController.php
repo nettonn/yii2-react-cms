@@ -1,30 +1,16 @@
-<?php
-/**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
- */
-
-namespace app\commands;
+<?php namespace app\commands;
 
 use app\models\Post;
 use app\models\User;
 use app\models\UserMock;
 use app\models\Page;
 use nettonn\yii2filestorage\models\FileModel;
+use Yii;
 use yii\console\Controller;
 use yii\console\ExitCode;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
-/**
- * This command echoes the first argument that you have entered.
- *
- * This command is provided as an example for you to learn how to create console commands.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
- */
 class MockController extends Controller
 {
     public function actionUser()
@@ -59,8 +45,8 @@ class MockController extends Controller
 //        }
 
         $images = [];
-        if(is_dir(path_alias('@app/temp/photos'))) {
-            foreach(FileHelper::findFiles(path_alias('@app/temp/photos')) as $filename) {
+        if(is_dir(Yii::getAlias('@app/temp/photos'))) {
+            foreach(FileHelper::findFiles(Yii::getAlias('@app/temp/photos')) as $filename) {
                 $image = new UploadedFile();
                 $image->name = basename($filename);
                 $image->tempName = $filename;

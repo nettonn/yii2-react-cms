@@ -21,20 +21,33 @@ class AdminClientUrlCreateRules extends BaseObject implements UrlRuleInterface
 
     public $patterns = [];
 
-    public $prefix = 'admin';
+    public $prefix = ADMIN_URL_PREFIX;
 
     public function createUrl($manager, $route, $params)
     {
+        $url = $this->createPath($manager, $route, $params);
+        if($url && !empty($params) && ($query = http_build_query($params)) !== '') {
+            $url .= '?' . $query;
+        }
+        return $url;
+    }
+
+    protected function createPath($manager, $route, &$params)
+    {
         $prefix = ltrim($this->prefix, '/');
         foreach($this->restControllers as $path => $controller) {
-            if($route === $controller.'/index' || $route === $controller)
+            if($route === $controller.'/index' || $route === $controller) {
                 return $prefix.'/'.$path;
-
-            if($route === $controller.'/create')
+            }
+            if($route === $controller.'/create') {
                 return $prefix.'/'.$path.'/create';
+            }
 
-            if($route === $controller.'/update' && isset($params['id']) && $params['id'])
-                return $prefix.'/'.$path.'/'.$params['id'];
+            if($route === $controller.'/update' && isset($params['id']) && $params['id']) {
+                $url = $prefix.'/'.$path.'/'.$params['id'];
+                unset($params['id']);
+                return $url;
+            }
         }
 
         foreach($this->patterns as $path => $controllerAction) {

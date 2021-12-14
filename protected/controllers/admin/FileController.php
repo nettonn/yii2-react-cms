@@ -1,5 +1,6 @@
 <?php namespace app\controllers\admin;
 
+use app\controllers\base\BaseApiController;
 use nettonn\yii2filestorage\actions\CreateAction;
 use nettonn\yii2filestorage\actions\IndexAction;
 use Yii;
@@ -25,7 +26,7 @@ class FileController extends BaseApiController
         ];
     }
 
-    protected function authExcept()
+    protected function authExcept(): array
     {
         return [
             'options',

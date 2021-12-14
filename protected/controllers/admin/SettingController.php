@@ -1,6 +1,8 @@
 <?php namespace app\controllers\admin;
 
+use app\controllers\base\RestController;
 use app\models\Setting;
+use app\utils\AdminClientHelper;
 use yii\db\ActiveQuery;
 
 class SettingController extends RestController
@@ -22,10 +24,8 @@ class SettingController extends RestController
 
     public function modelOptions(): array
     {
-        $instance = Setting::instance();
-
         return [
-            'type' => prepare_value_text_options($instance->typeOptions),
+            'type' => AdminClientHelper::getOptionsFromKeyValue(Setting::instance()->typeOptions),
         ];
     }
 }

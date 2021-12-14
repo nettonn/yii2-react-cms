@@ -16,7 +16,7 @@
     "require": {
         "php": ">=7.3.0",
         "yiisoft/yii2": "~2.0.43",
-        "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
+        "yiisoft/yii2-swiftmailer": "^2.0.0",
         "sizeg/yii2-jwt": "^2.0",
         "yiisoft/yii2-imagine": "^2.3",
         "nettonn/yii2-file-storage": "dev-develop",
@@ -28,7 +28,8 @@
         "howardeagle/yii2-inline-widgets-behavior": "dev-master",
         "yii2tech/ar-dynattribute": "1.0.x-dev",
         "oxyaction/yii2-polymorphic-relation-behavior": "dev-master",
-        "prewk/xml-string-streamer": "dev-master"
+        "prewk/xml-string-streamer": "dev-master",
+        "wamania/php-stemmer": "^3.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

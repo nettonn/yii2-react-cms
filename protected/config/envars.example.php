@@ -1,7 +1,9 @@
 <?php
 return [
+    'APP_NAME' => 'DL CMS',
     'ADMIN_NAME' => 'Name Lastname',
     'ADMIN_EMAIL' => 'email@email.com',
+    'ADMIN_DEFAULT_PASSWORD' => '12345',
 
     'DEV_IPS' => '127.0.0.1, 127.0.0.1',
 
@@ -24,4 +26,6 @@ return [
     'SMTP_ENCRYPTION' => 'ssl',
 
     'COOKIE_VALIDATION_KEY' => 'long string',
+
+    'PHP_INTERPRETER_PATH' => 'php',
 ];
