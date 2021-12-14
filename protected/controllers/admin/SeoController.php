@@ -3,7 +3,7 @@
 use app\controllers\base\RestController;
 use app\models\Seo;
 use app\utils\AdminClientHelper;
-use yii\db\ActiveQuery;
+use app\models\query\ActiveQuery;
 
 class SeoController extends RestController
 {

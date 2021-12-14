@@ -11,6 +11,7 @@ import menu from "./parts/menu";
 import menuItem from "./parts/menu-item";
 import version from "./parts/version";
 import log from "./parts/log";
+import queue from "./parts/queue";
 import { IRoute } from "../types";
 
 export const RouteNames = {
@@ -27,6 +28,7 @@ export const RouteNames = {
   menuItem: menuItem.names,
   version: version.names,
   log: log.names,
+  queue: queue.names,
 };
 
 export const publicRoutes: IRoute[] = [...common.publicRoutes];
@@ -46,6 +48,7 @@ export const privateRoutes: IRoute[] = [
   ...menuItem.routes,
   ...version.routes,
   ...log.routes,
+  ...queue.routes,
 ];
 
 export const routeIcons = {
@@ -61,4 +64,5 @@ export const routeIcons = {
   ...menuItem.icons,
   ...version.icons,
   ...log.icons,
+  ...queue.icons,
 };

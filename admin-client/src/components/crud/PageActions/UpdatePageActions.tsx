@@ -128,9 +128,9 @@ const UpdatePageActions: FC<UpdatePageActionsProps> = ({
               type={button.type as any}
               danger={!touched && error && lastClickKey === button.key}
               icon={
-                !touched &&
-                success &&
-                lastClickKey === button.key && <CheckOutlined />
+                !touched && success && !error && lastClickKey === button.key ? (
+                  <CheckOutlined />
+                ) : undefined
               }
               onClick={() => buttonClickHandler(button)}
               // loading={loading && lastClickKey === button.key}

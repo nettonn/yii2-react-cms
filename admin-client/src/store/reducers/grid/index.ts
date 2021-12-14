@@ -1,7 +1,7 @@
 import createGridSlice from "./createGridSlice";
 import { $Keys, ValuesType } from "utility-types";
 
-// TODO how to make it right with typescript test
+// TODO how to make it right with typescript
 
 const slices = {
   page: createGridSlice("page"),
@@ -15,6 +15,7 @@ const slices = {
   menuItem: createGridSlice("menuItem"),
   version: createGridSlice("version"),
   log: createGridSlice("log"),
+  queue: createGridSlice("queue"),
 };
 
 export const gridReducers = {
@@ -29,6 +30,7 @@ export const gridReducers = {
   menuItem: slices.menuItem.reducer,
   version: slices.version.reducer,
   log: slices.log.reducer,
+  queue: slices.queue.reducer,
 };
 
 export const gridActions = {
@@ -43,6 +45,7 @@ export const gridActions = {
   menuItem: slices.menuItem.actions,
   version: slices.version.actions,
   log: slices.log.actions,
+  queue: slices.queue.actions,
 };
 
 export type DataGridSelector = $Keys<typeof slices>;

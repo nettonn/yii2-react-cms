@@ -16,6 +16,8 @@ use Yii;
  */
 class Log extends ActiveRecord
 {
+    public $flushCache = false;
+
     /**
      * {@inheritdoc}
      */

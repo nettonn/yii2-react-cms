@@ -5,9 +5,8 @@ use Yii;
 use yii\base\Behavior;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
+use yii\db\BaseActiveRecord;
 use yii\helpers\Inflector;
-use yii\helpers\StringHelper;
-use yii\helpers\Url;
 use yii\helpers\VarDumper;
 
 /**
@@ -40,10 +39,10 @@ class VersionBehavior extends Behavior
     public function events()
     {
         return [
-            ActiveRecord::EVENT_BEFORE_UPDATE   => 'beforeUpdate',
-            ActiveRecord::EVENT_AFTER_UPDATE    => 'afterUpdate',
-            ActiveRecord::EVENT_BEFORE_DELETE   => 'beforeDelete',
-            ActiveRecord::EVENT_AFTER_DELETE    => 'afterDelete',
+            BaseActiveRecord::EVENT_BEFORE_UPDATE   => 'beforeUpdate',
+            BaseActiveRecord::EVENT_AFTER_UPDATE    => 'afterUpdate',
+            BaseActiveRecord::EVENT_BEFORE_DELETE   => 'beforeDelete',
+            BaseActiveRecord::EVENT_AFTER_DELETE    => 'afterDelete',
         ];
     }
 

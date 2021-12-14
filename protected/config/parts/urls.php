@@ -19,6 +19,7 @@ return [
             'menu-items' => 'admin/menu-item',
             'versions' => 'admin/version',
             'logs' => 'admin/log',
+            'queues' => 'admin/queue',
         ]
     ],
     [
@@ -74,6 +75,7 @@ return [
             'menu-items' => 'admin/menu-item',
             'versions' => 'admin/version',
             'logs' => 'admin/log',
+            'queues' => 'admin/queue',
         ],
         'prefix' => 'admin-api',
         'extraPatterns' => [

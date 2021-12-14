@@ -1,38 +1,37 @@
 <?php namespace app\controllers\admin;
 
 use app\controllers\base\RestController;
-use app\models\Log;
+use app\models\Queue;
 use app\utils\AdminClientHelper;
 use app\models\query\ActiveQuery;
 
-class LogController extends RestController
+class QueueController extends RestController
 {
-    public $modelClass = Log::class;
-    public $indexQuerySelectExclude = ['messages'];
-    public $defaultSortAttribute = 'created_at';
+    public $modelClass = Queue::class;
+    public $indexQuerySelectExclude = ['job'];
+    public $defaultSortAttribute = 'pushed_at';
     public $defaultSortDirection = SORT_DESC;
 
     protected function prepareSearchQuery(ActiveQuery $query, string $search) : ActiveQuery
     {
         return $query->andWhere(['or',
             ['like', 'id',  "$search"],
-            ['like', 'name',  "$search"],
-            ['like', 'url',  "$search"],
-            ['like', 'messages',  "$search"],
+            ['like', 'channel',  "$search"],
+            ['like', 'job',  "$search"],
         ]);
     }
 
     public function modelOptions(): array
     {
-        $nameOptions = Log::find()
-            ->select('DISTINCT(name)')
-            ->orderBy('name ASC')
-            ->indexBy('name')
+        $channelOptions = Queue::find()
+            ->select('DISTINCT(channel)')
+            ->orderBy('channel ASC')
+            ->indexBy('channel')
             ->notDeleted()
             ->column();
 
         return [
-            'name' => AdminClientHelper::getOptionsFromKeyValue($nameOptions),
+            'name' => AdminClientHelper::getOptionsFromKeyValue($channelOptions),
         ];
     }
 
@@ -41,7 +40,7 @@ class LogController extends RestController
      */
     protected function getLastModifiedSql(): string
     {
-        return 'SELECT MAX(created_at) from '.($this->modelClass)::tableName();
+        return 'SELECT GREATEST(MAX(pushed_at), MAX(reserved_at), MAX(done_at)) from '.($this->modelClass)::tableName();
     }
 
     public function actions(): array

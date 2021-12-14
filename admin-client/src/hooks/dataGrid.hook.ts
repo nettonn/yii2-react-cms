@@ -142,7 +142,6 @@ export default function useDataGrid<
       return true;
     } else {
       message.error(result.error);
-      throw new Error(result.error);
     }
   });
 
@@ -168,21 +167,6 @@ export default function useDataGrid<
     } else {
       setFilters(null);
     }
-
-    // if (tableFilters) {
-    //   const filterKeys = Object.keys(tableFilters).filter(
-    //     (key: string) => tableFilters[key]
-    //   );
-    //   if (filterKeys.length) {
-    //     const params = {} as IFiltersParam;
-    //     for (const key of filterKeys) {
-    //       params[key] = tableFilters[key];
-    //     }
-    //     setFilters(params);
-    //   } else {
-    //     setFilters(null);
-    //   }
-    // }
   };
 
   const searchChangeHandler = async (value: string) => {

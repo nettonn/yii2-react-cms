@@ -3,7 +3,7 @@
 use app\controllers\base\RestController;
 use app\models\Setting;
 use app\utils\AdminClientHelper;
-use yii\db\ActiveQuery;
+use app\models\query\ActiveQuery;
 
 class SettingController extends RestController
 {

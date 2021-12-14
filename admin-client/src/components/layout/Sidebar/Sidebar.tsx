@@ -98,6 +98,11 @@ const Sidebar: FC = () => {
         },
         {
           hideIcon: true,
+          route: RouteNames.queue.index,
+          title: "Задачи",
+        },
+        {
+          hideIcon: true,
           route: RouteNames.log.index,
           title: "Логи",
         },

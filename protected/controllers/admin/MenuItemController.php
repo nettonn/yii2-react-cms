@@ -4,7 +4,7 @@ use app\controllers\base\RestController;
 use app\models\MenuItem;
 use app\utils\AdminClientHelper;
 use Yii;
-use yii\db\ActiveQuery;
+use app\models\query\ActiveQuery;
 
 class MenuItemController extends RestController
 {

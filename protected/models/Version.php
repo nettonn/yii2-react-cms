@@ -2,10 +2,8 @@
 
 namespace app\models;
 
-use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
 use Yii;
-use yii\helpers\StringHelper;
 
 /**
  * This is the model class for table "version".
@@ -18,7 +16,6 @@ use yii\helpers\StringHelper;
  * @property string|null $version_attributes
  * @property array|null $version_attributes_array
  * @property int|null $created_at
- * @property int|null $updated_at
  */
 class Version extends ActiveRecord
 {
@@ -70,19 +67,6 @@ class Version extends ActiveRecord
             'version_attributes' => 'Attributes',
             'version_attributes_array' => 'Attributes',
             'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors(): array
-    {
-        return [
-            'TimestampBehavior' => [
-                'class' => TimestampBehavior::class,
-            ],
         ];
     }
 
@@ -132,10 +116,12 @@ class Version extends ActiveRecord
     {
         $this->version_attributes = $this->version_attributes_array ? serialize($this->version_attributes_array) : $this->version_attributes;
 
+        $this->created_at = time();
+
         return parent::beforeSave($insert);
     }
 
-    public function getOwner(): ?\yii\db\ActiveRecord
+    public function getOwner(): ?ActiveRecord
     {
         if(!class_exists($this->link_type))
             return null;

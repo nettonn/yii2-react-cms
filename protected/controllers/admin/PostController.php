@@ -3,7 +3,7 @@
 use app\controllers\base\RestController;
 use app\models\Post;
 use app\utils\AdminClientHelper;
-use yii\db\ActiveQuery;
+use app\models\query\ActiveQuery;
 
 class PostController extends RestController
 {

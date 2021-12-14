@@ -24,7 +24,6 @@ class m211201_191645_create_version_table extends Migration
             'action'=>$this->string()->notNull(),
             'version_attributes' => $this->text(),
             'created_at' => $this->integer()->unsigned(),
-            'updated_at' => $this->integer()->unsigned(),
         ], $tableOptions);
 
         $this->createIndex('idx-version-name', '{{%version}}', ['name']);
@@ -32,7 +31,6 @@ class m211201_191645_create_version_table extends Migration
         $this->createIndex('idx-version-link_id', '{{%version}}', ['link_id']);
         $this->createIndex('idx-version-action', '{{%version}}', ['action']);
         $this->createIndex('idx-version-created_at', '{{%version}}', ['created_at']);
-        $this->createIndex('idx-version-updated_at', '{{%version}}', ['updated_at']);
     }
 
     /**
