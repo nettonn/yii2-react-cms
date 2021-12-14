@@ -1,7 +1,7 @@
 import createGridSlice from "./createGridSlice";
 import { $Keys, ValuesType } from "utility-types";
 
-// TODO how to make it right with typescript
+// TODO how to make it right with typescript test
 
 const slices = {
   page: createGridSlice("page"),
