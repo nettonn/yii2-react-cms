@@ -1,10 +1,8 @@
-import { $api } from "../http/api";
+import { $api } from "../http/axios";
 import { IApiServicePagination, IApiServiceReturn, IModel } from "../types";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { prepareAxiosConfig, requestErrorHandler } from "../utils/functions";
 import { queryClient } from "../http/query-client";
-
-const axiosClient = $api;
 
 export interface IRestServiceIndexQueryParams {
   page?: number;
@@ -49,7 +47,7 @@ export default class RestService {
         limit,
       });
       if (signal) config.signal = signal;
-      const response = await axiosClient.request<T[]>(config);
+      const response = await $api.request<T[]>(config);
 
       return {
         success: true,
@@ -72,7 +70,7 @@ export default class RestService {
     try {
       const config = prepareAxiosConfig(this.indexConfig(), params);
       if (signal) config.signal = signal;
-      const response = await axiosClient.request<T[]>(config);
+      const response = await $api.request<T[]>(config);
       const pagination: IApiServicePagination = {};
 
       if (response.headers["x-pagination-current-page"] !== undefined)
@@ -118,7 +116,7 @@ export default class RestService {
     try {
       const config = prepareAxiosConfig(this.viewConfig(id));
       if (signal) config.signal = signal;
-      const response = await axiosClient.request<T>(config);
+      const response = await $api.request<T>(config);
       this.prepareModelOptions(response);
       return {
         success: true,
@@ -138,7 +136,7 @@ export default class RestService {
     try {
       const config = prepareAxiosConfig(this.createConfig(), null, values);
 
-      const response = await axiosClient.request<T>(config);
+      const response = await $api.request<T>(config);
 
       // queryClient.invalidateQueries(this.listQueryKey());
       // queryClient.invalidateQueries(this.indexQueryKey());
@@ -169,7 +167,7 @@ export default class RestService {
     try {
       const config = prepareAxiosConfig(this.updateConfig(id), null, values);
 
-      const response = await axiosClient.request<T>(config);
+      const response = await $api.request<T>(config);
 
       // queryClient.invalidateQueries(this.listQueryKey());
       // queryClient.invalidateQueries(this.indexQueryKey());
@@ -195,7 +193,7 @@ export default class RestService {
 
   async delete(id: number | string): Promise<IApiServiceReturn<null>> {
     try {
-      const response = await axiosClient.request(this.deleteConfig(id));
+      const response = await $api.request(this.deleteConfig(id));
 
       // queryClient.invalidateQueries(this.listQueryKey());
       // queryClient.invalidateQueries(this.indexQueryKey());
@@ -217,7 +215,7 @@ export default class RestService {
     try {
       const config = prepareAxiosConfig(this.modelOptionsConfig());
       if (signal) config.signal = signal;
-      const response = await axiosClient.request<T>(config);
+      const response = await $api.request<T>(config);
       return { success: true, data: response.data };
     } catch (e: any) {
       const errors = requestErrorHandler(e);
@@ -233,7 +231,7 @@ export default class RestService {
     try {
       const config = prepareAxiosConfig(this.modelDefaultsConfig());
       if (signal) config.signal = signal;
-      const response = await axiosClient.request<T>(config);
+      const response = await $api.request<T>(config);
       return { success: true, data: response.data };
     } catch (e: any) {
       const errors = requestErrorHandler(e);

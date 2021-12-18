@@ -1,7 +1,7 @@
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { authService } from "../api/AuthService";
 import { logMessage, sleep } from "../utils/functions";
-import { $api, $apiNoAuth } from "./api";
+import { $api, $apiNoAuth } from "./axios";
 import { queryStringStringify } from "../utils/qs";
 
 export const authRequest = (config: AxiosRequestConfig) => {

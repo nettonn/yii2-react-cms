@@ -34,7 +34,7 @@ const LogPage: FC = () => {
         <hr />
         <Descriptions.Item label="Url">{data.url}</Descriptions.Item>
       </Descriptions>
-      <pre>{data.messages}</pre>
+      <pre style={{ whiteSpace: "pre-wrap" }}>{data.messages}</pre>
     </>
   );
 };

@@ -1,7 +1,7 @@
 import createGridSlice from "./createGridSlice";
 import { $Keys, ValuesType } from "utility-types";
 
-// TODO how to make it right with typescript
+// TODO how to make it right with typescript autocompletion
 
 const slices = {
   page: createGridSlice("page"),
@@ -51,3 +51,53 @@ export const gridActions = {
 export type DataGridSelector = $Keys<typeof slices>;
 
 export type DataGridActions = ValuesType<typeof gridActions>;
+
+// const selectors: readonly string[] = [
+//   "page",
+//   "post",
+//   "user",
+//   "chunk",
+//   "redirect",
+//   "setting",
+//   "seo",
+//   "menu",
+//   "menuItem",
+//   "version",
+//   "log",
+//   "queue",
+// ];
+//
+// type ArrayToObjectType<KS extends readonly string[], T> = { [K in KS[number]]: T };
+//
+// type SlicesType = ArrayToObjectType<
+//   typeof selectors,
+//   ReturnType<typeof createGridSlice>
+//   >;
+//
+// const slices: SlicesType = selectors.reduce((object: SlicesType, selector) => {
+//   object[selector] = createGridSlice(selector);
+//   return object;
+// }, {} as any);
+//
+// type ReducersType = ArrayToObjectType<typeof selectors, Reducer<DataGridState>>;
+//
+// export const gridReducers: ReducersType = selectors.reduce(
+//   (object: ReducersType, selector) => {
+//     object[selector] = slices[selector].reducer;
+//     return object;
+//   },
+//   {} as any
+// );
+//
+// type ActionsType = ArrayToObjectType<
+//   typeof selectors,
+//   CaseReducerActions<SliceCaseReducers<DataGridState>>
+//   >;
+//
+// export const gridActions: ActionsType = selectors.reduce(
+//   (object: ActionsType, selector) => {
+//     object[selector] = slices[selector].actions;
+//     return object;
+//   },
+//   {} as any
+// );

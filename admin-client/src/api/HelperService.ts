@@ -1,9 +1,7 @@
 import { AxiosRequestConfig } from "axios";
-import { $api } from "../http/api";
+import { $api } from "../http/axios";
 import { IApiServiceReturn } from "../types";
 import { prepareAxiosConfig, requestErrorHandler } from "../utils/functions";
-
-const axiosClient = $api;
 
 export default class HelperService {
   protected name = "helpers";
@@ -18,7 +16,7 @@ export default class HelperService {
       const config = prepareAxiosConfig(this.generateAliasConfig(), {
         value,
       });
-      const response = await axiosClient.request<string>(config);
+      const response = await $api.request<string>(config);
       return {
         success: true,
         data: response.data,

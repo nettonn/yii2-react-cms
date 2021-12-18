@@ -1,7 +1,7 @@
 import React, { FC, useState, useRef, ChangeEvent } from "react";
 import { fileService } from "../../../../api/FileService";
 import { prepareAxiosConfig } from "../../../../utils/functions";
-import { $api } from "../../../../http/api";
+import { $api } from "../../../../http/axios";
 import { Button, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { IFileModel } from "../../../../models/IFileModel";

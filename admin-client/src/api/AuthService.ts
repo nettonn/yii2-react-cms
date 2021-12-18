@@ -1,5 +1,5 @@
 import { AxiosRequestConfig, AxiosResponse } from "axios";
-import { $api, $apiNoAuth } from "../http/api";
+import { $api, $apiNoAuth } from "../http/axios";
 import { IIdentity } from "../models/IIdentity";
 
 const authStorageName = "auth";
