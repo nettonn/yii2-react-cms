@@ -1,15 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export interface AppState {
+export interface MainState {
   currentDataGridSelector: string | null;
 }
 
-const initialState: AppState = {
+const initialState: MainState = {
   currentDataGridSelector: null,
 };
 
-export const appSlice = createSlice({
-  name: "app",
+const slice = createSlice({
+  name: "main",
   initialState,
   reducers: {
     setCurrentDataGridSelector(state, action: PayloadAction<string | null>) {
@@ -18,6 +18,6 @@ export const appSlice = createSlice({
   },
 });
 
-export const appActions = appSlice.actions;
+export const mainActions = slice.actions;
 
-export const appReducer = appSlice.reducer;
+export const mainReducer = { main: slice.reducer };

@@ -1,33 +1,54 @@
-import { AxiosRequestConfig, AxiosResponse } from "axios";
+import { AxiosRequestConfig } from "axios";
 import { $api, $apiNoAuth } from "../http/axios";
 import { IIdentity } from "../models/IIdentity";
+import { prepareAxiosConfig } from "../utils/functions";
+
+export interface IAuthStorage {
+  isAuth: boolean;
+  token: string;
+  identity: IIdentity;
+}
 
 const authStorageName = "auth";
-const tokenStorageName = "auth-token";
-const identityStorageName = "auth-identity";
 
 export default class AuthService {
   protected loginUrl = "/auth/login";
   protected logoutUrl = "/auth/refresh-token";
   protected refreshTokenUrl = "/auth/refresh-token";
 
-  async login(
-    email: string,
-    password: string
-  ): Promise<
-    AxiosResponse<{
-      identity: IIdentity;
-      token: string;
-    }>
-  > {
-    return await $apiNoAuth.post(this.loginUrl, {
-      email,
-      password,
-    });
+  async login(values: { email: string; password: string }): Promise<{
+    identity: IIdentity;
+    token: string;
+  }> {
+    const config = prepareAxiosConfig(this.loginConfig(), { data: values });
+    const response = await $apiNoAuth.request(config);
+    return response.data;
   }
 
-  async logout() {
-    return await $api.delete(this.logoutUrl);
+  async logout(): Promise<null> {
+    const config = prepareAxiosConfig(this.logoutConfig());
+    const response = await $api.request(config);
+    return response.data;
+  }
+
+  async refresh(): Promise<{}> {
+    const config = prepareAxiosConfig(this.refreshConfig());
+    const response = await $api.request(config);
+    return response.data;
+  }
+
+  loginConfig(): AxiosRequestConfig {
+    return {
+      url: this.loginUrl,
+      method: "post",
+    };
+  }
+
+  logoutConfig(): AxiosRequestConfig {
+    return {
+      url: this.logoutUrl,
+      method: "delete",
+    };
   }
 
   refreshConfig(): AxiosRequestConfig {
@@ -37,41 +58,38 @@ export default class AuthService {
     };
   }
 
-  setAuth(auth: boolean) {
-    localStorage.setItem(authStorageName, JSON.stringify(auth));
+  setStorage(data: IAuthStorage) {
+    localStorage.setItem(authStorageName, JSON.stringify(data));
   }
 
-  getAuth(): boolean | null {
-    if (localStorage.getItem(authStorageName)) {
-      return JSON.parse(localStorage.getItem(authStorageName) as string);
+  getStorage(): IAuthStorage {
+    const dataString = localStorage.getItem(authStorageName);
+    if (!dataString) return {} as IAuthStorage;
+
+    const data = JSON.parse(dataString);
+
+    if (!this.isStorageValid(data)) {
+      this.setStorage({} as IAuthStorage);
+      return {} as IAuthStorage;
     }
-    return null;
+
+    return data;
   }
 
-  setToken(token: string) {
-    localStorage.setItem(tokenStorageName, token);
-  }
-
-  getToken(): string | null {
-    return localStorage.getItem(tokenStorageName);
-  }
-
-  setIdentity(identity: IIdentity) {
-    localStorage.setItem(identityStorageName, JSON.stringify(identity));
-  }
-
-  getIdentity(): IIdentity {
-    if (localStorage.getItem(identityStorageName))
-      return JSON.parse(
-        localStorage.getItem(identityStorageName) as string
-      ) as IIdentity;
-    return {} as IIdentity;
-  }
-
-  removeAuthData() {
+  clearStorage() {
     localStorage.removeItem(authStorageName);
-    localStorage.removeItem(tokenStorageName);
-    localStorage.removeItem(identityStorageName);
+  }
+
+  isStorageValid(data: IAuthStorage) {
+    return typeof data === "object" && !Array.isArray(data) && data !== null;
+  }
+
+  setStorageToken(token: string) {
+    this.setStorage({ ...this.getStorage(), token });
+  }
+
+  getStorageToken(): string {
+    return this.getStorage().token;
   }
 }
 

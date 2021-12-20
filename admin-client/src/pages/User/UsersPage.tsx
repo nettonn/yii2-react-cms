@@ -3,14 +3,14 @@ import DataGridTable from "../../components/crud/grid/DataGridTable";
 import { IUser, IUserModelOptions } from "../../models/IUser";
 import { ColumnsType } from "antd/lib/table/Table";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
 import { userService } from "../../api/UserService";
 import useDataGrid from "../../hooks/dataGrid.hook";
 import { Link } from "react-router-dom";
 import { statusColumn } from "../../components/crud/grid/columns";
 
-const modelRoutes = RouteNames.user;
+const modelRoutes = routeNames.user;
 
 const UsersPage: FC = () => {
   const dataGridHook = useDataGrid<IUser, IUserModelOptions>(
@@ -46,7 +46,7 @@ const UsersPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Пользователи" backPath={RouteNames.home} />
+      <PageHeader title="Пользователи" backPath={routeNames.home} />
 
       <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
 

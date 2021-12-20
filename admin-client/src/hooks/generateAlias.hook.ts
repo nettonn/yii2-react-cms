@@ -1,7 +1,6 @@
 import { FormInstance } from "antd/lib/form/hooks/useForm";
 import { useQuery } from "react-query";
 import { helperService } from "../api/HelperService";
-import { message } from "antd";
 import { NamePath } from "rc-field-form/lib/interface";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
@@ -23,14 +22,7 @@ export default function useGenerateAlias(
       if (!debouncedValue) {
         return "";
       }
-      const result = await helperService.generateAlias(debouncedValue);
-
-      if (result.success) {
-        return result.data;
-      } else {
-        message.error(result.error);
-        throw new Error(result.error);
-      }
+      return await helperService.generateAlias(debouncedValue);
     },
     {
       enabled: isAllowed,

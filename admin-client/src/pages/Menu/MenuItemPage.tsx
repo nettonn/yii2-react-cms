@@ -5,11 +5,11 @@ import { useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
 import { Form, Input, Switch, TreeSelect } from "antd";
 import rules from "../../utils/rules";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import { IMenuItem, IMenuItemModelOptions } from "../../models/IMenuItem";
 import MenuItemService from "../../api/MenuItemService";
 
-const modelRoutes = RouteNames.menuItem;
+const modelRoutes = routeNames.menuItem;
 
 const MenuItemPage: FC = () => {
   const { id, menuId } = useParams();
@@ -83,9 +83,9 @@ const MenuItemPage: FC = () => {
         title={`${id ? "Редактирование" : "Создание"} пункта меню`}
         backPath={modelRoutes.indexUrl(menuId)}
         breadcrumbItems={[
-          { path: RouteNames.menu.index, label: "Меню" },
+          { path: routeNames.menu.index, label: "Меню" },
           {
-            path: RouteNames.menu.updateUrl(menuId),
+            path: routeNames.menu.updateUrl(menuId),
             label: menuId ? menuId : "",
           },
           {

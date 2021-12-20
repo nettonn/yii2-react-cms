@@ -1,7 +1,7 @@
 import { $api } from "../http/axios";
-import { IApiServicePagination, IApiServiceReturn, IModel } from "../types";
+import { IApiServicePagination, IModel } from "../types";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
-import { prepareAxiosConfig, requestErrorHandler } from "../utils/functions";
+import { prepareAxiosConfig } from "../utils/functions";
 import { queryClient } from "../http/query-client";
 
 export interface IRestServiceIndexQueryParams {
@@ -11,6 +11,8 @@ export interface IRestServiceIndexQueryParams {
   search?: string;
   filters?: any;
   ids?: number[];
+  list?: boolean;
+  limit?: number;
 }
 
 export default class RestService {
@@ -37,210 +39,100 @@ export default class RestService {
     return `${this.name}-view`;
   }
 
-  async list<T extends IModel = IModel>(
-    limit?: number,
-    signal?: AbortSignal
-  ): Promise<IApiServiceReturn<T[]>> {
-    try {
-      const config = prepareAxiosConfig(this.indexConfig(), {
-        list: true,
-        limit,
-      });
-      if (signal) config.signal = signal;
-      const response = await $api.request<T[]>(config);
-
-      return {
-        success: true,
-        data: response.data,
-      };
-    } catch (e: any) {
-      const errors = requestErrorHandler(e);
-      return {
-        success: false,
-        status: errors.status,
-        error: errors.message,
-      };
-    }
-  }
-
   async index<T extends IModel = IModel>(
     params?: IRestServiceIndexQueryParams,
     signal?: AbortSignal
-  ): Promise<IApiServiceReturn<T[]>> {
-    try {
-      const config = prepareAxiosConfig(this.indexConfig(), params);
-      if (signal) config.signal = signal;
-      const response = await $api.request<T[]>(config);
-      const pagination: IApiServicePagination = {};
+  ): Promise<{ pagination: IApiServicePagination; data: T[] }> {
+    const config = prepareAxiosConfig(this.indexConfig(), { params });
+    if (signal) config.signal = signal;
+    const response = await $api.request<T[]>(config);
+    const pagination: IApiServicePagination = {};
 
-      if (response.headers["x-pagination-current-page"] !== undefined)
-        pagination.currentPage = parseInt(
-          response.headers["x-pagination-current-page"]
-        );
-      if (response.headers["x-pagination-total-count"] !== undefined)
-        pagination.totalCount = parseInt(
-          response.headers["x-pagination-total-count"]
-        );
+    if (response.headers["x-pagination-current-page"] !== undefined)
+      pagination.currentPage = parseInt(
+        response.headers["x-pagination-current-page"]
+      );
+    if (response.headers["x-pagination-total-count"] !== undefined)
+      pagination.totalCount = parseInt(
+        response.headers["x-pagination-total-count"]
+      );
 
-      if (response.headers["x-pagination-per-page"] !== undefined)
-        pagination.perPage = parseInt(
-          response.headers["x-pagination-per-page"]
-        );
+    if (response.headers["x-pagination-per-page"] !== undefined)
+      pagination.perPage = parseInt(response.headers["x-pagination-per-page"]);
 
-      if (response.headers["x-pagination-page-count"] !== undefined)
-        pagination.pageCount = parseInt(
-          response.headers["x-pagination-page-count"]
-        );
+    if (response.headers["x-pagination-page-count"] !== undefined)
+      pagination.pageCount = parseInt(
+        response.headers["x-pagination-page-count"]
+      );
 
-      this.prepareModelOptions<T[]>(response);
+    this.prepareModelOptions<T[]>(response);
 
-      return {
-        success: true,
-        data: response.data,
-        pagination,
-      };
-    } catch (e: any) {
-      const errors = requestErrorHandler(e);
-      return {
-        success: false,
-        status: errors.status,
-        error: errors.message,
-      };
-    }
+    return {
+      data: response.data,
+      pagination,
+    };
   }
 
-  async view<T>(
-    id: number | string,
-    signal?: AbortSignal
-  ): Promise<IApiServiceReturn<T>> {
-    try {
-      const config = prepareAxiosConfig(this.viewConfig(id));
-      if (signal) config.signal = signal;
-      const response = await $api.request<T>(config);
-      this.prepareModelOptions(response);
-      return {
-        success: true,
-        data: response.data,
-      };
-    } catch (e: any) {
-      const errors = requestErrorHandler(e);
-      return {
-        success: false,
-        status: errors.status,
-        error: errors.message,
-      };
-    }
+  async view<T>(id: number | string, signal?: AbortSignal): Promise<T> {
+    const config = prepareAxiosConfig(this.viewConfig(id));
+    if (signal) config.signal = signal;
+    const response = await $api.request<T>(config);
+    this.prepareModelOptions(response);
+
+    return response.data;
   }
 
-  async create<T>(values: T): Promise<IApiServiceReturn<T>> {
-    try {
-      const config = prepareAxiosConfig(this.createConfig(), null, values);
+  async create<T>(values: T): Promise<T> {
+    const config = prepareAxiosConfig(this.createConfig(), { data: values });
 
-      const response = await $api.request<T>(config);
+    const response = await $api.request<T>(config);
 
-      // queryClient.invalidateQueries(this.listQueryKey());
-      // queryClient.invalidateQueries(this.indexQueryKey());
+    // queryClient.invalidateQueries(this.listQueryKey());
+    // queryClient.invalidateQueries(this.indexQueryKey());
 
-      this.prepareModelOptions(response);
+    this.prepareModelOptions(response);
 
-      return { success: true, data: response.data };
-    } catch (e: any) {
-      const errors = requestErrorHandler(e);
-      if (errors.validationErrors) {
-        return {
-          success: false,
-          validationErrors: errors.validationErrors,
-        };
-      }
-      return {
-        success: false,
-        status: errors.status,
-        error: errors.message,
-      };
-    }
+    return response.data;
   }
 
-  async update<T>(
-    id: number | string,
-    values: T
-  ): Promise<IApiServiceReturn<T>> {
-    try {
-      const config = prepareAxiosConfig(this.updateConfig(id), null, values);
+  async update<T>(id: number | string, values: T): Promise<T> {
+    const config = prepareAxiosConfig(this.updateConfig(id), {
+      data: values,
+    });
 
-      const response = await $api.request<T>(config);
+    const response = await $api.request<T>(config);
 
-      // queryClient.invalidateQueries(this.listQueryKey());
-      // queryClient.invalidateQueries(this.indexQueryKey());
+    // queryClient.invalidateQueries(this.listQueryKey());
+    // queryClient.invalidateQueries(this.indexQueryKey());
 
-      this.prepareModelOptions(response);
+    this.prepareModelOptions(response);
 
-      return { success: true, data: response.data };
-    } catch (e: any) {
-      const errors = requestErrorHandler(e);
-      if (errors.validationErrors) {
-        return {
-          success: false,
-          validationErrors: errors.validationErrors,
-        };
-      }
-      return {
-        success: false,
-        status: errors.status,
-        error: errors.message,
-      };
-    }
+    return response.data;
   }
 
-  async delete(id: number | string): Promise<IApiServiceReturn<null>> {
-    try {
-      const response = await $api.request(this.deleteConfig(id));
+  async delete(id: number | string): Promise<null> {
+    const response = await $api.request(this.deleteConfig(id));
 
-      // queryClient.invalidateQueries(this.listQueryKey());
-      // queryClient.invalidateQueries(this.indexQueryKey());
+    // queryClient.invalidateQueries(this.listQueryKey());
+    // queryClient.invalidateQueries(this.indexQueryKey());
 
-      this.prepareModelOptions(response);
+    this.prepareModelOptions(response);
 
-      return { success: true, data: response.data };
-    } catch (e: any) {
-      const errors = requestErrorHandler(e);
-      return {
-        success: false,
-        status: errors.status,
-        error: errors.message,
-      };
-    }
+    return response.data;
   }
 
-  async modelOptions<T>(signal?: AbortSignal): Promise<IApiServiceReturn<T>> {
-    try {
-      const config = prepareAxiosConfig(this.modelOptionsConfig());
-      if (signal) config.signal = signal;
-      const response = await $api.request<T>(config);
-      return { success: true, data: response.data };
-    } catch (e: any) {
-      const errors = requestErrorHandler(e);
-      return {
-        success: false,
-        status: errors.status,
-        error: errors.message,
-      };
-    }
+  async modelOptions<T>(signal?: AbortSignal): Promise<T> {
+    const config = prepareAxiosConfig(this.modelOptionsConfig());
+    if (signal) config.signal = signal;
+    const response = await $api.request<T>(config);
+    return response.data;
   }
 
-  async modelDefaults<T>(signal?: AbortSignal): Promise<IApiServiceReturn<T>> {
-    try {
-      const config = prepareAxiosConfig(this.modelDefaultsConfig());
-      if (signal) config.signal = signal;
-      const response = await $api.request<T>(config);
-      return { success: true, data: response.data };
-    } catch (e: any) {
-      const errors = requestErrorHandler(e);
-      return {
-        success: false,
-        status: errors.status,
-        error: errors.message,
-      };
-    }
+  async modelDefaults<T>(signal?: AbortSignal): Promise<T> {
+    const config = prepareAxiosConfig(this.modelDefaultsConfig());
+    if (signal) config.signal = signal;
+    const response = await $api.request<T>(config);
+    return response.data;
   }
 
   indexConfig(): AxiosRequestConfig {

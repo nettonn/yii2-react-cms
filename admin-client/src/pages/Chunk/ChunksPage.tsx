@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
 import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
@@ -9,7 +9,7 @@ import { IChunk, IChunkModelOptions } from "../../models/IChunk";
 import { chunkService } from "../../api/ChunkService";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
-const modelRoutes = RouteNames.chunk;
+const modelRoutes = routeNames.chunk;
 
 const ChunksPage: FC = () => {
   const dataGridHook = useDataGrid<IChunk, IChunkModelOptions>(
@@ -60,7 +60,7 @@ const ChunksPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Чанки" backPath={RouteNames.home} />
+      <PageHeader title="Чанки" backPath={routeNames.home} />
 
       <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
 

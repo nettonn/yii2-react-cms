@@ -5,13 +5,13 @@ import { Link, useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
 import { Button, Form, Input, Switch } from "antd";
 import rules from "../../utils/rules";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import { IMenu, IMenuModelOptions } from "../../models/IMenu";
 import { menuService } from "../../api/MenuService";
 import { MenuOutlined } from "@ant-design/icons";
 
-const modelRoutes = RouteNames.menu;
-const menuItemRoutes = RouteNames.menuItem;
+const modelRoutes = routeNames.menu;
+const menuItemRoutes = routeNames.menuItem;
 
 const MenuPage: FC = () => {
   const { id } = useParams();

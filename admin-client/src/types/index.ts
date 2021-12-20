@@ -1,18 +1,9 @@
-import React, { Attributes } from "react";
+import React from "react";
 
 export interface IPaginationType {
   current: number;
   pageSize: number;
   total: number;
-}
-
-export interface IApiServiceReturn<T> {
-  success?: boolean;
-  data?: T;
-  status?: number;
-  error?: string;
-  pagination?: IApiServicePagination;
-  validationErrors?: IValidationErrorType[];
 }
 
 export interface IApiServicePagination {
@@ -41,9 +32,11 @@ export interface IDataTableParamsType {
 
 export interface IRoute {
   path: string;
-  element: React.ComponentType;
-  // exact?: boolean;
-  elementProps?: Attributes;
+  element: React.ElementType;
+  elementProps?: React.Attributes;
+  isPublic?: boolean;
+  layout?: React.ElementType;
+  hideIfAuth?: boolean;
 }
 
 export interface IModelRouteNames {

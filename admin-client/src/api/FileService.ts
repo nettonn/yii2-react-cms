@@ -1,5 +1,5 @@
 import RestService from "./RestService";
-import { AxiosRequestConfig } from "axios";
+import { AxiosRequestConfig, AxiosResponse } from "axios";
 
 export default class FileService extends RestService {
   protected name = "file";
@@ -11,6 +11,10 @@ export default class FileService extends RestService {
       method: "post",
       headers: { "Content-Type": "multipart/form-data" },
     };
+  }
+
+  prepareModelOptions<T>(response: AxiosResponse<T>) {
+    return;
   }
 }
 

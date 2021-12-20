@@ -1,16 +1,20 @@
 import RestService, { IRestServiceIndexQueryParams } from "../api/RestService";
-import { message } from "antd";
 import { TablePaginationConfig } from "antd/lib/table/interface";
 import { IFiltersParam, IModel, IModelOptions } from "../types";
 import { useQuery, useMutation } from "react-query";
 import { useAppActions, useAppSelector } from "./redux";
 import { useEffect, useState } from "react";
-import { appActions } from "../store/reducers/app";
+import { mainActions } from "../store/reducers/main";
 import { queryClient } from "../http/query-client";
 import { useLocation, useNavigate } from "react-router-dom";
 import { queryStringParse } from "../utils/qs";
-import { buildUrl, withoutBaseUrl } from "../utils/functions";
+import {
+  buildUrl,
+  requestErrorHandler,
+  withoutBaseUrl,
+} from "../utils/functions";
 import { DataGridSelector, gridActions } from "../store/reducers/grid";
+import { message } from "antd";
 
 export default function useDataGrid<
   T extends IModel = IModel,
@@ -19,8 +23,8 @@ export default function useDataGrid<
   const dataGridActions = gridActions[dataGridSelector];
   const { pathname: locationPathname, search: locationSearch } = useLocation();
   const [isInit, setIsInit] = useState(false);
-  const { currentDataGridSelector } = useAppSelector((state) => state.app);
-  const { setCurrentDataGridSelector } = useAppActions(appActions);
+  const { currentDataGridSelector } = useAppSelector((state) => state.main);
+  const { setCurrentDataGridSelector } = useAppActions(mainActions);
   const [allowQueries, setAllowQueries] = useState(false);
   const navigate = useNavigate();
 
@@ -71,12 +75,7 @@ export default function useDataGrid<
   } = useQuery(
     modelService.modelOptionsQueryKey(),
     async ({ signal }) => {
-      const result = await modelService.modelOptions<M>(signal);
-      if (result.success) {
-        return result.data;
-      }
-      message.error(result.error);
-      throw new Error(result.error);
+      return await modelService.modelOptions<M>(signal);
     },
     {
       enabled: allowQueries,
@@ -106,23 +105,19 @@ export default function useDataGrid<
 
       const result = await modelService.index<T>(params, signal);
 
-      if (result.success) {
-        if (result.pagination) {
-          if (result.pagination.currentPage !== undefined)
-            setCurrentPage(result.pagination.currentPage);
-          if (result.pagination.totalCount !== undefined)
-            setDataCount(result.pagination.totalCount);
+      if (result.pagination) {
+        if (result.pagination.currentPage !== undefined)
+          setCurrentPage(result.pagination.currentPage);
+        if (result.pagination.totalCount !== undefined)
+          setDataCount(result.pagination.totalCount);
 
-          if (result.pagination.perPage !== undefined)
-            setPageSize(result.pagination.perPage);
+        if (result.pagination.perPage !== undefined)
+          setPageSize(result.pagination.perPage);
 
-          if (result.pagination.pageCount !== undefined)
-            setPageCount(result.pagination.pageCount);
-        }
-        return result.data;
+        if (result.pagination.pageCount !== undefined)
+          setPageCount(result.pagination.pageCount);
       }
-      message.error(result.error);
-      throw new Error(result.error);
+      return result.data;
     },
     {
       enabled: allowQueries,
@@ -130,20 +125,20 @@ export default function useDataGrid<
     }
   );
 
-  const {
-    mutate: deleteHandler,
-    isLoading: deleteIsLoading,
-    error: deleteError,
-  } = useMutation(async (id: number) => {
-    const result = await modelService.delete(id);
-    if (result.success) {
+  const { mutate: deleteHandler, isLoading: deleteIsLoading } = useMutation(
+    async (id: number) => {
+      await modelService.delete(id);
       queryClient.invalidateQueries(modelService.listQueryKey());
       queryClient.invalidateQueries(modelService.indexQueryKey());
       return true;
-    } else {
-      message.error(result.error);
+    },
+    {
+      onError: (e) => {
+        const errors = requestErrorHandler(e);
+        message.error(errors.message);
+      },
     }
-  });
+  );
 
   const tableChangeHandler = (
     tablePagination: TablePaginationConfig,
@@ -182,7 +177,7 @@ export default function useDataGrid<
     setSearchQuery(null);
   };
 
-  const error = indexError || modelOptionsError || deleteError;
+  const error = indexError || modelOptionsError;
 
   const isLoading =
     !indexIsFetched || !modelOptionsIsFetched || deleteIsLoading;

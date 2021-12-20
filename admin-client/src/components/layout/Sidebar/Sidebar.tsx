@@ -2,13 +2,12 @@ import React, { FC, useState, useEffect, ReactElement } from "react";
 import { Layout, Menu } from "antd";
 import "./Sidebar.css";
 import { Link, useLocation } from "react-router-dom";
-import { RouteNames } from "../../../routes";
+import { routeNames } from "../../../routes";
 import RouteIcon from "../../ui/RouteIcon";
-import { useAppActions } from "../../../hooks/redux";
-import { authActions } from "../../../store/reducers/auth";
 import { MenuClickEventHandler } from "rc-menu/lib/interface";
 import { LogoutOutlined } from "@ant-design/icons";
 import { useLocalStorage } from "usehooks-ts";
+import useLogout from "../../../hooks/logout.hook";
 
 interface IItem {
   title: string;
@@ -22,7 +21,7 @@ interface IItem {
 
 const Sidebar: FC = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>();
-  const { logout } = useAppActions(authActions);
+  const { logout, isLoading: logoutIsLoading } = useLogout();
   const { pathname } = useLocation();
   const [storedOpenKeys, setStoredOpenKeys] = useLocalStorage<string[]>(
     `admin-sidebar-open-keys`,
@@ -32,17 +31,16 @@ const Sidebar: FC = () => {
 
   useEffect(() => {
     for (const route of [
-      RouteNames.event,
-      RouteNames.user.index,
-      RouteNames.post.index,
-      RouteNames.page.index,
-      RouteNames.chunk.index,
-      RouteNames.redirect.index,
-      RouteNames.setting.index,
-      RouteNames.seo.index,
-      RouteNames.menu.index,
-      RouteNames.version.index,
-      RouteNames.log.index,
+      routeNames.user.index,
+      routeNames.post.index,
+      routeNames.page.index,
+      routeNames.chunk.index,
+      routeNames.redirect.index,
+      routeNames.setting.index,
+      routeNames.seo.index,
+      routeNames.menu.index,
+      routeNames.version.index,
+      routeNames.log.index,
     ]) {
       if (pathname.indexOf(route) === 0) {
         setSelectedKeys([route]);
@@ -54,66 +52,62 @@ const Sidebar: FC = () => {
 
   const menuItems: (IItem | ReactElement)[] = [
     {
-      route: RouteNames.home,
+      route: routeNames.home,
       title: "Панель",
     },
     {
-      route: RouteNames.event,
-      title: "Календарь",
-    },
-    {
-      route: RouteNames.page.index,
+      route: routeNames.page.index,
       title: "Страницы",
     },
     {
-      route: RouteNames.post.index,
+      route: routeNames.post.index,
       title: "Записи",
     },
     {
-      route: RouteNames.chunk.index,
+      route: routeNames.chunk.index,
       title: "Чанки",
     },
     {
-      route: RouteNames.menu.index,
+      route: routeNames.menu.index,
       title: "Меню",
     },
     {
-      route: RouteNames.seo.index,
+      route: routeNames.seo.index,
       title: "SEO",
     },
     {
       key: "service",
       title: "Сервис",
-      icon: <RouteIcon route={RouteNames.setting.index} />,
+      icon: <RouteIcon route={routeNames.setting.index} />,
       children: [
         {
           hideIcon: true,
-          route: RouteNames.redirect.index,
+          route: routeNames.redirect.index,
           title: "Редиректы",
         },
         {
           hideIcon: true,
-          route: RouteNames.version.index,
+          route: routeNames.version.index,
           title: "Версии",
         },
         {
           hideIcon: true,
-          route: RouteNames.queue.index,
+          route: routeNames.queue.index,
           title: "Задачи",
         },
         {
           hideIcon: true,
-          route: RouteNames.log.index,
+          route: routeNames.log.index,
           title: "Логи",
         },
         {
           hideIcon: true,
-          route: RouteNames.user.index,
+          route: routeNames.user.index,
           title: "Пользователи",
         },
         {
           hideIcon: true,
-          route: RouteNames.setting.index,
+          route: routeNames.setting.index,
           title: "Настройки",
         },
       ],
@@ -214,6 +208,7 @@ const Sidebar: FC = () => {
           <Menu.Item
             key="logout"
             icon={<LogoutOutlined />}
+            disabled={logoutIsLoading}
             onClick={() => logout()}
           >
             Выйти

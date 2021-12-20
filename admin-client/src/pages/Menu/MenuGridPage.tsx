@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
 import { IMenu, IMenuModelOptions } from "../../models/IMenu";
 import { ColumnsType } from "antd/lib/table/interface";
@@ -11,8 +11,8 @@ import { menuService } from "../../api/MenuService";
 import { Link } from "react-router-dom";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
-const modelRoutes = RouteNames.menu;
-const menuItemRoutes = RouteNames.menuItem;
+const modelRoutes = routeNames.menu;
+const menuItemRoutes = routeNames.menuItem;
 
 const MenuGridPage: FC = () => {
   const dataGridHook = useDataGrid<IMenu, IMenuModelOptions>(
@@ -62,7 +62,7 @@ const MenuGridPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Меню" backPath={RouteNames.home} />
+      <PageHeader title="Меню" backPath={routeNames.home} />
 
       <DataGridTable
         dataGridHook={dataGridHook}

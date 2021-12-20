@@ -1,7 +1,8 @@
 import { IValidationErrorType } from "../types";
 import CONSTANTS from "./constants";
 import { AxiosRequestConfig } from "axios";
-import isEmpty from "lodash/isEmpty";
+import _isEmpty from "lodash/isEmpty";
+import _merge from "lodash/merge";
 import { FieldData } from "rc-field-form/es/interface";
 import { message } from "antd";
 import { queryStringStringify } from "./qs";
@@ -15,10 +16,8 @@ export function simpleCloneObject(object: {}) {
 }
 
 export function prepareAxiosConfig(
-  axiosConfig: AxiosRequestConfig,
-  params: {} | null = null,
-  data: {} | null = null,
-  headers: {} | null = null
+  config: AxiosRequestConfig,
+  addConfig?: { params?: {}; data?: {}; headers?: {} }
 ) {
   const defaultConfig: AxiosRequestConfig = {
     url: "",
@@ -27,27 +26,13 @@ export function prepareAxiosConfig(
     data: null,
     headers: {},
   };
-  const config = { ...defaultConfig, ...axiosConfig };
 
-  config.params = Object.assign({}, axiosConfig.params, params);
-  if (isEmpty(config.params)) config.params = null;
+  const resultConfig = _merge({}, defaultConfig, config, addConfig);
 
-  config.data = Object.assign({}, axiosConfig.data, data);
-  if (isEmpty(config.data)) config.data = null;
+  if (_isEmpty(resultConfig.params)) resultConfig.params = null;
+  if (_isEmpty(resultConfig.data)) resultConfig.data = null;
 
-  config.headers = Object.assign(
-    {},
-    config.headers,
-    axiosConfig.headers,
-    headers
-  );
-
-  if (config.headers) config.headers["Accept"] = "application/json";
-
-  if (!isEmpty(config.data)) {
-    config.headers["Content-Type"] = "application/json";
-  }
-  return config;
+  return resultConfig;
 }
 
 export function requestErrorHandler(e: any) {

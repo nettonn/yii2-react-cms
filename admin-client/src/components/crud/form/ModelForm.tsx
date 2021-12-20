@@ -5,7 +5,7 @@ import { useModelForm } from "../../../hooks/modelForm.hook";
 import UpdatePageActions from "./../../crud/PageActions/UpdatePageActions";
 import { IModel, IModelOptions } from "../../../types";
 import { Navigate } from "react-router-dom";
-import { RouteNames } from "../../../routes";
+import { routeNames } from "../../../routes";
 import { stringReplace } from "../../../utils/functions";
 
 interface ModelFormProps {
@@ -52,7 +52,7 @@ const ModelForm: FC<ModelFormProps> = ({
   if (!isInit) return <Spin spinning={true} />;
 
   if (isNotFound) {
-    return <Navigate to={RouteNames.error.e404} />;
+    return <Navigate to={routeNames.error.e404} />;
   }
 
   const renderForm = () => (

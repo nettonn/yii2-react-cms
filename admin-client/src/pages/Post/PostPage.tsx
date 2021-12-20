@@ -5,14 +5,14 @@ import { useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
 import { Col, Form, Input, Row, Switch, Tabs } from "antd";
 import rules from "../../utils/rules";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import { IPost, IPostModelOptions } from "../../models/IPost";
 import FileUpload from "../../components/crud/form/FileUpload/FileUpload";
 import { postService } from "../../api/PostService";
 import useGenerateAlias from "../../hooks/generateAlias.hook";
 import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
 
-const modelRoutes = RouteNames.post;
+const modelRoutes = routeNames.post;
 
 const PostPage: FC = () => {
   const { id } = useParams();

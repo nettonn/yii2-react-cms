@@ -13,8 +13,10 @@ import version from "./parts/version";
 import log from "./parts/log";
 import queue from "./parts/queue";
 import { IRoute } from "../types";
+import PublicLayout from "../components/layout/PublicLayout/PublicLayout";
+import PrivateLayout from "../components/layout/PrivateLayout/PrivateLayout";
 
-export const RouteNames = {
+export const routeNames = {
   ...common.names,
   error: error.names,
   user: user.names,
@@ -31,11 +33,8 @@ export const RouteNames = {
   queue: queue.names,
 };
 
-export const publicRoutes: IRoute[] = [...common.publicRoutes];
-
-export const privateRoutes: IRoute[] = [
+export const routes: IRoute[] = [
   ...common.routes,
-
   ...error.routes,
   ...user.routes,
   ...post.routes,

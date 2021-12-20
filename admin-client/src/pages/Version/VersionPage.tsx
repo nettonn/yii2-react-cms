@@ -2,7 +2,7 @@ import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import React, { FC } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Descriptions, Spin, Table } from "antd";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import { versionService } from "../../api/VersionService";
 import {
   IVersion,
@@ -15,7 +15,7 @@ import "./VersionPage.css";
 import { ColumnsType } from "antd/lib/table/Table";
 import { withoutBaseUrl } from "../../utils/functions";
 
-const modelRoutes = RouteNames.version;
+const modelRoutes = routeNames.version;
 
 const VersionPage: FC = () => {
   const { id } = useParams();

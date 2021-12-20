@@ -1,14 +1,14 @@
 import React, { FC } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
 import { IVersion, IVersionModelOptions } from "../../models/IVersion";
 import { versionService } from "../../api/VersionService";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
-const modelRoutes = RouteNames.version;
+const modelRoutes = routeNames.version;
 
 const VersionsPage: FC = () => {
   const dataGridHook = useDataGrid<IVersion, IVersionModelOptions>(
@@ -68,7 +68,7 @@ const VersionsPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Версии" backPath={RouteNames.home} />
+      <PageHeader title="Версии" backPath={routeNames.home} />
 
       <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
     </>

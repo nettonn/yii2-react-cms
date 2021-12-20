@@ -5,12 +5,12 @@ import { useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
 import { Form, Input, Switch, Tabs, TreeSelect } from "antd";
 import rules from "../../utils/rules";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import { ISeo, ISeoModelOptions } from "../../models/ISeo";
 import { seoService } from "../../api/SeoService";
 import CkeditorInput from "../../components/crud/form/CkeditorInput/CkeditorInput";
 
-const modelRoutes = RouteNames.seo;
+const modelRoutes = routeNames.seo;
 
 const SeoPage: FC = () => {
   const { id } = useParams();

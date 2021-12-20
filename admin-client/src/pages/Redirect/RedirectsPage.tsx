@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
 import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
@@ -10,7 +10,7 @@ import { redirectService } from "../../api/RedirectService";
 import { statusColumn } from "../../components/crud/grid/columns";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
-const modelRoutes = RouteNames.redirect;
+const modelRoutes = routeNames.redirect;
 
 const RedirectsPage: FC = () => {
   const dataGridHook = useDataGrid<IRedirect, IRedirectModelOptions>(
@@ -61,7 +61,7 @@ const RedirectsPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Редиректы" backPath={RouteNames.home} />
+      <PageHeader title="Редиректы" backPath={routeNames.home} />
 
       <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
 

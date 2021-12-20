@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
 import { Col, Form, FormInstance, Input, Row, Select, Switch } from "antd";
 import rules from "../../utils/rules";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import { settingService } from "../../api/SettingService";
 import {
   ISetting,
@@ -16,7 +16,7 @@ import {
 } from "../../models/ISetting";
 import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
 
-const modelRoutes = RouteNames.setting;
+const modelRoutes = routeNames.setting;
 
 const SettingPage: FC = () => {
   const { id } = useParams();

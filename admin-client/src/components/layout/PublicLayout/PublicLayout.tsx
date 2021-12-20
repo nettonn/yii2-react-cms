@@ -1,12 +1,11 @@
 import React, { FC } from "react";
 import { Layout } from "antd";
-import PublicAppRouter from "../../routers/PublicAppRouter";
 
-const PublicLayout: FC = () => {
+const PublicLayout: FC = (props) => {
   return (
     <Layout>
-      <Layout.Content style={{ padding: "0 15px" }}>
-        <PublicAppRouter />
+      <Layout.Content style={{ padding: "0 15px", minHeight: "100vh" }}>
+        {props.children}
       </Layout.Content>
     </Layout>
   );

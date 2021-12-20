@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
 import { IPost, IPostModelOptions } from "../../models/IPost";
 import { ColumnsType } from "antd/lib/table/interface";
@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { postService } from "../../api/PostService";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
-const modelRoutes = RouteNames.post;
+const modelRoutes = routeNames.post;
 
 const PostsPage: FC = () => {
   const dataGridHook = useDataGrid<IPost, IPostModelOptions>(
@@ -54,7 +54,7 @@ const PostsPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Записи" backPath={RouteNames.home} />
+      <PageHeader title="Записи" backPath={routeNames.home} />
 
       <DataGridTable
         dataGridHook={dataGridHook}

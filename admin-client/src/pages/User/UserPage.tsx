@@ -6,10 +6,10 @@ import { useModelForm } from "../../hooks/modelForm.hook";
 import { Form, Input, Select, Switch } from "antd";
 import rules from "../../utils/rules";
 import { IUser, IUserModelOptions } from "../../models/IUser";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import { userService } from "../../api/UserService";
 
-const modelRoutes = RouteNames.user;
+const modelRoutes = routeNames.user;
 
 const UserPage: FC = () => {
   const { id } = useParams();

@@ -9,15 +9,18 @@ export default function useAuth() {
   const { isAuth, isAuthChecked } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
-    if (authService.getAuth()) {
+    if (isAuthChecked) return;
+    const { isAuth, token, identity } = authService.getStorage();
+    if (isAuth) {
       authorize({
-        identity: authService.getIdentity(),
-        token: authService.getToken(),
+        identity,
+        token,
       });
     } else {
       clearAuth();
+      authService.clearStorage();
     }
-  }, [authorize, clearAuth]);
+  }, [authorize, clearAuth, isAuthChecked]);
 
   return {
     isAuth,

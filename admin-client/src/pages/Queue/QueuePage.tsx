@@ -2,12 +2,12 @@ import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 import { Descriptions, Spin } from "antd";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import { queueService } from "../../api/QueueService";
 import { IQueue, IQueueModelOptions } from "../../models/IQueue";
 import { useModelView } from "../../hooks/modelView.hook";
 
-const modelRoutes = RouteNames.queue;
+const modelRoutes = routeNames.queue;
 
 const QueuePage: FC = () => {
   const { id } = useParams();

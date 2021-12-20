@@ -3,10 +3,11 @@ import { authService } from "../api/AuthService";
 import { logMessage, sleep } from "../utils/functions";
 import { $api, $apiNoAuth } from "./axios";
 import { queryStringStringify } from "../utils/qs";
+import isEmpty from "lodash/isEmpty";
 
 export const authRequest = (config: AxiosRequestConfig) => {
   if (config.headers) {
-    config.headers.Authorization = `Bearer ${authService.getToken()}`;
+    config.headers.Authorization = `Bearer ${authService.getStorageToken()}`;
   }
   return config;
 };
@@ -14,6 +15,9 @@ export const authRequest = (config: AxiosRequestConfig) => {
 export const acceptJsonRequest = (config: AxiosRequestConfig) => {
   if (config.headers) {
     config.headers.Accept = "application/json";
+  }
+  if (!isEmpty(config.data) && config.headers) {
+    config.headers["Content-Type"] = "application/json";
   }
   return config;
 };
@@ -55,13 +59,13 @@ export const refreshTokenResponse = async (error: any) => {
     try {
       const response = await $apiNoAuth.request(authService.refreshConfig());
       if (response && response.data) {
-        authService.setToken(response.data.token);
+        authService.setStorageToken(response.data.token);
         isRefreshing = false;
         return $api.request(originalRequest);
       }
     } catch (e) {
       isRefreshing = false;
-      authService.removeAuthData();
+      authService.clearStorage();
       window.location.reload();
     }
   }

@@ -13,7 +13,7 @@ import {
   Row,
 } from "antd";
 import rules from "../../utils/rules";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import { chunkService } from "../../api/ChunkService";
 import {
   IChunk,
@@ -26,7 +26,7 @@ import CkeditorInput from "../../components/crud/form/CkeditorInput/CkeditorInpu
 import { IModelOptions } from "../../types";
 import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
 
-const modelRoutes = RouteNames.chunk;
+const modelRoutes = routeNames.chunk;
 
 const ChunkPage: FC = () => {
   const { id } = useParams();

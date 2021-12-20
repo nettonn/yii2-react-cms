@@ -1,14 +1,14 @@
 import React, { FC } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
 import { IQueue, IQueueModelOptions } from "../../models/IQueue";
 import { queueService } from "../../api/QueueService";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
-const modelRoutes = RouteNames.queue;
+const modelRoutes = routeNames.queue;
 
 const QueuesPage: FC = () => {
   const dataGridHook = useDataGrid<IQueue, IQueueModelOptions>(
@@ -58,7 +58,7 @@ const QueuesPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Задачи" backPath={RouteNames.home} />
+      <PageHeader title="Задачи" backPath={routeNames.home} />
 
       <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
     </>

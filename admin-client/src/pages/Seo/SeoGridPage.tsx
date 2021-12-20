@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
 import { ISeo, ISeoModelOptions } from "../../models/ISeo";
 import { ColumnsType } from "antd/lib/table/interface";
@@ -10,7 +10,7 @@ import { seoService } from "../../api/SeoService";
 import { Link } from "react-router-dom";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
-const modelRoutes = RouteNames.seo;
+const modelRoutes = routeNames.seo;
 
 const SeoGridPage: FC = () => {
   const dataGridHook = useDataGrid<ISeo, ISeoModelOptions>(seoService, "seo");
@@ -57,7 +57,7 @@ const SeoGridPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="SEO" backPath={RouteNames.home} />
+      <PageHeader title="SEO" backPath={routeNames.home} />
 
       <DataGridTable
         dataGridHook={dataGridHook}

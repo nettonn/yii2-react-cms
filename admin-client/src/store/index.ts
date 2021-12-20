@@ -1,13 +1,11 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { appReducer } from "./reducers/app";
+import { mainReducer } from "./reducers/main";
 import { authReducer } from "./reducers/auth";
-import { eventReducer } from "./reducers/event";
 import { gridReducers } from "./reducers/grid";
 
 const rootReducer = combineReducers({
-  app: appReducer,
-  auth: authReducer,
-  event: eventReducer,
+  ...mainReducer,
+  ...authReducer,
   ...gridReducers,
 });
 

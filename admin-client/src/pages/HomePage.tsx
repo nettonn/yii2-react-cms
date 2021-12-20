@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { RouteNames } from "../routes";
+import { routeNames } from "../routes";
 import RouteIcon from "../components/ui/RouteIcon";
 import PageHeader from "../components/ui/PageHeader/PageHeader";
 import { Card, List, Space } from "antd";
@@ -15,47 +15,43 @@ interface IItem {
 const HomePage: FC = () => {
   const items: IItem[] = [
     {
-      route: RouteNames.event,
-      title: "События",
-    },
-    {
-      route: RouteNames.page.index,
+      route: routeNames.page.index,
       title: "Страницы",
     },
     {
-      route: RouteNames.post.index,
+      route: routeNames.post.index,
       title: "Записи",
     },
     {
-      route: RouteNames.chunk.index,
+      route: routeNames.chunk.index,
       title: "Чанки",
     },
     {
-      route: RouteNames.menu.index,
+      route: routeNames.menu.index,
       title: "Меню",
     },
     {
-      route: RouteNames.seo.index,
+      route: routeNames.seo.index,
       title: "SEO",
     },
     {
-      route: RouteNames.redirect.index,
+      route: routeNames.redirect.index,
       title: "Редиректы",
     },
     {
-      route: RouteNames.log.index,
+      route: routeNames.log.index,
       title: "Логи",
     },
     {
-      route: RouteNames.version.index,
+      route: routeNames.version.index,
       title: "Версии",
     },
     {
-      route: RouteNames.setting.index,
+      route: routeNames.setting.index,
       title: "Настройки",
     },
     {
-      route: RouteNames.user.index,
+      route: routeNames.user.index,
       title: "Пользователи",
     },
   ];

@@ -4,7 +4,7 @@ import _unionBy from "lodash/unionBy";
 import _differenceBy from "lodash/differenceBy";
 import { fileService } from "../../../../api/FileService";
 import { sortObjectByIds } from "../../../../utils/functions";
-import { Image, message, Row, Spin } from "antd";
+import { Image, Row, Spin } from "antd";
 import "./FileList.css";
 import {
   DndContext,
@@ -91,12 +91,7 @@ const FileList: FC<FileListProps> = ({
     async ({ signal }) => {
       const params = { ids: toFetchIds };
       const result = await fileService.index<IFileModel>(params, signal);
-
-      if (result.success) {
-        return result.data;
-      }
-      message.error(result.error);
-      throw new Error(result.error);
+      return result.data;
     },
     {
       // keepPreviousData: true,

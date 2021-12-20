@@ -13,8 +13,13 @@
 }
 
 .app-content {
-    padding: 15px 15px 200px;
+    padding: 10px 15px 200px;
 }
 .ant-layout-sider-collapsed + .app-content-layout {
     margin-left: 0;
 }
+
+.app-private-layout .ant-layout-sider-collapsed + .app-content-layout .ant-breadcrumb {
+    padding-left: 40px;
+}
+

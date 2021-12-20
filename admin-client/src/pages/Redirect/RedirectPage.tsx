@@ -5,11 +5,11 @@ import { useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
 import { Form, FormInstance, Input, Switch } from "antd";
 import rules from "../../utils/rules";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import { redirectService } from "../../api/RedirectService";
 import { IRedirect, IRedirectModelOptions } from "../../models/IRedirect";
 
-const modelRoutes = RouteNames.redirect;
+const modelRoutes = routeNames.redirect;
 
 const RedirectPage: FC = () => {
   const { id } = useParams();

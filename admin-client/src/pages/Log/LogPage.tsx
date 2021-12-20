@@ -2,12 +2,12 @@ import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 import { Descriptions, Spin } from "antd";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import { logService } from "../../api/LogService";
 import { ILog, ILogModelOptions } from "../../models/ILog";
 import { useModelView } from "../../hooks/modelView.hook";
 
-const modelRoutes = RouteNames.log;
+const modelRoutes = routeNames.log;
 
 const LogPage: FC = () => {
   const { id } = useParams();
