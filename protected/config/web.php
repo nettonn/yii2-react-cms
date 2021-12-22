@@ -51,8 +51,8 @@ $config = [
             'errorAction' => 'site/error',
         ],
         'mailer' => require(__DIR__ . '/parts/mailer.php'),
-        'ajaxFileUpload' => [
-            'class'=> 'app\components\AjaxFileUploadComponent',
+        'fileUpload' => [
+            'class'=> 'app\components\FileUploadComponent',
         ],
         'chunks' => [
             'class'=>'app\components\ChunkComponent'

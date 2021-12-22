@@ -4,17 +4,18 @@ use nettonn\yii2filestorage\Module;
 use Yii;
 use yii\base\Component;
 use yii\helpers\FileHelper;
+use yii\web\BadRequestHttpException;
 use yii\web\UploadedFile;
 use yii\helpers\Inflector;
 
-class AjaxFileUploadComponent extends Component
+class FileUploadComponent extends Component
 {
     public $imagesExt = [
         'jpg', 'jpeg', 'bmp', 'gif', 'png'
     ];
 
     public $restrictExt = [
-        'exe', 'bat',
+        'exe', 'bat', 'dmg',
     ];
 
     public $fileMaxSize = 52428800;
@@ -30,7 +31,7 @@ class AjaxFileUploadComponent extends Component
 
     protected function getCurrentPath($token)
     {
-        $path = $this->uploadPath.DS.$token;
+        $path = $this->uploadPath.DIRECTORY_SEPARATOR.$token;
         FileHelper::createDirectory($path);
 
         return $path;
@@ -38,17 +39,20 @@ class AjaxFileUploadComponent extends Component
 
     protected function getThumbPath($token)
     {
-        $path = $this->getCurrentPath($token).DS.'thumb';
+        $path = $this->getCurrentPath($token).DIRECTORY_SEPARATOR.'thumb';
         FileHelper::createDirectory($path);
         return $path;
     }
 
     public function upload($token, UploadedFile $uploadedFile, $onlyImages = false)
     {
-        if($uploadedFile->size > $this->fileMaxSize)
-            return ['success'=>false];
+        if(!$uploadedFile)
+            throw new BadRequestHttpException('Файл не приложен');
 
-        $token = basename($token);
+        if($uploadedFile->size > $this->fileMaxSize)
+            throw new BadRequestHttpException('Файл слишком большой');
+
+        $token = $this->prepareToken($token);
 
         $currentPath = $this->getCurrentPath($token);
         $thumbPath = $this->getThumbPath($token);
@@ -60,19 +64,22 @@ class AjaxFileUploadComponent extends Component
         if(in_array($ext, $this->imagesExt)) {
             $isImage = true;
 
-            $filename = $currentPath.DS.$nameExt;
-            $thumbName = $thumbPath.DS.$nameExt;
-            Yii::$app->getModule('file-storage')->generateImage($uploadedFile->tempName, $filename, 1280, 1280);
-            Yii::$app->getModule('file-storage')->generateImage($uploadedFile->tempName, $thumbName, 100, 100, true);
+            $filename = $currentPath.DIRECTORY_SEPARATOR.$nameExt;
+            $thumbName = $thumbPath.DIRECTORY_SEPARATOR.$nameExt;
+            $fileStorage = Yii::$app->getModule('file-storage');
+            $fileStorage->generateImage($uploadedFile->tempName, $filename, 1280, 1280);
+            $fileStorage->generateImage($uploadedFile->tempName, $thumbName, 100, 100, true);
         } elseif(!$onlyImages) {
             $isImage = false;
-            $filename = $currentPath.DS.$nameExt;
+            $filename = $currentPath.DIRECTORY_SEPARATOR.$nameExt;
             move_uploaded_file($uploadedFile->tempName, $filename);
         } else {
-            return ['success'=>false];
+            throw new BadRequestHttpException('Файл не является изображением');
         }
 
         $this->deleteOldFiles();
+
+        $webroot = Yii::getAlias('@webroot');
 
         return [
             'success'=>true,
@@ -80,14 +87,15 @@ class AjaxFileUploadComponent extends Component
             'name'=>$name,
             'nameExt'=>$nameExt,
             'ext'=>$ext,
-            'fileurl'=>str_replace(DOCROOT, '', $filename),
-            'thumburl'=>isset($thumbName) ? str_replace(DOCROOT, '', $thumbName) : '',
+            'fileUrl'=>str_replace($webroot, '', $filename),
+            'thumbUrl'=>isset($thumbName) ? str_replace($webroot, '', $thumbName) : '',
         ];
 
     }
 
     public function getFiles($token, $names = [])
     {
+        $token = $this->prepareToken($token);
         $path = $this->getCurrentPath($token);
 
         $files = FileHelper::findFiles($path, [
@@ -108,6 +116,17 @@ class AjaxFileUploadComponent extends Component
         return $files;
     }
 
+    protected function prepareToken($token)
+    {
+        $token = basename($token);
+        $token = preg_replace('~[^\w]~ui', '', $token);
+
+        if(strlen($token) > 20)
+            throw new BadRequestHttpException('Неверный токен');
+
+        return $token;
+    }
+
     protected function deleteOldFiles()
     {
         $dir = $this->uploadPath;
@@ -116,7 +135,7 @@ class AjaxFileUploadComponent extends Component
             if ($file == '.' || $file == '..')
                 continue;
 
-            $dirname = $dir.DS.$file;
+            $dirname = $dir.DIRECTORY_SEPARATOR.$file;
             if(!is_dir($dirname))
                 continue;
 

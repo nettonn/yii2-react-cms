@@ -1,5 +1,5 @@
 import React from "react";
-import { BlockOutlined } from "@ant-design/icons";
+import { ScheduleOutlined } from "@ant-design/icons";
 import { stringReplace } from "../../utils/functions";
 const QueuesPage = React.lazy(() => import("../../pages/Queue/QueuesPage"));
 const QueuePage = React.lazy(() => import("../../pages/Queue/QueuePage"));
@@ -21,7 +21,7 @@ const routes = [
 ];
 
 const icons = {
-  [names.index]: BlockOutlined,
+  [names.index]: ScheduleOutlined,
 };
 
 const queue = { names, routes, icons };

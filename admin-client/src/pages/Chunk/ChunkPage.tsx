@@ -32,7 +32,9 @@ const ChunkPage: FC = () => {
   const { id } = useParams();
   const [type, setType] = useState<number>();
 
-  const modelForm = useModelForm<IChunk, IModelOptions>(id, chunkService);
+  const modelForm = useModelForm<IChunk, IModelOptions>(id, chunkService, [
+    "content",
+  ]);
 
   const initType = modelForm.initData?.type;
 

@@ -72,12 +72,7 @@ const Page: FC = () => {
       </Tabs.TabPane>
       <Tabs.TabPane tab="Файлы" key="files">
         <Form.Item name="images_id" noStyle={true}>
-          <FileUpload
-            label="Изображения"
-            // isImages={true}
-            accept=".jpg,.png,.gif"
-            // multiple={true}
-          />
+          <FileUpload label="Изображения" accept=".jpg,.png,.gif" />
         </Form.Item>
       </Tabs.TabPane>
       <Tabs.TabPane tab="SEO" key="seo">

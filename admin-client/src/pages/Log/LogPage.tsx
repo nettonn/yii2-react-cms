@@ -27,7 +27,7 @@ const LogPage: FC = () => {
       />
 
       <Descriptions bordered style={{ marginBottom: "30px" }}>
-        <Descriptions.Item label="name">{data.name}</Descriptions.Item>
+        <Descriptions.Item label="Название">{data.name}</Descriptions.Item>
         <Descriptions.Item label="Время">
           {data.created_at_datetime}
         </Descriptions.Item>

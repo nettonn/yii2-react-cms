@@ -72,6 +72,10 @@ const Sidebar: FC = () => {
       title: "Меню",
     },
     {
+      route: routeNames.order.index,
+      title: "Заявки",
+    },
+    {
       route: routeNames.seo.index,
       title: "SEO",
     },

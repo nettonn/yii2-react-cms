@@ -20,6 +20,7 @@ return [
             'versions' => 'admin/version',
             'logs' => 'admin/log',
             'queues' => 'admin/queue',
+            'orders' => 'admin/order',
         ]
     ],
     [
@@ -76,6 +77,7 @@ return [
             'versions' => 'admin/version',
             'logs' => 'admin/log',
             'queues' => 'admin/queue',
+            'orders' => 'admin/order',
         ],
         'prefix' => 'admin-api',
         'extraPatterns' => [

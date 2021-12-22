@@ -1,5 +1,5 @@
 import React from "react";
-import { BlockOutlined } from "@ant-design/icons";
+import { ExceptionOutlined } from "@ant-design/icons";
 import { stringReplace } from "../../utils/functions";
 const LogsPage = React.lazy(() => import("../../pages/Log/LogsPage"));
 const LogPage = React.lazy(() => import("../../pages/Log/LogPage"));
@@ -21,7 +21,7 @@ const routes = [
 ];
 
 const icons = {
-  [names.index]: BlockOutlined,
+  [names.index]: ExceptionOutlined,
 };
 
 const log = { names, routes, icons };

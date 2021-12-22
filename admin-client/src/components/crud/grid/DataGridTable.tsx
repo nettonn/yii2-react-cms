@@ -1,7 +1,6 @@
 import useDataGrid from "../../../hooks/dataGrid.hook";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
-import { Popconfirm, Space, Table, Spin, Button, Col, Row } from "antd";
-import Search from "antd/es/input/Search";
+import { Popconfirm, Space, Table, Spin, Button, Col, Row, Input } from "antd";
 import { ColumnsType } from "antd/lib/table/interface";
 import React, { FC, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -9,6 +8,8 @@ import { IModel } from "../../../types";
 import RestService from "../../../api/RestService";
 import { useLocalStorage } from "usehooks-ts";
 import { DEFAULT_ROW_GUTTER } from "../../../utils/constants";
+
+const Search = Input.Search;
 
 interface DataGridTableProps {
   dataGridHook: ReturnType<typeof useDataGrid>;

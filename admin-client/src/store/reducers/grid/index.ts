@@ -16,6 +16,7 @@ const slices = {
   version: createGridSlice("version"),
   log: createGridSlice("log"),
   queue: createGridSlice("queue"),
+  order: createGridSlice("order"),
 };
 
 export const gridReducers = {
@@ -31,6 +32,7 @@ export const gridReducers = {
   version: slices.version.reducer,
   log: slices.log.reducer,
   queue: slices.queue.reducer,
+  order: slices.order.reducer,
 };
 
 export const gridActions = {
@@ -46,6 +48,7 @@ export const gridActions = {
   version: slices.version.actions,
   log: slices.log.actions,
   queue: slices.queue.actions,
+  order: slices.order.actions,
 };
 
 export type DataGridSelector = $Keys<typeof slices>;
