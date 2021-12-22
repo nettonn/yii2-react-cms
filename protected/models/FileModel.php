@@ -83,8 +83,7 @@ class FileModel extends ActiveRecord
     {
         if($this->file && $insert) {
             $this->mime = FileHelper::getMimeType($this->file->tempName);
-            $exts = FileHelper::getExtensionsByMimeType($this->mime);
-            $this->ext = end($exts);
+            $this->ext = $this->file->getExtension();
             $this->name = $this->prepareName($this->file->baseName).'.'.$this->ext;
             $this->size = $this->file->size;
             $imageExt = Yii::$app->fileStorage->imageExt;
@@ -113,12 +112,16 @@ class FileModel extends ActiveRecord
 
                 $fileStorage = Yii::$app->fileStorage;
 
-                $maxWidth = $fileStorage->originalImageMaxWidth;
-                $maxHeight = $fileStorage->originalImageMaxHeight;
+                if($this->is_image) {
+                    $maxWidth = $fileStorage->originalImageMaxWidth;
+                    $maxHeight = $fileStorage->originalImageMaxHeight;
 
-                $fileStorage->generateImage($this->file->tempName, $filename, $maxWidth, $maxHeight, false, 90);
+                    $fileStorage->generateImage($this->file->tempName, $filename, $maxWidth, $maxHeight, false, 90);
+                } else {
+                    copy($this->file->tempName, $filename);
+                }
 
-                FileHelper::unlink($this->file->tempName);
+//                FileHelper::unlink($this->file->tempName);
             } catch (Exception $e) {
                 $this->delete();
                 throw new ServerErrorHttpException('Error saving file model');
@@ -220,5 +223,20 @@ class FileModel extends ActiveRecord
         $name = preg_replace('/[^a-zA-Z0-9=\s_—–-]+/u', '', $name);
         $name = preg_replace('/[=\s_—–-]+/u', '-', $name);
         return strtolower(trim($name, '-'));
+    }
+
+    public static function createByFilename($filename, $save = true)
+    {
+        $file = new UploadedFile();
+        $file->name = basename($filename);
+        $file->tempName = $filename;
+        $file->type = FileHelper::getMimeType($filename);
+        $file->size = filesize($filename);
+
+        $model = new FileModel();
+        $model->file = $file;
+        if($save)
+            $model->save();
+        return $model;
     }
 }

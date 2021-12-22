@@ -3,7 +3,7 @@
 use app\models\SearchEntry;
 use Wamania\Snowball\StemmerManager;
 use yii\base\Component;
-use yii\base\InvalidConfigException;
+use yii\base\InvalidArgumentException;
 use yii\db\ActiveRecord;
 use yii\helpers\StringHelper;
 
@@ -84,11 +84,11 @@ class SearchComponent extends Component
         }
         foreach($modelClasses as $modelClass) {
             if(!is_subclass_of($modelClass, ActiveRecord::class))
-                throw new InvalidConfigException('Model class must be subclass of \yii\db\ActiveRecord');
+                throw new InvalidArgumentException('Model class must be subclass of \yii\db\ActiveRecord');
 
             foreach($modelClass::find()->all() as $model) {
                 if(!$model->hasMethod('searchIndex'))
-                    throw new InvalidConfigException('Model must use \app\behaviors\SearchBehavior');
+                    throw new InvalidArgumentException('Model must use \app\behaviors\SearchBehavior');
 
                 $model->searchIndex();
             }

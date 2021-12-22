@@ -1,5 +1,6 @@
 <?php namespace app\assets;
 
+// Sample
 class PrintAsset extends BaseAsset
 {
     public $sourcePath = '@app/../assets/print';

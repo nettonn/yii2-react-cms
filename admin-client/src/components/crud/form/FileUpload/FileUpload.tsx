@@ -5,15 +5,14 @@ import { $api } from "../../../../http/axios";
 import { Button, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { IFileModel } from "../../../../models/IFileModel";
-import FileList from "./FileList";
 import "./FileUpload.css";
+import FileList from "../../FileList/FileList";
 
 interface FileUploadProps {
   value?: number[] | null; // fileIds
   onChange?: (fileIds: number[] | null) => void;
   inputName?: string;
   label?: string;
-  isImages?: boolean;
   accept?: string;
   multiple?: boolean;
 }
@@ -23,7 +22,6 @@ const FileUpload: FC<FileUploadProps> = ({
   onChange,
   inputName = "file",
   label,
-  isImages = true,
   accept,
   multiple = true,
 }) => {
@@ -96,7 +94,7 @@ const FileUpload: FC<FileUploadProps> = ({
         </label>
       </div>
       {fileIds.length ? (
-        <FileList fileIds={fileIds} onChange={onChange} isImages={isImages} />
+        <FileList fileIds={fileIds} onChange={onChange} />
       ) : null}
     </>
   );

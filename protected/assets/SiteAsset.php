@@ -1,5 +1,6 @@
 <?php namespace app\assets;
 
+// Sample
 class SiteAsset extends BaseAsset
 {
     public $sourcePath = '@app/../assets/site';
@@ -7,6 +8,7 @@ class SiteAsset extends BaseAsset
         'css/main.css',
     ];
     public $js = [
+        'vendors/jquery-3.6.0.min.js',
         'js/main.js',
     ];
     public $appendTimestamps = [

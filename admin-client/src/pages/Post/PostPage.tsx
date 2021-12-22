@@ -56,7 +56,6 @@ const PostPage: FC = () => {
         <Form.Item name="images_id" noStyle={true}>
           <FileUpload
             label="Изображения"
-            // isImages={true}
             accept=".jpg,.png,.gif"
             // multiple={true}
           />

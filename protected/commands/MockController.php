@@ -1,5 +1,6 @@
 <?php namespace app\commands;
 
+use app\models\Order;
 use app\models\Post;
 use app\models\User;
 use app\models\Page;
@@ -140,5 +141,23 @@ class MockController extends Controller
         echo 'Imported: '.Page::find()->count() . "\n";
 
         return ExitCode::OK;
+    }
+
+    public function actionOrder()
+    {
+        $order = new Order([
+            'subject' => 'Order',
+            'name' => 'Name',
+            'phone' => 'Phone',
+            'email' => 'email',
+        ]);
+
+        $order->save();
+
+        $files = FileHelper::findFiles(Yii::getAlias('@app/temp/files'));
+
+        $order->fileAttachByFilename('files', $files);
+
+        $order->save();
     }
 }

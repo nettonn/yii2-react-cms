@@ -2,7 +2,7 @@
 /* @var $this app\components\View */
 /* @var $content string */
 
-\app\assets\PrintAsset::register($this);
+//\app\assets\PrintAsset::register($this);
 ?>
 <html>
 <head>

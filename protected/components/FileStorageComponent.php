@@ -5,6 +5,7 @@ use Imagine\Image\ManipulatorInterface;
 use Imagine\Image\Point;
 use app\models\FileModel;
 use yii\base\Component;
+use yii\base\InvalidArgumentException;
 use yii\base\InvalidConfigException;
 use yii\imagine\Image;
 use Yii;
@@ -111,6 +112,22 @@ class FileStorageComponent extends Component
 
     public function generateImage($filename, $saveFilename, $toWidth, $toHeight, $adaptive = false, $quality = 80, $watermark = null)
     {
+        try {
+            return $this->_generateImage($filename, $saveFilename, $toWidth, $toHeight, $adaptive, $quality, $watermark);
+        } catch(\Exception $e) {
+            $prevDriver = Image::$driver;
+            Image::$driver = [Image::DRIVER_GD2];
+            try {
+                return $this->_generateImage($filename, $saveFilename, $toWidth, $toHeight, $adaptive, $quality, $watermark);
+            } catch(\Exception $e2) {
+                Image::$driver = $prevDriver;
+                throw $e2;
+            }
+        }
+    }
+
+    protected function _generateImage($filename, $saveFilename, $toWidth, $toHeight, $adaptive, $quality, $watermark)
+    {
         if($adaptive) {
             $image = Image::thumbnail($filename, $toWidth, $toHeight, ManipulatorInterface::THUMBNAIL_OUTBOUND);
         } else {
@@ -123,7 +140,7 @@ class FileStorageComponent extends Component
             $image->paste($watermarkObj, new Point(($iSize->getWidth() - $wSize->getWidth())/2, ($iSize->getHeight() - $wSize->getHeight())/2));
         }
 
-        if(class_exists('Imagick', false)) {
+        if(in_array(Image::DRIVER_IMAGICK, Image::$driver) && class_exists('Imagick', false)) {
             $imagick = $image->getImagick();
             $imagick->stripImage();
             $imagick->setImageCompressionQuality($quality);
@@ -199,14 +216,14 @@ class FileStorageComponent extends Component
     public function getPrivateToPublicPath($path)
     {
         if(strpos($path, $this->getPrivateStoragePath()) !== 0)
-            throw new InvalidConfigException('No such path in rules: '.$path);
+            throw new InvalidArgumentException('No such path in rules: '.$path);
         return $this->getPublicStoragePath().str_replace($this->getPrivateStoragePath(), '', $path);
     }
 
     public function getPublicToPrivatePath($path)
     {
         if(strpos($path, $this->getPublicStoragePath()) !== 0)
-            throw new InvalidConfigException('No such path in rules: '.$path);
+            throw new InvalidArgumentException('No such path in rules: '.$path);
         return $this->getPrivateStoragePath().str_replace($this->getPublicStoragePath(), '', $path);
     }
 
@@ -240,16 +257,16 @@ class FileStorageComponent extends Component
      * @param string $variant
      * @param true $relative
      * @return string|string[]
-     * @throws InvalidConfigException
+     * @throws InvalidArgumentException
      */
     public function getThumb($filename, $variant = null, $relative = true)
     {
         if(!file_exists($filename))
-            throw new InvalidConfigException('File not exists '.$filename);
+            throw new InvalidArgumentException('File not exists '.$filename);
         $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
         if(in_array($ext, $this->imageExt) && !isset($this->variants[$variant]))
-            throw new InvalidConfigException('Wrong variant for image: '.$variant);
+            throw new InvalidArgumentException('Wrong variant for image: '.$variant);
 
         $newFilename = $this->getPublicFilename($filename, $variant);
         if($relative) {
@@ -288,7 +305,7 @@ class FileStorageComponent extends Component
     {
         $ext = pathinfo($url, PATHINFO_EXTENSION);
         if(!$ext)
-            throw new InvalidConfigException('Invalid url');
+            throw new InvalidArgumentException('Invalid url');
         $ext = strtolower($ext);
         if(in_array($ext, $this->imageExt)) {
             return $this->generateImageFromUrl($url);

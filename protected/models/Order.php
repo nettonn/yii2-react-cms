@@ -2,9 +2,11 @@
 
 namespace app\models;
 
+use app\behaviors\FileBehavior;
 use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
 use Yii;
+use yii\web\Request;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -75,6 +77,18 @@ class Order extends ActiveRecord
         ];
     }
 
+    public function fields()
+    {
+        $fields = parent::fields();
+
+        if($this->isRelationPopulated('files')) {
+            $fields[] = 'files';
+            $fields[] = 'files_id';
+        }
+
+        return $fields;
+    }
+
     public function init()
     {
         if($this->getIsNewRecord())
@@ -83,6 +97,18 @@ class Order extends ActiveRecord
         }
 
         parent::init();
+    }
+
+    public function beforeSave($insert)
+    {
+        if($insert) {
+            $request = Yii::$app->getRequest();
+            if(is_a($request, Request::class)) {
+                $this->ip = $request->getUserIP();
+                $this->user_agent = $request->getUserAgent();
+            }
+        }
+        return parent::beforeSave($insert);
     }
 
 
@@ -94,6 +120,15 @@ class Order extends ActiveRecord
         return [
             'TimestampBehavior' => [
                 'class' => TimestampBehavior::class,
+            ],
+            'FileBehavior' => [
+                'class' => FileBehavior::class,
+                'attributes' => [
+                    'files' => [
+                        'multiple' => true,
+                        'is_image' => false,
+                    ],
+                ]
             ],
             'SoftDeleteBehavior' => [
                 'class' => SoftDeleteBehavior::class,

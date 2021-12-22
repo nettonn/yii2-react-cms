@@ -3,13 +3,16 @@
 use app\models\FileModel;
 use Yii;
 use yii\base\Behavior;
+use yii\base\InvalidArgumentException;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
 use yii\db\BaseActiveRecord;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
+use yii\helpers\FileHelper;
 use yii\helpers\VarDumper;
 use yii\validators\Validator;
+use yii\web\UploadedFile;
 
 class FileBehavior extends Behavior
 {
@@ -20,12 +23,13 @@ class FileBehavior extends Behavior
 
     public $attributes = [
         'images' => [
-            'attribute_id' => 'images_id',
-            'multiple' => true,
-            'image' => true,
+            'attribute_id' => 'images_id', // default {$attribute}_id
+            'multiple' => true, // default true
+            'is_image' => true, // default true
             'extensions' => ['jpg', 'jpeg', 'png'], // if image is true will use from component config
         ]
     ];
+
 
     protected $ownerClass;
 
@@ -104,7 +108,7 @@ class FileBehavior extends Behavior
             $options['multiple'] = $options['multiple'] ?? false;
             $options['is_image'] = $options['is_image'] ?? true;
             if($options['is_image']) {
-                $options['extensions'] = $fileStorage->imageExt;
+                $options['extensions'] = $options['extensions'] ?? $fileStorage->imageExt;
             } else {
                 $options['extensions'] = $options['extensions'] ?? [];
             }
@@ -166,8 +170,10 @@ class FileBehavior extends Behavior
                 $idsString = implode(',', $newIds);
                 $query = FileModel::find()
                     ->where(['in', $this->pkAttribute, $newIds])
-                    ->andWhere(['in', 'ext', $extensions])
                     ->orderBy(new Expression("FIELD (`{$this->pkAttribute}`, $idsString)"));
+                if($extensions) {
+                    $query = $query->andWhere(['in', 'ext', $extensions]);
+                }
 
                 foreach($query->all() as $model) {
                     $model->link_class = $this->ownerClass;
@@ -319,19 +325,25 @@ class FileBehavior extends Behavior
             $extensions = $this->attributes[$attribute]['extensions'];
 
             if($this->attributes[$attribute]['multiple']) {
-                $this->_related[$attribute] = $this->owner
+                $query = $this->owner
                     ->hasMany(FileModel::class, ['link_id' => $this->pkAttribute])
                     ->andWhere(['link_attribute' => $attribute])
                     ->andWhere(['link_class' => $this->ownerClass])
-                    ->andWhere(['in', 'ext', $extensions])
                     ->orderBy('sort ASC');
+                if($extensions) {
+                    $query = $query->andWhere(['in', 'ext', $extensions]);
+                }
+                $this->_related[$attribute] = $query;
             } else {
-                $this->_related[$attribute] = $this->owner
+                $query = $this->owner
                     ->hasOne(FileModel::class, ['link_id' => $this->pkAttribute])
                     ->andWhere(['link_attribute' => $attribute])
                     ->andWhere(['link_class' => $this->ownerClass])
-                    ->andWhere(['in', 'ext', $extensions])
                     ->orderBy('sort ASC');
+                if($extensions) {
+                    $query = $query->andWhere(['in', 'ext', $extensions]);
+                }
+                $this->_related[$attribute] = $query;
             }
         }
         return $this->_related[$attribute];
@@ -410,5 +422,29 @@ class FileBehavior extends Behavior
                 return true;
         }
         return parent::hasMethod($name);
+    }
+
+    public function fileAttachByFilename($attribute,  $fileData, $replace = false)
+    {
+        if(!isset($this->attributes[$attribute]))
+            throw new InvalidArgumentException('No such attribute: '.$attribute);
+
+        $filenames = is_array($fileData) ? $fileData : [$fileData];
+
+        foreach($filenames as $filename) {
+            if(!file_exists($filename) || !is_file($filename))
+                throw new InvalidArgumentException('File not exists: '.$filename);
+        }
+
+        $fileIds = $this->_values[$attribute] ?? [];
+        if(!$replace)
+            $fileIds = $this->getRelation($attribute)->select($this->pkAttribute)->column();
+
+        foreach($filenames as $filename) {
+            $fileModel = FileModel::createByFilename($filename);
+            $fileIds[] = $fileModel->id;
+        }
+
+        $this->_values[$attribute] = $fileIds;
     }
 }

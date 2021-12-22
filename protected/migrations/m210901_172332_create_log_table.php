@@ -2,22 +2,7 @@
 
 use Yii;
 use yii\db\Migration;
-use yii\base\InvalidConfigException;
-use yii\log\DbTarget;
 
-/**
- * Copy of
- * yiisoft/yii2/log/migrations/m141106_185632_log_init.php
- *
- * Initializes log table.
- *
- * The indexes declared are not required. They are mainly used to improve the performance
- * of some queries about message levels and categories. Depending on your actual needs, you may
- * want to create additional indexes (e.g. index on `log_time`).
- *
- * @author Alexander Makarov <sam@rmcreative.ru>
- * @since 2.0.1
- */
 class m210901_172332_create_log_table extends Migration
 {
     public function up()

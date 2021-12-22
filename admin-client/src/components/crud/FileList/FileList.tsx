@@ -1,9 +1,6 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
-import { IFileModel } from "../../../../models/IFileModel";
 import _unionBy from "lodash/unionBy";
 import _differenceBy from "lodash/differenceBy";
-import { fileService } from "../../../../api/FileService";
-import { sortObjectByIds } from "../../../../utils/functions";
 import { Image, Row, Spin } from "antd";
 import "./FileList.css";
 import {
@@ -23,21 +20,20 @@ import {
   rectSortingStrategy,
   arrayMove,
 } from "@dnd-kit/sortable";
-import FileListItem from "./FileListItem";
+import Item from "./Item";
 import { parseInt, uniq } from "lodash";
 import { useQuery } from "react-query";
+import { IFileModel } from "../../../models/IFileModel";
+import { fileService } from "../../../api/FileService";
+import { sortObjectByIds } from "../../../utils/functions";
 
 interface FileListProps {
   fileIds: number[];
   onChange?: (fileIds: number[] | null) => void;
-  isImages?: boolean;
+  hasControls?: boolean;
 }
 
-const FileList: FC<FileListProps> = ({
-  fileIds,
-  onChange,
-  isImages = false,
-}) => {
+const FileList: FC<FileListProps> = ({ fileIds, onChange, hasControls }) => {
   const [isInit, setIsInit] = useState(false);
   const [toFetchIds, setToFetchIds] = useState<number[]>([]);
   const [fileModels, setFileModels] = useState<IFileModel[]>([]);
@@ -69,12 +65,15 @@ const FileList: FC<FileListProps> = ({
 
   useEffect(() => {
     if (isInit) return;
-    if (fileIds.length === 0) setIsInit(true);
+    if (!fileIds || fileIds.length === 0) {
+      setIsInit(true);
+    }
   }, [isInit, fileIds]);
 
   // Fetch file models
   useEffect(() => {
     const notFindIds: number[] = [];
+    if (!fileIds || fileIds.length === 0) return;
     for (const id of fileIds) {
       if (!fileModels.find((o) => o.id === id)) {
         notFindIds.push(id);
@@ -113,6 +112,8 @@ const FileList: FC<FileListProps> = ({
     onChange && onChange(fileIds.filter((itemId) => itemId !== id));
   };
 
+  if (!fileIds) return null;
+
   if (fileIds.length !== 0 && !isInit) return <Spin />;
 
   if (fileIds.length === 0) return null;
@@ -125,6 +126,23 @@ const FileList: FC<FileListProps> = ({
     if (fileModel) files.push(fileModel);
   }
 
+  const renderList = (files: IFileModel[]) => {
+    return (
+      <Row className="app-file-list">
+        <Image.PreviewGroup>
+          {files.map((fileModel) => (
+            <Item
+              key={fileModel.id}
+              fileModel={fileModel}
+              deleteHandler={deleteHandler}
+              hasControls={hasControls}
+            />
+          ))}
+        </Image.PreviewGroup>
+      </Row>
+    );
+  };
+
   return (
     <DndContext
       sensors={sensors}
@@ -132,19 +150,7 @@ const FileList: FC<FileListProps> = ({
       onDragEnd={dragEndHandler}
     >
       <SortableContext items={fileIdsString} strategy={rectSortingStrategy}>
-        <Row
-          className={isImages ? "app-file-list-images" : "app-file-list-files"}
-        >
-          <Image.PreviewGroup>
-            {files.map((fileModel) => (
-              <FileListItem
-                key={fileModel.id}
-                fileModel={fileModel}
-                deleteHandler={deleteHandler}
-              />
-            ))}
-          </Image.PreviewGroup>
-        </Row>
+        {renderList(files)}
       </SortableContext>
     </DndContext>
   );

@@ -6,6 +6,7 @@ use app\models\query\ActiveQuery;
 
 class OrderController extends RestController
 {
+    public $modelWith = ['files'];
     public $modelClass = Order::class;
     public $indexQuerySelectExclude = ['info', 'message'];
     public $defaultSortAttribute = 'created_at';

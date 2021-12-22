@@ -139,7 +139,8 @@ export function stringReplace(
   return string;
 }
 
-export function openNewWindow(url: string) {
+export function openNewWindow(url?: string) {
+  if (!url) return;
   window.open(url, "_blank")?.focus();
 }
 
