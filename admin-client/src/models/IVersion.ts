@@ -17,8 +17,8 @@ export interface IVersion extends IModel {
   attributes_compare: IVersionAttributesCompare[];
   action: typeof VERSION_ACTION_UPDATE | typeof VERSION_ACTION_DELETE;
   action_text: string;
-  link_type: string;
-  link_type_label: string;
+  link_class: string;
+  link_class_label: string;
   link_id: number;
   created_at: number;
   created_at_date: string;
@@ -28,6 +28,6 @@ export interface IVersion extends IModel {
 
 export interface IVersionModelOptions extends IModelOptions {
   action: IValueTextOption[];
-  link_type: IValueTextOption[];
+  link_class: IValueTextOption[];
   link_id: IValueTextOption[];
 }

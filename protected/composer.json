@@ -19,7 +19,6 @@
         "yiisoft/yii2-swiftmailer": "^2.0.0",
         "sizeg/yii2-jwt": "^2.0",
         "yiisoft/yii2-imagine": "^2.3",
-        "nettonn/yii2-file-storage": "dev-develop",
         "yii2tech/ar-softdelete": "*",
         "voskobovich/yii2-linker-behavior": "^4.1",
         "samdark/sitemap": "^2.4",
@@ -70,10 +69,6 @@
         {
             "type": "composer",
             "url": "https://asset-packagist.org"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/nettonn/yii2-file-storage"
         }
     ]
 }

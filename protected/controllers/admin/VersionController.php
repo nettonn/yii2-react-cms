@@ -18,19 +18,19 @@ class VersionController extends RestController
         return $query->andWhere(['or',
             ['like', 'id',  "$search"],
             ['like', 'name',  "$search"],
-            ['like', 'link_type',  "$search"],
+            ['like', 'link_class',  "$search"],
             ['like', 'link_id',  "$search"],
         ]);
     }
 
     public function modelOptions(): array
     {
-        $linkTypeOptions = [];
-        foreach(Version::find()->select('link_type')->notDeleted()->column() as $linkType) {
-            $label = ActiveRecord::getModelLabelForClass($linkType);
-            $linkTypeOptions[$linkType] = $label ?? $linkType;
+        $linkClassOptions = [];
+        foreach(Version::find()->select('link_class')->notDeleted()->column() as $linkClass) {
+            $label = ActiveRecord::getModelLabelForClass($linkClass);
+            $linkClassOptions[$linkClass] = $label ?? $linkClass;
         }
-        asort($linkTypeOptions);
+        asort($linkClassOptions);
 
         $linkIdOptions = Version::find()
             ->select('DISTINCT(link_id)')
@@ -41,7 +41,7 @@ class VersionController extends RestController
 
         return [
             'action' => AdminClientHelper::getOptionsFromKeyValue( Version::instance()->actionOptions),
-            'link_type' => AdminClientHelper::getOptionsFromKeyValue($linkTypeOptions),
+            'link_class' => AdminClientHelper::getOptionsFromKeyValue($linkClassOptions),
             'link_id' => AdminClientHelper::getOptionsFromKeyValue($linkIdOptions),
         ];
     }

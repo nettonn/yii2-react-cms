@@ -68,12 +68,12 @@ const VersionPage: FC = () => {
           data.owner_update_url ? (
             <Link to={withoutBaseUrl(data.owner_update_url)}>{data.name}</Link>
           ) : (
-            `${data.name} (${data.link_type} - ${data.link_id})`
+            `${data.name} (${data.link_class} - ${data.link_id})`
           )
         }
       >
         <Descriptions.Item label="Модель">
-          {data.link_type_label}
+          {data.link_class_label}
         </Descriptions.Item>
         <Descriptions.Item label="ID модели">{data.link_id}</Descriptions.Item>
         <hr />

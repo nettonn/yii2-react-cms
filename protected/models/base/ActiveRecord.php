@@ -31,6 +31,9 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord
         return $class::getModelLabel();
     }
 
+    /**
+     * @inheritdoc
+     */
     public function fields()
     {
         $fields = parent::fields();
@@ -67,6 +70,9 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord
         return $fields;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
@@ -75,6 +81,9 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord
             Yii::$app->getCache()->flush();
     }
 
+    /**
+     * @inheritdoc
+     */
     public function afterDelete()
     {
         parent::afterDelete();
@@ -83,6 +92,9 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord
             Yii::$app->getCache()->flush();
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function find(): ActiveQuery
     {
         return new ActiveQuery(get_called_class());

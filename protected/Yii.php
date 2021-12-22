@@ -31,6 +31,7 @@ abstract class BaseApplication extends yii\base\Application
  * @property app\components\SeoComponent $seo
  * @property app\components\ChunkComponent $chunks
  * @property app\components\PlaceholderComponent $placeholders
+ * @property app\components\FileStorageComponent $fileStorage
  * @property app\components\FileUploadComponent $fileUpload
  * @property app\components\MicrodataComponent $microdata
  * @property sizeg\jwt\Jwt $jwt

@@ -1,6 +1,5 @@
 <?php namespace app\components;
 
-use nettonn\yii2filestorage\Module;
 use Yii;
 use yii\base\Component;
 use yii\helpers\FileHelper;
@@ -66,7 +65,7 @@ class FileUploadComponent extends Component
 
             $filename = $currentPath.DIRECTORY_SEPARATOR.$nameExt;
             $thumbName = $thumbPath.DIRECTORY_SEPARATOR.$nameExt;
-            $fileStorage = Yii::$app->getModule('file-storage');
+            $fileStorage = Yii::$app->fileStorage;
             $fileStorage->generateImage($uploadedFile->tempName, $filename, 1280, 1280);
             $fileStorage->generateImage($uploadedFile->tempName, $thumbName, 100, 100, true);
         } elseif(!$onlyImages) {

@@ -1,12 +1,12 @@
 <?php namespace app\models;
 
+use app\behaviors\ContentImagesBehavior;
+use app\behaviors\FileBehavior;
 use app\behaviors\SearchBehavior;
 use app\behaviors\TimestampBehavior;
 use app\behaviors\VersionBehavior;
 use app\models\base\ActiveRecord;
 use app\models\query\ActiveQuery;
-use nettonn\yii2filestorage\behaviors\ContentImagesBehavior;
-use nettonn\yii2filestorage\behaviors\FileBehavior;
 use Yii;
 use yii\helpers\Inflector;
 use yii\helpers\Url;

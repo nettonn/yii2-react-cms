@@ -10,7 +10,7 @@ use Yii;
  *
  * @property int $id
  * @property string $name
- * @property string $link_type
+ * @property string $link_class
  * @property int $link_id
  * @property string $action
  * @property string|null $version_attributes
@@ -45,10 +45,10 @@ class Version extends ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'link_type', 'link_id', 'action'], 'required'],
+            [['name', 'link_class', 'link_id', 'action'], 'required'],
             [['link_id'], 'integer'],
             [['name', 'action'], 'string', 'max' => 255],
-            [['link_type'], 'string', 'max' => 128],
+            [['link_class'], 'string', 'max' => 128],
             [['version_attributes_array'], 'safe'],
         ];
     }
@@ -61,7 +61,7 @@ class Version extends ActiveRecord
         return [
             'id' => 'ID',
             'name' => 'Name',
-            'link_type' => 'Link Type',
+            'link_class' => 'Link Type',
             'link_id' => 'Link ID',
             'action' => 'Action',
             'version_attributes' => 'Attributes',
@@ -79,9 +79,9 @@ class Version extends ActiveRecord
     {
         $fields = parent::fields();
 
-        $fields['link_type_label'] = function($model) {
-            $label = ActiveRecord::getModelLabelForClass($model->link_type);
-            return $label ?? $model->link_type;
+        $fields['link_class_label'] = function($model) {
+            $label = ActiveRecord::getModelLabelForClass($model->link_class);
+            return $label ?? $model->link_class;
         };
 
         $fields['action_text'] = function($model) {
@@ -123,11 +123,13 @@ class Version extends ActiveRecord
 
     public function getOwner(): ?ActiveRecord
     {
-        if(!class_exists($this->link_type))
+        if(!class_exists($this->link_class))
             return null;
-        $class = $this->link_type;
+        /** @var ActiveRecord $class */
+        $class = $this->link_class;
         $primaryKey = $class::primaryKey();
         $primaryKey = current($primaryKey);
+        /** @var ActiveRecord $owner */
         $owner = $class::find()->where([$primaryKey => $this->link_id])->notDeleted()->one();
         if($owner)
             return $owner;

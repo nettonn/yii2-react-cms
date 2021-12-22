@@ -37,10 +37,10 @@ const VersionsPage: FC = () => {
     },
     {
       title: "Модель",
-      dataIndex: "link_type_label",
-      key: "link_type",
+      dataIndex: "link_class_label",
+      key: "link_class",
       sorter: true,
-      filters: modelOptions.link_type,
+      filters: modelOptions.link_class,
     },
     {
       title: "ID модели",

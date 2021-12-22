@@ -2,9 +2,8 @@
 
 use app\models\Post;
 use app\models\User;
-use app\models\UserMock;
 use app\models\Page;
-use nettonn\yii2filestorage\models\FileModel;
+use app\models\FileModel;
 use Yii;
 use yii\console\Controller;
 use yii\console\ExitCode;
@@ -13,24 +12,6 @@ use yii\web\UploadedFile;
 
 class MockController extends Controller
 {
-    public function actionUser()
-    {
-        $json = file_get_contents('https://my.api.mockaroo.com/users.json?key=91f50010');
-        $data = \yii\helpers\Json::decode($json);
-
-        UserMock::deleteAll();
-
-        foreach($data as $row) {
-            $userMock = new UserMock();
-            $userMock->attributes = $row;
-            $userMock->save();
-        }
-
-        echo 'Imported: '.UserMock::find()->count() . "\n";
-
-        return ExitCode::OK;
-    }
-
     public function actionPost()
     {
         $json = file_get_contents('https://my.api.mockaroo.com/posts.json?key=91f50010');

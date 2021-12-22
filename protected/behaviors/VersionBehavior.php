@@ -131,7 +131,7 @@ class VersionBehavior extends Behavior
         $owner = $this->owner;
         return Version::instance()->getAdminIndexUrl([
             'filters' => [
-                'link_type' => get_class($owner),
+                'link_class' => get_class($owner),
                 'link_id' =>  $owner->getPrimaryKey(),
             ]
         ]);
@@ -150,7 +150,7 @@ class VersionBehavior extends Behavior
         $version = new Version();
         $version->name = $owner->getAttribute($this->nameAttribute);
         $version->action = $action;
-        $version->link_type = get_class($owner);
+        $version->link_class = get_class($owner);
         $version->link_id = $owner->getPrimaryKey();
         $version->version_attributes_array = $this->_oldAttributes;
         if(!$version->save()) {

@@ -2,10 +2,10 @@
 
 namespace app\models;
 
+use app\behaviors\FileBehavior;
 use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
 use app\models\query\ActiveQuery;
-use nettonn\yii2filestorage\behaviors\FileBehavior;
 use Yii;
 use yii\helpers\Inflector;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
