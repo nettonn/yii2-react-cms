@@ -4,6 +4,7 @@ import RouteIcon from "../components/ui/RouteIcon";
 import { Card, List, Space, Typography } from "antd";
 import { Link } from "react-router-dom";
 import { DEFAULT_ROW_GUTTER } from "../utils/constants";
+import PageHeader from "../components/ui/PageHeader/PageHeader";
 
 const Title = Typography.Title;
 
@@ -85,7 +86,7 @@ const HomePage: FC = () => {
 
   return (
     <>
-      <Title level={3}>Панель управления</Title>
+      <PageHeader title="Панель управления" />
       <List //xs={12} sm={12} md={8} lg={6}
         grid={{
           gutter: DEFAULT_ROW_GUTTER,

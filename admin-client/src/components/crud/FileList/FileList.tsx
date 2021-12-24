@@ -2,7 +2,6 @@ import React, { FC, useCallback, useEffect, useState } from "react";
 import _unionBy from "lodash/unionBy";
 import _differenceBy from "lodash/differenceBy";
 import { Image, Row, Spin } from "antd";
-import "./FileList.css";
 import {
   DndContext,
   closestCenter,

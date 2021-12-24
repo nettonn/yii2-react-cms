@@ -9,7 +9,7 @@ import {
   prepareAntdValidationErrors,
   requestErrorHandler,
 } from "../../utils/functions";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { routeNames } from "../../routes";
 
 interface ILoginFormValues {
@@ -19,10 +19,8 @@ interface ILoginFormValues {
 
 const LoginForm: FC = () => {
   const [form] = Form.useForm<ILoginFormValues>();
-
   const { authorize } = useAppActions(authActions);
-
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const { isLoading, mutate: login } = useMutation(
@@ -36,11 +34,9 @@ const LoginForm: FC = () => {
       });
       authorize({ identity, token });
 
-      let url = routeNames.home;
-      if (location.state.returnUrl) {
-        url = location.state.returnUrl;
-        location.state.returnUrl = null;
-      }
+      const returnUrl = searchParams.get("return");
+      const url = returnUrl ?? routeNames.home;
+
       navigate(url, { replace: true });
     },
     {

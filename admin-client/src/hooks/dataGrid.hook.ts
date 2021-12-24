@@ -128,8 +128,8 @@ export default function useDataGrid<
   const { mutate: deleteHandler, isLoading: deleteIsLoading } = useMutation(
     async (id: number) => {
       await modelService.delete(id);
-      queryClient.invalidateQueries(modelService.listQueryKey());
-      queryClient.invalidateQueries(modelService.indexQueryKey());
+      await queryClient.invalidateQueries(modelService.listQueryKey());
+      await queryClient.invalidateQueries(modelService.indexQueryKey());
       return true;
     },
     {

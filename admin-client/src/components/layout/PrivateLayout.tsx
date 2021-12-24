@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import Sidebar from "../Sidebar/Sidebar";
+import Sidebar from "./Sidebar";
 import { Layout } from "antd";
-import "./PrivateLayout.css";
+import { Outlet } from "react-router-dom";
 
 const PrivateLayout: FC = (props) => {
   return (
@@ -9,7 +9,7 @@ const PrivateLayout: FC = (props) => {
       <Sidebar />
       <Layout className="app-content-layout">
         <Layout.Content className="app-content">
-          {props.children}
+          <Outlet />
         </Layout.Content>
       </Layout>
     </Layout>

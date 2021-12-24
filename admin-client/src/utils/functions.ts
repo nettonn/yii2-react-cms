@@ -157,7 +157,7 @@ export function withoutBaseUrl(url: string) {
   if (baseurl.length === 0 || url.length === 0 || url.indexOf(baseurl) !== 0) {
     return url;
   }
-  return url.substr(baseurl.length);
+  return url.substring(baseurl.length);
 }
 
 export function buildUrl(path: string, params?: {}) {

@@ -11,6 +11,7 @@ import { setupStore } from "./store";
 import ErrorFallback from "./components/ui/ErrorFallback";
 import "./wdyr";
 import "antd/dist/antd.css";
+import "./css/app.css";
 import locale from "antd/lib/locale/ru_RU";
 import "moment/locale/ru";
 

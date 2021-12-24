@@ -1,13 +1,12 @@
 import React, { FC, useState, useEffect, ReactElement } from "react";
 import { Layout, Menu } from "antd";
-import "./Sidebar.css";
 import { Link, useLocation } from "react-router-dom";
-import { routeNames } from "../../../routes";
-import RouteIcon from "../../ui/RouteIcon";
+import { routeNames } from "../../routes";
+import RouteIcon from "../ui/RouteIcon";
 import { MenuClickEventHandler } from "rc-menu/lib/interface";
 import { LogoutOutlined } from "@ant-design/icons";
 import { useLocalStorage } from "usehooks-ts";
-import useLogout from "../../../hooks/logout.hook";
+import useLogout from "../../hooks/logout.hook";
 
 interface IItem {
   title: string;
@@ -29,6 +28,7 @@ const Sidebar: FC = () => {
   );
   const [openKeys, setOpenKeys] = useState<string[]>(storedOpenKeys);
 
+  // Select menu item if sub section selected
   useEffect(() => {
     for (const route of [
       routeNames.user.index,
@@ -41,6 +41,8 @@ const Sidebar: FC = () => {
       routeNames.menu.index,
       routeNames.version.index,
       routeNames.log.index,
+      routeNames.queue.index,
+      routeNames.order.index,
     ]) {
       if (pathname.indexOf(route) === 0) {
         setSelectedKeys([route]);

@@ -11,7 +11,6 @@ import {
   VERSION_ACTION_UPDATE,
 } from "../../models/IVersion";
 import { useModelView } from "../../hooks/modelView.hook";
-import "./VersionPage.css";
 import { ColumnsType } from "antd/lib/table/Table";
 import { withoutBaseUrl } from "../../utils/functions";
 
@@ -86,6 +85,7 @@ const VersionPage: FC = () => {
       </Descriptions>
 
       <Table
+        className="app-version-page-table"
         columns={columns}
         dataSource={data.attributes_compare}
         rowKey="attribute"

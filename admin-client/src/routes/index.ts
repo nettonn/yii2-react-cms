@@ -33,7 +33,7 @@ export const routeNames = {
   order: order.names,
 };
 
-export const routes: IRoute[] = [
+export const routes: readonly IRoute[] = [
   ...common.routes,
   ...error.routes,
   ...user.routes,

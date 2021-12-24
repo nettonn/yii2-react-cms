@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import Breadcrumbs, { BreadcrumbItem } from "../Breadcrumbs";
 import { PageHeader as PageHeaderAntd } from "antd";
-import "./PageHeader.css";
 import { useNavigate } from "react-router-dom";
 
 interface PageHeaderProps {

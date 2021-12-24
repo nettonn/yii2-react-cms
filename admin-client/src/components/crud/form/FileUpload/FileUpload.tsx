@@ -5,7 +5,6 @@ import { $api } from "../../../../http/axios";
 import { Button, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { IFileModel } from "../../../../models/IFileModel";
-import "./FileUpload.css";
 import FileList from "../../FileList/FileList";
 
 interface FileUploadProps {

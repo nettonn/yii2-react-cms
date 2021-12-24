@@ -114,7 +114,10 @@ const DataGridTable: FC<DataGridTableProps> = ({
 
   return (
     <>
-      <Row gutter={DEFAULT_ROW_GUTTER} style={{ marginBottom: "20px" }}>
+      <Row
+        gutter={[DEFAULT_ROW_GUTTER, DEFAULT_ROW_GUTTER]}
+        style={{ marginBottom: "20px" }}
+      >
         <Col flex="auto">
           <Search
             placeholder="Поиск"
