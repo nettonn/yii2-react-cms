@@ -1,12 +1,10 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { mainReducer } from "./reducers/main";
 import { authReducer } from "./reducers/auth";
-import { gridReducers } from "./reducers/grid";
+import { dataGridReducer } from "./reducers/grid";
 
 const rootReducer = combineReducers({
-  ...mainReducer,
-  ...authReducer,
-  ...gridReducers,
+  auth: authReducer,
+  grid: dataGridReducer,
 });
 
 export const setupStore = () => {

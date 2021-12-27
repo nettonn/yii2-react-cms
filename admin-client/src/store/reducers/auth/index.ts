@@ -12,7 +12,7 @@ const initialState: AuthState = {
   isAuthChecked: false,
   isAuth: false,
   identity: {} as IIdentity,
-  token: null,
+  token: null, // TODO not updated on refresh token
 };
 
 const slice = createSlice({
@@ -43,4 +43,4 @@ const slice = createSlice({
 
 export const authActions = slice.actions;
 
-export const authReducer = { auth: slice.reducer };
+export const authReducer = slice.reducer;

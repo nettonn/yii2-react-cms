@@ -4,7 +4,7 @@ import { IFiltersParam, IModel, IModelOptions } from "../types";
 import { useQuery, useMutation } from "react-query";
 import { useAppActions, useAppSelector } from "./redux";
 import { useEffect, useState } from "react";
-import { mainActions } from "../store/reducers/main";
+import { dataGridCommonActions } from "../store/reducers/grid";
 import { useLocation, useNavigate } from "react-router-dom";
 import { queryStringParse } from "../utils/qs";
 import {
@@ -12,18 +12,20 @@ import {
   requestErrorHandler,
   withoutBaseUrl,
 } from "../utils/functions";
-import { DataGridSelector, gridActions } from "../store/reducers/grid";
+import {
+  DataGridSelector,
+  dataGridActions,
+} from "../store/reducers/grid/grids";
 import { message } from "antd";
 
 export default function useDataGrid<
   T extends IModel = IModel,
   M extends IModelOptions = any
 >(modelService: RestService, dataGridSelector: DataGridSelector) {
-  const dataGridActions = gridActions[dataGridSelector];
   const { pathname: locationPathname, search: locationSearch } = useLocation();
   const [isInit, setIsInit] = useState(false);
-  const { currentDataGridSelector } = useAppSelector((state) => state.main);
-  const { setCurrentDataGridSelector } = useAppActions(mainActions);
+  const { currentSelector } = useAppSelector((state) => state.grid.common);
+  const { setCurrentSelector } = useAppActions(dataGridCommonActions);
   const [allowQueries, setAllowQueries] = useState(false);
   const navigate = useNavigate();
 
@@ -36,7 +38,7 @@ export default function useDataGrid<
     sortDirection,
     searchQuery,
     filters,
-  } = useAppSelector((state) => state[dataGridSelector]);
+  } = useAppSelector((state) => state.grid[dataGridSelector]);
 
   const {
     setCurrentPage,
@@ -45,7 +47,7 @@ export default function useDataGrid<
     setSortDirection,
     setSortField,
     setPagination,
-  } = useAppActions(dataGridActions);
+  } = useAppActions(dataGridActions[dataGridSelector]);
 
   useEffect(() => {
     if (locationSearch) {
@@ -174,10 +176,7 @@ export default function useDataGrid<
 
   useEffect(() => {
     if (isInit) return;
-    if (
-      currentDataGridSelector &&
-      currentDataGridSelector === dataGridSelector
-    ) {
+    if (currentSelector && currentSelector === dataGridSelector) {
       setIsInit(true);
       return;
     }
@@ -188,7 +187,7 @@ export default function useDataGrid<
       modelOptionsIsSuccess &&
       !modelOptionsIsFetching
     ) {
-      setCurrentDataGridSelector(dataGridSelector);
+      setCurrentSelector(dataGridSelector);
       setIsInit(true);
     }
   }, [
@@ -197,8 +196,8 @@ export default function useDataGrid<
     indexIsFetching,
     modelOptionsIsSuccess,
     modelOptionsIsFetching,
-    currentDataGridSelector,
-    setCurrentDataGridSelector,
+    currentSelector,
+    setCurrentSelector,
     dataGridSelector,
   ]);
 
