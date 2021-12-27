@@ -14,7 +14,7 @@ interface LayoutRoute {
 }
 
 const AppRoutes: FC = () => {
-  const LayoutRoutes: LayoutRoute[] = [];
+  const layoutRoutes: LayoutRoute[] = [];
 
   const getLayout = (route: IRoute) => {
     if (!route) return PublicLayout;
@@ -26,14 +26,14 @@ const AppRoutes: FC = () => {
 
   for (const route of routes) {
     const layout = getLayout(route);
-    const index = LayoutRoutes.findIndex((i) => i.element === layout);
+    const index = layoutRoutes.findIndex((i) => i.element === layout);
     if (-1 === index) {
-      LayoutRoutes.push({
+      layoutRoutes.push({
         element: layout,
         routes: [route],
       } as LayoutRoute);
     } else {
-      LayoutRoutes[index].routes.push(route);
+      layoutRoutes[index].routes.push(route);
     }
   }
 
@@ -57,7 +57,7 @@ const AppRoutes: FC = () => {
 
   return (
     <Routes>
-      {LayoutRoutes.map((layoutRoute, index) => (
+      {layoutRoutes.map((layoutRoute, index) => (
         <Route key={index} element={React.createElement(layoutRoute.element)}>
           {layoutRoute.routes.map((route) => (
             <Route
@@ -71,7 +71,7 @@ const AppRoutes: FC = () => {
       <Route
         key="*"
         path="*"
-        element={<Navigate to={routeNames.error.e404} />}
+        element={<Navigate to={routeNames.error.e404} replace={true} />}
       />
     </Routes>
   );
