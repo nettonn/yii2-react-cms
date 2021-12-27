@@ -55,7 +55,7 @@ export type DataGridSelector = $Keys<typeof slices>;
 
 export type DataGridActions = ValuesType<typeof gridActions>;
 
-// const selectors: readonly string[] = [
+// const selectors = [
 //   "page",
 //   "post",
 //   "user",
@@ -68,16 +68,16 @@ export type DataGridActions = ValuesType<typeof gridActions>;
 //   "version",
 //   "log",
 //   "queue",
-// ];
+//   "order",
+// ] as const;
 //
 // type ArrayToObjectType<KS extends readonly string[], T> = { [K in KS[number]]: T };
 //
 // type SlicesType = ArrayToObjectType<
-//   typeof selectors,
-//   ReturnType<typeof createGridSlice>
-//   >;
+//   ValuesType<typeof selectors>,
+//   ReturnType<typeof createGridSlice<typeof selectors>>>;
 //
-// const slices: SlicesType = selectors.reduce((object: SlicesType, selector) => {
+// const slices2: SlicesType = selectors.reduce((object: SlicesType, selector) => {
 //   object[selector] = createGridSlice(selector);
 //   return object;
 // }, {} as any);

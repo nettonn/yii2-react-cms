@@ -42,8 +42,8 @@ return [
         'prefix' => 'admin-api',
         'patterns' => [
             'OPTIONS <action:.+>' => 'options',
-            'POST registration' => 'registration',
-            'POST email-confirm' => 'email-confirm',
+//            'POST registration' => 'registration',
+//            'POST email-confirm' => 'email-confirm',
             'POST login' => 'login',
             'POST,DELETE refresh-token' => 'refresh-token',
         ],

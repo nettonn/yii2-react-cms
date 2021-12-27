@@ -1,20 +1,23 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IFiltersParam } from "../../../types";
 
-export interface DataGridState {
+interface IPaginationFields {
   currentPage: number | null;
   pageCount: number | null;
   pageSize: number | null;
   dataCount: number | null;
+}
+
+export interface DataGridState extends IPaginationFields {
   sortField: string | null;
   sortDirection: string | null;
   searchQuery: string | null;
   filters: IFiltersParam | null;
 }
 
-const createGridSlice = (name: string) => {
+const createGridSlice = <Name extends string = string>(name: Name) => {
   const initialState: DataGridState = {
-    currentPage: null,
+    currentPage: 1,
     pageCount: null,
     pageSize: null,
     dataCount: null,
@@ -28,11 +31,7 @@ const createGridSlice = (name: string) => {
     initialState,
     reducers: {
       setCurrentPage(state, action: PayloadAction<number>) {
-        if (!action.payload || action.payload === 1) {
-          state.currentPage = null;
-        } else {
-          state.currentPage = action.payload;
-        }
+        state.currentPage = action.payload;
       },
       setPageCount(state, action: PayloadAction<number>) {
         state.pageCount = action.payload;
@@ -42,6 +41,15 @@ const createGridSlice = (name: string) => {
       },
       setDataCount(state, action: PayloadAction<number>) {
         state.dataCount = action.payload;
+      },
+      setPagination(state, action: PayloadAction<Partial<IPaginationFields>>) {
+        const fieldNames = Object.keys(action.payload) as Array<
+          Extract<IPaginationFields, string>
+        >;
+        fieldNames.forEach((key) => {
+          if (action.payload[key] === undefined) return;
+          state[key] = action.payload[key];
+        });
       },
       setSortField(state, action: PayloadAction<string | null>) {
         state.sortField = action.payload;

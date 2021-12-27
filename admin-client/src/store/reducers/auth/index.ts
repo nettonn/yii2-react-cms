@@ -35,6 +35,9 @@ const slice = createSlice({
       state.token = null;
       state.isAuthChecked = true;
     },
+    setToken(state, action: PayloadAction<string | null>) {
+      state.token = action.payload;
+    },
   },
 });
 

@@ -113,8 +113,8 @@ export default class RestService {
   async delete(id: number | string): Promise<null> {
     const response = await $api.request(this.deleteConfig(id));
 
-    // queryClient.invalidateQueries(this.listQueryKey());
-    // queryClient.invalidateQueries(this.indexQueryKey());
+    queryClient.invalidateQueries(this.listQueryKey());
+    queryClient.invalidateQueries(this.indexQueryKey());
 
     this.prepareModelOptions(response);
 

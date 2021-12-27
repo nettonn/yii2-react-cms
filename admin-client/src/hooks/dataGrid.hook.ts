@@ -5,7 +5,6 @@ import { useQuery, useMutation } from "react-query";
 import { useAppActions, useAppSelector } from "./redux";
 import { useEffect, useState } from "react";
 import { mainActions } from "../store/reducers/main";
-import { queryClient } from "../http/query-client";
 import { useLocation, useNavigate } from "react-router-dom";
 import { queryStringParse } from "../utils/qs";
 import {
@@ -41,13 +40,11 @@ export default function useDataGrid<
 
   const {
     setCurrentPage,
-    setDataCount,
     setFilters,
-    setPageCount,
-    setPageSize,
     setSearchQuery,
     setSortDirection,
     setSortField,
+    setPagination,
   } = useAppActions(dataGridActions);
 
   useEffect(() => {
@@ -104,18 +101,13 @@ export default function useDataGrid<
       if (filters) params.filters = filters;
 
       const result = await modelService.index<T>(params, signal);
-
       if (result.pagination) {
-        if (result.pagination.currentPage !== undefined)
-          setCurrentPage(result.pagination.currentPage);
-        if (result.pagination.totalCount !== undefined)
-          setDataCount(result.pagination.totalCount);
-
-        if (result.pagination.perPage !== undefined)
-          setPageSize(result.pagination.perPage);
-
-        if (result.pagination.pageCount !== undefined)
-          setPageCount(result.pagination.pageCount);
+        setPagination({
+          currentPage: result.pagination.currentPage,
+          dataCount: result.pagination.totalCount,
+          pageSize: result.pagination.perPage,
+          pageCount: result.pagination.pageCount,
+        });
       }
       return result.data;
     },
@@ -128,8 +120,6 @@ export default function useDataGrid<
   const { mutate: deleteHandler, isLoading: deleteIsLoading } = useMutation(
     async (id: number) => {
       await modelService.delete(id);
-      await queryClient.invalidateQueries(modelService.listQueryKey());
-      await queryClient.invalidateQueries(modelService.indexQueryKey());
       return true;
     },
     {
