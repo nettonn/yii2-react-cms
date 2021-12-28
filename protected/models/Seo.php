@@ -165,7 +165,7 @@ class Seo extends ActiveRecord
         return parent::beforeSave($insert);
     }
 
-    public function getUrl($scheme = false): string
+    public function getUrl($scheme = false)
     {
         return Url::to($this->url, $scheme);
     }

@@ -77,7 +77,7 @@ export default function useDataGrid<
       return await modelService.modelOptions<M>(signal);
     },
     {
-      enabled: allowQueries,
+      enabled: !locationSearch || allowQueries,
       refetchOnMount: false,
     }
   );
@@ -114,7 +114,7 @@ export default function useDataGrid<
       return result.data;
     },
     {
-      enabled: allowQueries,
+      enabled: !locationSearch || allowQueries,
       keepPreviousData: true,
     }
   );
@@ -176,10 +176,10 @@ export default function useDataGrid<
 
   useEffect(() => {
     if (isInit) return;
-    if (currentSelector && currentSelector === dataGridSelector) {
-      setIsInit(true);
-      return;
-    }
+    // if (currentSelector && currentSelector === dataGridSelector) {
+    //   setIsInit(true);
+    //   return;
+    // }
 
     if (
       indexIsSuccess &&
