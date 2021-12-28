@@ -5,9 +5,9 @@ import { ColumnsType } from "antd/lib/table/interface";
 import React, { FC, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { IModel } from "../../../types";
-import RestService from "../../../api/RestService";
-import { useLocalStorage } from "usehooks-ts";
 import { DEFAULT_ROW_GUTTER } from "../../../utils/constants";
+import { useAppActions, useAppSelector } from "../../../hooks/redux";
+import { dataGridActions } from "../../../store/reducers/grid/grids";
 
 const Search = Input.Search;
 
@@ -43,16 +43,18 @@ const DataGridTable: FC<DataGridTableProps> = ({
     filters,
     modelOptions,
     clearAll,
+    dataGridSelector,
   } = dataGridHook;
 
   const { pathname } = useLocation();
 
   const [searchInputValue, setSearchInputValue] = useState(searchQuery ?? "");
 
-  const [expandedRows, setExpandedRows] = useLocalStorage(
-    `${RestService.name}-data-grid-expanded-rows`,
-    []
+  const { expandedRows } = useAppSelector(
+    (state) => state.grid[dataGridSelector]
   );
+
+  const { setExpandedRows } = useAppActions(dataGridActions[dataGridSelector]);
 
   if (!isInit) return <Spin spinning={true} />;
 
@@ -149,9 +151,8 @@ const DataGridTable: FC<DataGridTableProps> = ({
         pagination={{
           total: dataCount ?? undefined,
           current: currentPage ?? 1,
-          pageSize: pageSize ?? 0,
+          pageSize: pageSize ?? undefined,
           showSizeChanger: false,
-          // disabled: !dataCount || dataCount <= pageSize,
           hideOnSinglePage: true,
           size: "default",
         }}
@@ -161,7 +162,7 @@ const DataGridTable: FC<DataGridTableProps> = ({
         size="small"
         expandable={{
           indentSize: 10,
-          defaultExpandedRowKeys: expandedRows,
+          expandedRowKeys: expandedRows,
           onExpandedRowsChange: async (rows: any) => {
             setExpandedRows(rows);
           },

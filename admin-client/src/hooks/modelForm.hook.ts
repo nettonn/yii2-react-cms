@@ -32,7 +32,8 @@ export function useModelForm<
   );
   const [newId, setNewId] = useState<number | string | null>(null);
   const [viewUrl, setViewUrl] = useState<string | undefined>();
-  const [versionsUrl, setVersionsUrl] = useState<string | undefined>();
+  const [modelClass, setModelClass] = useState<string | undefined>();
+  const [modelHasVersions, setModelHasVersions] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -84,12 +85,10 @@ export function useModelForm<
       if (!id) throw Error("Id not set");
       const data = await modelService.view<T>(id, signal);
 
-      if (data?.view_url) {
-        setViewUrl(data.view_url);
-      }
-      if (data?.versions_url) {
-        setVersionsUrl(data.versions_url);
-      }
+      if (data?.view_url) setViewUrl(data.view_url);
+      if (data?.model_class) setModelClass(data.model_class);
+      if (data?.has_versions) setModelHasVersions(data.has_versions);
+
       return data;
     },
     {
@@ -127,7 +126,8 @@ export function useModelForm<
         : modelService.create<T>(values));
 
       if (data?.view_url) setViewUrl(data.view_url);
-      if (data?.versions_url) setVersionsUrl(data.versions_url);
+      if (data?.model_class) setModelClass(data.model_class);
+      if (data?.has_versions) setModelHasVersions(data.has_versions);
 
       if (isCreateForm) {
         if (data && isMounted()) {
@@ -173,36 +173,28 @@ export function useModelForm<
     setValidationErrors(errorFields);
   };
 
+  const isUpdateFormLoaded =
+    isUpdateForm &&
+    viewIsSuccess &&
+    !viewIsFetching &&
+    modelOptionsIsSuccess &&
+    !modelOptionsIsFetching;
+
+  const isCreateFormLoaded =
+    isCreateForm &&
+    modelDefaultsIsSuccess &&
+    !modelDefaultsIsFetching &&
+    modelOptionsIsSuccess &&
+    !modelOptionsIsFetching;
+
   useEffect(() => {
     if (isInit) return;
-    if (
-      isUpdateForm &&
-      viewIsSuccess &&
-      !viewIsFetching &&
-      modelOptionsIsSuccess &&
-      !modelOptionsIsFetching
-    ) {
+    if (isUpdateFormLoaded) {
       setIsInit(true);
-    } else if (
-      isCreateForm &&
-      modelDefaultsIsSuccess &&
-      !modelDefaultsIsFetching &&
-      modelOptionsIsSuccess &&
-      !modelOptionsIsFetching
-    ) {
+    } else if (isCreateFormLoaded) {
       setIsInit(true);
     }
-  }, [
-    isInit,
-    isCreateForm,
-    isUpdateForm,
-    viewIsSuccess,
-    viewIsFetching,
-    modelOptionsIsSuccess,
-    modelOptionsIsFetching,
-    modelDefaultsIsSuccess,
-    modelDefaultsIsFetching,
-  ]);
+  }, [isInit, isUpdateFormLoaded, isCreateFormLoaded]);
 
   const error =
     modelDefaultsError || viewError || modelOptionsError || submitError;
@@ -222,8 +214,9 @@ export function useModelForm<
   return {
     id,
     newId,
+    modelClass,
+    modelHasVersions,
     viewUrl,
-    versionsUrl,
     isCreateForm,
     isUpdateForm,
     form,

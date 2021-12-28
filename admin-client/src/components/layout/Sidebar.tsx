@@ -5,8 +5,9 @@ import { routeNames } from "../../routes";
 import RouteIcon from "../ui/RouteIcon";
 import { MenuClickEventHandler } from "rc-menu/lib/interface";
 import { LogoutOutlined } from "@ant-design/icons";
-import { useLocalStorage } from "usehooks-ts";
 import useLogout from "../../hooks/logout.hook";
+import { useAppActions, useAppSelector } from "../../hooks/redux";
+import { layoutActions } from "../../store/reducers/layout";
 
 interface IItem {
   title: string;
@@ -22,11 +23,12 @@ const Sidebar: FC = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>();
   const { logout, isLoading: logoutIsLoading } = useLogout();
   const { pathname } = useLocation();
-  const [storedOpenKeys, setStoredOpenKeys] = useLocalStorage<string[]>(
-    `admin-sidebar-open-keys`,
-    []
-  );
-  const [openKeys, setOpenKeys] = useState<string[]>(storedOpenKeys);
+
+  const { sidebarOpenKeys } = useAppSelector((state) => state.layout);
+
+  const { setSidebarOpenKeys } = useAppActions(layoutActions);
+
+  const [openKeys, setOpenKeys] = useState<string[]>(sidebarOpenKeys);
 
   // Select menu item if sub section selected
   useEffect(() => {
@@ -124,7 +126,7 @@ const Sidebar: FC = () => {
     if (collapsed) {
       setOpenKeys([]);
     } else {
-      setOpenKeys([...storedOpenKeys]);
+      setOpenKeys([...sidebarOpenKeys]);
     }
   };
 
@@ -136,7 +138,7 @@ const Sidebar: FC = () => {
       newOpenKeys = [...openKeys, e.key];
     }
     setOpenKeys([...newOpenKeys]);
-    setStoredOpenKeys([...newOpenKeys]);
+    setSidebarOpenKeys([...newOpenKeys]);
   };
 
   const getMenuItemIcon = (menuItem: IItem) => {

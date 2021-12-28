@@ -13,6 +13,7 @@ export interface DataGridState extends IPaginationFields {
   sortDirection: string | null;
   searchQuery: string | null;
   filters: IFiltersParam | null;
+  expandedRows: number[];
 }
 
 const createGridSlice = <Name extends string = string>(name: Name) => {
@@ -25,6 +26,7 @@ const createGridSlice = <Name extends string = string>(name: Name) => {
     sortDirection: null,
     searchQuery: null,
     filters: null,
+    expandedRows: [],
   };
   return createSlice({
     name,
@@ -62,6 +64,16 @@ const createGridSlice = <Name extends string = string>(name: Name) => {
       },
       setFilters(state, action: PayloadAction<IFiltersParam | null>) {
         state.filters = action.payload;
+      },
+      setExpandedRows(state, action: PayloadAction<number[]>) {
+        state.expandedRows = action.payload;
+      },
+      reset(state) {
+        state.currentPage = initialState.currentPage;
+        state.sortField = initialState.sortField;
+        state.sortDirection = initialState.sortDirection;
+        state.filters = initialState.filters;
+        state.searchQuery = initialState.searchQuery;
       },
     },
   });

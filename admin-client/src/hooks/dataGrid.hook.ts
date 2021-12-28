@@ -4,14 +4,7 @@ import { IFiltersParam, IModel, IModelOptions } from "../types";
 import { useQuery, useMutation } from "react-query";
 import { useAppActions, useAppSelector } from "./redux";
 import { useEffect, useState } from "react";
-import { dataGridCommonActions } from "../store/reducers/grid";
-import { useLocation, useNavigate } from "react-router-dom";
-import { queryStringParse } from "../utils/qs";
-import {
-  buildUrl,
-  requestErrorHandler,
-  withoutBaseUrl,
-} from "../utils/functions";
+import { requestErrorHandler } from "../utils/functions";
 import {
   DataGridSelector,
   dataGridActions,
@@ -22,12 +15,7 @@ export default function useDataGrid<
   T extends IModel = IModel,
   M extends IModelOptions = any
 >(modelService: RestService, dataGridSelector: DataGridSelector) {
-  const { pathname: locationPathname, search: locationSearch } = useLocation();
   const [isInit, setIsInit] = useState(false);
-  const { currentSelector } = useAppSelector((state) => state.grid.common);
-  const { setCurrentSelector } = useAppActions(dataGridCommonActions);
-  const [allowQueries, setAllowQueries] = useState(false);
-  const navigate = useNavigate();
 
   const {
     currentPage,
@@ -47,23 +35,8 @@ export default function useDataGrid<
     setSortDirection,
     setSortField,
     setPagination,
+    reset: clearAll,
   } = useAppActions(dataGridActions[dataGridSelector]);
-
-  useEffect(() => {
-    if (locationSearch) {
-      const searchParams = queryStringParse(locationSearch);
-      if (searchParams) {
-        const searchFilters = getFiltersFromSearchParams(searchParams.filters);
-        if (searchFilters) {
-          setFilters(searchFilters);
-        }
-        delete searchParams.filters;
-      }
-      const newUrl = buildUrl(locationPathname, searchParams);
-      navigate(withoutBaseUrl(newUrl), { replace: true });
-    }
-    setAllowQueries(true);
-  }, [locationSearch, locationPathname, setFilters, navigate]);
 
   const {
     data: modelOptions,
@@ -77,7 +50,6 @@ export default function useDataGrid<
       return await modelService.modelOptions<M>(signal);
     },
     {
-      enabled: !locationSearch || allowQueries,
       refetchOnMount: false,
     }
   );
@@ -114,7 +86,6 @@ export default function useDataGrid<
       return result.data;
     },
     {
-      enabled: !locationSearch || allowQueries,
       keepPreviousData: true,
     }
   );
@@ -161,45 +132,24 @@ export default function useDataGrid<
     setCurrentPage(1);
   };
 
-  const clearAll = () => {
-    setFilters(null);
-    setSortField(null);
-    setSortDirection(null);
-    setCurrentPage(1);
-    setSearchQuery(null);
-  };
-
   const error = indexError || modelOptionsError;
 
   const isLoading =
     !indexIsFetched || !modelOptionsIsFetched || deleteIsLoading;
 
+  const isLoaded =
+    indexIsSuccess &&
+    modelOptionsIsSuccess &&
+    !indexIsFetching &&
+    !modelOptionsIsFetching;
+
   useEffect(() => {
     if (isInit) return;
-    // if (currentSelector && currentSelector === dataGridSelector) {
-    //   setIsInit(true);
-    //   return;
-    // }
 
-    if (
-      indexIsSuccess &&
-      !indexIsFetching &&
-      modelOptionsIsSuccess &&
-      !modelOptionsIsFetching
-    ) {
-      setCurrentSelector(dataGridSelector);
+    if (isLoaded) {
       setIsInit(true);
     }
-  }, [
-    isInit,
-    indexIsSuccess,
-    indexIsFetching,
-    modelOptionsIsSuccess,
-    modelOptionsIsFetching,
-    currentSelector,
-    setCurrentSelector,
-    dataGridSelector,
-  ]);
+  }, [isInit, isLoaded]);
 
   return {
     data,
@@ -219,23 +169,24 @@ export default function useDataGrid<
     tableChangeHandler,
     deleteHandler,
     clearAll,
+    dataGridSelector,
   };
 }
 
-function getFiltersFromSearchParams(searchFilters: any) {
-  if (
-    searchFilters &&
-    typeof searchFilters === "object" &&
-    !Array.isArray(searchFilters)
-  ) {
-    Object.keys(searchFilters).forEach((key) => {
-      if (!Array.isArray(searchFilters[key]))
-        searchFilters[key] = [searchFilters[key]];
-    });
-    return searchFilters;
-  }
-  return false;
-}
+// function getFiltersFromSearchParams(searchFilters: any) {
+//   if (
+//     searchFilters &&
+//     typeof searchFilters === "object" &&
+//     !Array.isArray(searchFilters)
+//   ) {
+//     Object.keys(searchFilters).forEach((key) => {
+//       if (!Array.isArray(searchFilters[key]))
+//         searchFilters[key] = [searchFilters[key]];
+//     });
+//     return searchFilters;
+//   }
+//   return false;
+// }
 
 function parseTableFilters(tableFilters: any) {
   if (!tableFilters) return false;

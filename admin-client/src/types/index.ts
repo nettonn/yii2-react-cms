@@ -47,8 +47,9 @@ export interface IModelRouteNames {
 
 export interface IModel {
   id: number;
+  model_class: string;
   view_url?: string;
-  versions_url?: string;
+  has_versions?: boolean;
 }
 
 export interface IModelOptions {}

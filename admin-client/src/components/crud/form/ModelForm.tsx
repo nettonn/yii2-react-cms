@@ -7,6 +7,7 @@ import { IModel, IModelOptions } from "../../../types";
 import { Navigate } from "react-router-dom";
 import { routeNames } from "../../../routes";
 import { stringReplace } from "../../../utils/functions";
+import VersionsButton from "../PageActions/VersionsButton";
 
 interface ModelFormProps {
   modelForm: any | ReturnType<typeof useModelForm>; // how without any?
@@ -30,7 +31,10 @@ const ModelForm: FC<ModelFormProps> = ({
   hasViewUrl,
 }) => {
   const {
+    id,
     newId,
+    modelClass,
+    modelHasVersions,
     viewUrl,
     form,
     initData,
@@ -46,7 +50,6 @@ const ModelForm: FC<ModelFormProps> = ({
     onValuesChange,
     modelOptions,
     isNotFound,
-    versionsUrl,
   } = modelForm;
 
   if (!isInit) return <Spin spinning={true} />;
@@ -90,7 +93,15 @@ const ModelForm: FC<ModelFormProps> = ({
         }
         hasViewUrl={hasViewUrl}
         viewUrl={viewUrl}
-        versionsUrl={versionsUrl}
+        extra={
+          modelHasVersions ? (
+            <VersionsButton
+              modelId={id}
+              modelClass={modelClass}
+              isLoading={isSaveLoading}
+            />
+          ) : null
+        }
       />
     </>
   );

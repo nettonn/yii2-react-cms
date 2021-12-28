@@ -37,6 +37,11 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord
     public function fields()
     {
         $fields = parent::fields();
+
+        $fields['model_class'] = function($model) {
+            return get_class($model);
+        };
+
         if($this->hasAttribute('created_at')) {
             $fields['created_at_date'] = function($model) {
                 return Yii::$app->getFormatter()->asDate($model->created_at);
@@ -61,11 +66,9 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord
             };
         }
 
-        if($this->hasMethod('versionGetVersionsUrl')) {
-            $fields['versions_url'] = function ($model) {
-                return $model->versionGetVersionsUrl();
-            };
-        }
+        $fields['has_versions'] = function($model) {
+            return !$model->isNewRecord && $model->hasMethod('versionGetVersionsUrl');
+        };
 
         return $fields;
     }

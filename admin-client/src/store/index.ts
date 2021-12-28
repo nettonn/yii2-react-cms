@@ -1,5 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { authReducer } from "./reducers/auth";
+import { layoutReducer } from "./reducers/layout";
 import { dataGridReducer } from "./reducers/grid";
 import {
   persistStore,
@@ -15,6 +16,7 @@ import storage from "redux-persist/lib/storage"; // defaults to localStorage for
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  layout: layoutReducer,
   grid: dataGridReducer,
 });
 

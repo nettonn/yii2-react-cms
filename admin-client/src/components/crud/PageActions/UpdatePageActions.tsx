@@ -2,9 +2,8 @@ import PageActions from "./PageActions";
 import { Button, Space } from "antd";
 import { ButtonType } from "antd/lib/button/button";
 import { CheckOutlined } from "@ant-design/icons";
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, { FC, ReactNode, useEffect, useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { withoutBaseUrl } from "../../../utils/functions";
 
 interface UpdatePageActionsProps {
   save(): void;
@@ -17,7 +16,7 @@ interface UpdatePageActionsProps {
   updateRoute?: string;
   hasViewUrl?: boolean;
   viewUrl?: string;
-  versionsUrl?: string;
+  extra?: ReactNode;
 }
 
 interface ButtonConfig {
@@ -40,7 +39,7 @@ const UpdatePageActions: FC<UpdatePageActionsProps> = ({
   updateRoute,
   hasViewUrl,
   viewUrl,
-  versionsUrl,
+  extra = null,
 }) => {
   const [lastClickKey, setLastClickKey] = useState<string | null>(null);
   const [isRedirectNeed, setIsRedirectNeed] = useState(false);
@@ -76,16 +75,9 @@ const UpdatePageActions: FC<UpdatePageActionsProps> = ({
         external: true,
       });
     }
-    if (versionsUrl) {
-      buttonList.push({
-        key: "versions",
-        label: "Версии",
-        redirect: withoutBaseUrl(versionsUrl),
-      });
-    }
 
     return buttonList;
-  }, [updateRoute, exitRoute, createRoute, hasViewUrl, viewUrl, versionsUrl]);
+  }, [updateRoute, exitRoute, createRoute, hasViewUrl, viewUrl]);
 
   const buttonClickHandler = (button: ButtonConfig) => {
     if (loading) return;
@@ -133,12 +125,12 @@ const UpdatePageActions: FC<UpdatePageActionsProps> = ({
                 ) : undefined
               }
               onClick={() => buttonClickHandler(button)}
-              // loading={loading && lastClickKey === button.key}
               disabled={loading && lastClickKey !== button.key}
             >
               {button.label}
             </Button>
           ))}
+          {extra}
         </Space>
       }
     />
