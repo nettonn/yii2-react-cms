@@ -45,6 +45,7 @@ const Sidebar: FC = () => {
       routeNames.log.index,
       routeNames.queue.index,
       routeNames.order.index,
+      routeNames.block.index,
     ]) {
       if (pathname.indexOf(route) === 0) {
         setSelectedKeys([route]);
@@ -74,6 +75,10 @@ const Sidebar: FC = () => {
     {
       route: routeNames.menu.index,
       title: "Меню",
+    },
+    {
+      route: routeNames.block.index,
+      title: "Блоки",
     },
     {
       route: routeNames.order.index,

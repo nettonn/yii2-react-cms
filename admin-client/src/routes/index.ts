@@ -13,6 +13,8 @@ import version from "./parts/version";
 import log from "./parts/log";
 import queue from "./parts/queue";
 import order from "./parts/order";
+import block from "./parts/block";
+import blockItem from "./parts/block-item";
 import { IRoute } from "../types";
 
 export const routeNames = {
@@ -31,6 +33,8 @@ export const routeNames = {
   log: log.names,
   queue: queue.names,
   order: order.names,
+  block: block.names,
+  blockItem: blockItem.names,
 };
 
 export const routes: readonly IRoute[] = [
@@ -49,6 +53,8 @@ export const routes: readonly IRoute[] = [
   ...log.routes,
   ...queue.routes,
   ...order.routes,
+  ...block.routes,
+  ...blockItem.routes,
 ];
 
 export const routeIcons = {
@@ -66,4 +72,6 @@ export const routeIcons = {
   ...log.icons,
   ...queue.icons,
   ...order.icons,
+  ...block.icons,
+  ...blockItem.icons,
 };

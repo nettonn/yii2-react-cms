@@ -172,8 +172,14 @@
 .app-file-list-mask-buttons button:first-child {
   margin-left: 0;
 }
+.app-file-upload {
+  margin-bottom: 24px;
+}
 .app-file-upload-button {
   margin-bottom: 10px;
+}
+.app-file-upload-button:only-child {
+  margin-bottom: 0;
 }
 .app-version-page-table .ant-table-tbody > tr > td {
   vertical-align: top;

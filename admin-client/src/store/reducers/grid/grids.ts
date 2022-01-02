@@ -15,6 +15,8 @@ const selectors = [
   "log",
   "queue",
   "order",
+  "block",
+  "blockItem",
 ] as const;
 
 type Selector = typeof selectors[number];

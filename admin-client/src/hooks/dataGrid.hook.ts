@@ -137,6 +137,8 @@ export default function useDataGrid<
   const isLoading =
     !indexIsFetched || !modelOptionsIsFetched || deleteIsLoading;
 
+  const isFetched = indexIsFetched && modelOptionsIsFetched;
+
   const isLoaded =
     indexIsSuccess &&
     modelOptionsIsSuccess &&
@@ -146,10 +148,14 @@ export default function useDataGrid<
   useEffect(() => {
     if (isInit) return;
 
+    if (isFetched) {
+      setIsInit(true);
+    }
+
     if (isLoaded) {
       setIsInit(true);
     }
-  }, [isInit, isLoaded]);
+  }, [isInit, isFetched, isLoaded]);
 
   return {
     data,

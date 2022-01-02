@@ -2,7 +2,7 @@ import useDataGrid from "../../../hooks/dataGrid.hook";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { Popconfirm, Space, Table, Spin, Button, Col, Row, Input } from "antd";
 import { ColumnsType } from "antd/lib/table/interface";
-import React, { FC, useState } from "react";
+import React, { FC, ReactNode, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { IModel } from "../../../types";
 import { DEFAULT_ROW_GUTTER } from "../../../utils/constants";
@@ -16,7 +16,7 @@ interface DataGridTableProps {
   getColumns: (modelOptions: any) => ColumnsType<any>;
   scroll?: { x?: number; y?: number };
   hasUrl?: boolean;
-  actionButtons?: (record: any) => React.ReactNode[];
+  actionButtons?: (record: any) => ReactNode;
 }
 
 const DataGridTable: FC<DataGridTableProps> = ({

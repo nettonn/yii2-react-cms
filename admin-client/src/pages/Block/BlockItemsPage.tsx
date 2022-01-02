@@ -3,43 +3,46 @@ import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
-import { IMenuItem, IMenuItemModelOptions } from "../../models/IMenuItem";
+import { IBlockItem, IBlockItemModelOptions } from "../../models/IBlockItem";
 import { ColumnsType } from "antd/lib/table/interface";
 import { statusColumn } from "../../components/crud/grid/columns";
 import { Link, useParams } from "react-router-dom";
 import useDataGrid from "../../hooks/dataGrid.hook";
-import MenuItemService from "../../api/MenuItemService";
+import BlockItemService from "../../api/BlockItemService";
 import { useQuery } from "react-query";
-import { menuService } from "../../api/MenuService";
-import { IMenu } from "../../models/IMenu";
+import { blockService } from "../../api/BlockService";
+import { IBlock } from "../../models/IBlock";
 
-const modelRoutes = routeNames.menuItem;
-const menuRoutes = routeNames.menu;
+const modelRoutes = routeNames.blockItem;
+const blockRoutes = routeNames.block;
 
-const MenuItemsPage: FC = () => {
-  const { menuId } = useParams();
+const BlockItemsPage: FC = () => {
+  const { blockId } = useParams();
 
-  const { data: menuData } = useQuery(
-    [menuService.viewQueryKey(), menuId],
+  const { data: blockData } = useQuery(
+    [blockService.viewQueryKey(), blockId],
     async ({ signal }) => {
-      if (!menuId) throw Error("Id not set");
-      return await menuService.view<IMenu>(menuId, signal);
+      if (!blockId) throw Error("Id not set");
+      return await blockService.view<IBlock>(blockId, signal);
     },
     {
       refetchOnMount: false,
     }
   );
 
-  const menuItemService = useMemo(() => new MenuItemService(menuId), [menuId]);
+  const blockItemService = useMemo(
+    () => new BlockItemService(blockId),
+    [blockId]
+  );
 
-  const dataGridHook = useDataGrid<IMenuItem, IMenuItemModelOptions>(
-    menuItemService,
-    "menuItem"
+  const dataGridHook = useDataGrid<IBlockItem, IBlockItemModelOptions>(
+    blockItemService,
+    "blockItem"
   );
 
   const getColumns = (
-    modelOptions: IMenuItemModelOptions
-  ): ColumnsType<IMenuItem> => [
+    modelOptions: IBlockItemModelOptions
+  ): ColumnsType<IBlockItem> => [
     // {
     //   title: "Id",
     //   dataIndex: "id",
@@ -54,7 +57,7 @@ const MenuItemsPage: FC = () => {
       ellipsis: true,
       render: (value, record) => {
         return (
-          <Link to={modelRoutes.updateUrl(menuId, record.id)}>{value}</Link>
+          <Link to={modelRoutes.updateUrl(blockId, record.id)}>{value}</Link>
         );
       },
     },
@@ -78,19 +81,19 @@ const MenuItemsPage: FC = () => {
       sorter: true,
       width: 120,
     },
-    statusColumn<IMenuItem>({ filters: modelOptions.status }),
+    statusColumn<IBlockItem>({ filters: modelOptions.status }),
   ];
 
   return (
     <>
       <PageHeader
-        title="Пункты меню"
-        backPath={menuRoutes.updateUrl(menuId)}
+        title="Элементы блока"
+        backPath={blockRoutes.updateUrl(blockId)}
         breadcrumbItems={[
-          { path: menuRoutes.index, label: "Меню" },
+          { path: blockRoutes.index, label: "Блоки" },
           {
-            path: menuRoutes.updateUrl(menuId),
-            label: menuData ? menuData.name : menuId ?? "",
+            path: blockRoutes.updateUrl(blockId),
+            label: blockData ? blockData.name : blockId ?? "",
           },
         ]}
       />
@@ -100,9 +103,9 @@ const MenuItemsPage: FC = () => {
         getColumns={getColumns}
         scroll={{ x: 800 }}
       />
-      <IndexPageActions createPath={modelRoutes.createUrl(menuId)} />
+      <IndexPageActions createPath={modelRoutes.createUrl(blockId)} />
     </>
   );
 };
 
-export default MenuItemsPage;
+export default BlockItemsPage;

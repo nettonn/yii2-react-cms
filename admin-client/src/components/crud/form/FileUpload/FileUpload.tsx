@@ -28,8 +28,11 @@ const FileUpload: FC<FileUploadProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const getFileIds = () => {
-    if (!value || !Array.isArray(value)) {
+    if (!value) {
       return [];
+    }
+    if (!Array.isArray(value)) {
+      return [value];
     }
     return value;
   };
@@ -71,7 +74,7 @@ const FileUpload: FC<FileUploadProps> = ({
   };
 
   return (
-    <>
+    <div className="app-file-upload">
       <div className="app-file-upload-button">
         <label>
           <Button
@@ -95,7 +98,7 @@ const FileUpload: FC<FileUploadProps> = ({
       {fileIds.length ? (
         <FileList fileIds={fileIds} onChange={onChange} />
       ) : null}
-    </>
+    </div>
   );
 };
 

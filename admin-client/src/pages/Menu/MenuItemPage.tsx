@@ -8,11 +8,25 @@ import rules from "../../utils/rules";
 import { routeNames } from "../../routes";
 import { IMenuItem, IMenuItemModelOptions } from "../../models/IMenuItem";
 import MenuItemService from "../../api/MenuItemService";
+import { useQuery } from "react-query";
+import { menuService } from "../../api/MenuService";
+import { IMenu } from "../../models/IMenu";
 
 const modelRoutes = routeNames.menuItem;
 
 const MenuItemPage: FC = () => {
   const { id, menuId } = useParams();
+
+  const { data: menuData } = useQuery(
+    [menuService.viewQueryKey(), menuId],
+    async ({ signal }) => {
+      if (!menuId) throw Error("Id not set");
+      return await menuService.view<IMenu>(menuId, signal);
+    },
+    {
+      refetchOnMount: false,
+    }
+  );
 
   const menuItemService = useMemo(() => new MenuItemService(menuId), [menuId]);
 
@@ -86,7 +100,7 @@ const MenuItemPage: FC = () => {
           { path: routeNames.menu.index, label: "Меню" },
           {
             path: routeNames.menu.updateUrl(menuId),
-            label: menuId ? menuId : "",
+            label: menuData ? menuData.name : menuId ?? "",
           },
           {
             path: modelRoutes.indexUrl(menuId),

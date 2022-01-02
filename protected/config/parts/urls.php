@@ -21,6 +21,8 @@ return [
             'logs' => 'admin/log',
             'queues' => 'admin/queue',
             'orders' => 'admin/order',
+            'blocks' => 'admin/block',
+            'block-items' => 'admin/block-item',
         ]
     ],
     [
@@ -78,6 +80,8 @@ return [
             'logs' => 'admin/log',
             'queues' => 'admin/queue',
             'orders' => 'admin/order',
+            'blocks' => 'admin/block',
+            'block-items' => 'admin/block-item',
         ],
         'prefix' => 'admin-api',
         'extraPatterns' => [
