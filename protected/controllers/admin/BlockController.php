@@ -1,7 +1,7 @@
 <?php namespace app\controllers\admin;
 
 use app\controllers\base\RestController;
-use app\models\blocks\Block;
+use app\models\Block;
 use app\utils\AdminClientHelper;
 use app\models\query\ActiveQuery;
 use Yii;
@@ -15,11 +15,10 @@ class BlockController extends RestController
 
     public function init()
     {
-        $this->modelClass = Block::getTypeClass(Yii::$app->getRequest()->post('type'));
+        $this->createScenario = Yii::$app->getRequest()->post('type');
 
         parent::init();
     }
-
 
     protected function prepareSearchQuery(ActiveQuery $query, string $search) : ActiveQuery
     {
@@ -33,7 +32,7 @@ class BlockController extends RestController
     {
         return [
             'status' => AdminClientHelper::getOptionsFromKeyValue(Block::instance()->statusOptions),
-            'type' => AdminClientHelper::getOptionsFromKeyValue(Block::getTypeLabels()),
+            'type' => AdminClientHelper::getOptionsFromKeyValue(Block::instance()->typeOptions),
         ];
     }
 }

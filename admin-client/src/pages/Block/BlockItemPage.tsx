@@ -40,7 +40,7 @@ const BlockItemPage: FC = () => {
     blockItemService
   );
 
-  const initType = modelForm.initData?.type;
+  const initType = blockData?.type;
 
   useLayoutEffect(() => {
     if (initType) setType(initType);

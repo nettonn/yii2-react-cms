@@ -24,7 +24,6 @@
         "samdark/sitemap": "^2.4",
         "yiisoft/yii2-queue": "^2.3",
         "denisogr/yii2-cronjobs": "dev-master",
-        "howardeagle/yii2-inline-widgets-behavior": "dev-master",
         "yii2tech/ar-dynattribute": "1.0.x-dev",
         "oxyaction/yii2-polymorphic-relation-behavior": "dev-master",
         "prewk/xml-string-streamer": "dev-master",

@@ -1,9 +1,9 @@
-<?php namespace app\models\blocks;
+<?php namespace app\models;
 
 use app\behaviors\FileBehavior;
 use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
-use app\models\query\ActiveQuery;
+use app\traits\ModelType;
 use Yii;
 use yii2tech\ar\dynattribute\DynamicAttributeBehavior;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
@@ -26,7 +26,7 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  */
 class BlockItem extends ActiveRecord
 {
-    const TYPE = null;
+    use ModelType;
 
     const STATUS_ACTIVE = true;
     const STATUS_NOT_ACTIVE = false;
@@ -56,11 +56,7 @@ class BlockItem extends ActiveRecord
             [['name', 'type'], 'string', 'max' => 255],
         ];
 
-        foreach($this->getFileAttributes() as $attribute => $params) {
-            $attributeId = $params['attribute_id'] ?? $attribute.'_id';
-            $rules[] = [$attributeId, 'integer', 'allowArray' => true];
-        }
-        return $rules;
+        return array_merge($rules, $this->getTypeRules());
     }
 
     /**
@@ -68,7 +64,7 @@ class BlockItem extends ActiveRecord
      */
     public function attributeLabels()
     {
-        return [
+        $labels = [
             'id' => 'ID',
             'name' => 'Название',
             'block_id' => 'Блок',
@@ -79,17 +75,19 @@ class BlockItem extends ActiveRecord
             'created_at' => 'Создано',
             'updated_at' => 'Изменено',
         ];
+
+        return array_merge($labels, $this->getTypeAttributeLabels());
     }
 
     public function fields()
     {
         $fields = parent::fields();
 
-        foreach($this->getFileAttributes() as $attribute => $params) {
+        foreach($this->getTypeFileAttributes() as $attribute => $params) {
             $fields[] = $params['attribute_id'] ?? $attribute.'_id';
         }
 
-        foreach($this->getDynamicAttributes() as $name => $defaultValue) {
+        foreach($this->getTypeDynamicAttributes() as $name => $defaultValue) {
             $fields[] = $name;
         }
 
@@ -106,36 +104,45 @@ class BlockItem extends ActiveRecord
         return $this->hasOne(Block::class, ['id' => 'block_id']);
     }
 
+    protected function configureTypes()
+    {
+        return [
+            Block::TYPE_SLIDER => [
+                'rules' => [
+                    ['title', 'string', 'max' => 255],
+                    ['description', 'string', 'max' => 1000],
+                ],
+                'attributeLabels' => [
+                    'title' => 'Заголовок',
+                    'description' => 'Описание',
+                ],
+                'fileAttributes' => [
+                    'image' => [
+                        'multiple' => false,
+                        'is_image' => true,
+                    ],
+                ],
+                'dynamicAttributes' => [
+                    'title' => '',
+                    'description' => '',
+                ],
+            ],
+        ];
+    }
+
     public function init()
     {
         if($this->getIsNewRecord())
         {
             $this->status = self::STATUS_NOT_ACTIVE;
         }
-
-        $this->type = static::TYPE;
         parent::init();
-    }
-
-    public static function find(): ActiveQuery
-    {
-        return new BlockQuery(get_called_class(), ['type' => static::TYPE]);
     }
 
     public function beforeSave($insert)
     {
-        $this->type = static::TYPE;
+        $this->type = $this->block->type;
         return parent::beforeSave($insert);
-    }
-
-    public function getFileAttributes()
-    {
-        return [];
-    }
-
-    public function getDynamicAttributes()
-    {
-        return [];
     }
 
     /**
@@ -155,7 +162,7 @@ class BlockItem extends ActiveRecord
             ],
         ];
 
-        if($dynamicAttributes = $this->getDynamicAttributes()) {
+        if($dynamicAttributes = $this->getTypeDynamicAttributes()) {
             $behaviors['DynamicAttribute'] = [
                 'class' => DynamicAttributeBehavior::class,
                 'storageAttribute' => 'data', // field to store serialized attributes
@@ -163,7 +170,7 @@ class BlockItem extends ActiveRecord
             ];
         }
 
-        if($fileAttributes = $this->getFileAttributes()) {
+        if($fileAttributes = $this->getTypeFileAttributes()) {
             $behaviors['FileBehavior'] = [
                 'class' => FileBehavior::class,
                 'attributes' => $fileAttributes,
@@ -173,38 +180,4 @@ class BlockItem extends ActiveRecord
         return $behaviors;
     }
 
-    public static function instantiate($row)
-    {
-        switch ($row['type']) {
-            case SliderBlockItem::TYPE:
-                return new SliderBlockItem();
-            default:
-                return new self;
-        }
-    }
-
-    public static function types()
-    {
-        return [
-            SliderBlockItem::TYPE => SliderBlockItem::class,
-        ];
-    }
-
-    public static function getTypeLabels()
-    {
-        return [
-            SliderBlockItem::TYPE => 'Слайдер',
-        ];
-    }
-
-    public static function getTypeClass($type)
-    {
-        $types = self::types();
-        return $types[$type] ?? BlockItem::class;
-    }
-
-    public static function getBlockClass()
-    {
-        return Block::class;
-    }
 }

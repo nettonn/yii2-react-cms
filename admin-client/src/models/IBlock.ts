@@ -1,7 +1,7 @@
 import { IModel, IModelOptions, IValueTextOption } from "../types";
 
 export const BLOCK_TYPE_SLIDER = "slider";
-export const BLOCK_TYPE_GALLERY_SIMPLE = "gallery_simple";
+export const BLOCK_TYPE_GALLERY_SIMPLE = "simple_gallery";
 
 export interface IBlock extends IModel {
   name: string;

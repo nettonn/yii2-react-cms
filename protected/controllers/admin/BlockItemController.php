@@ -1,8 +1,8 @@
 <?php namespace app\controllers\admin;
 
 use app\controllers\base\RestController;
-use app\models\blocks\Block;
-use app\models\blocks\BlockItem;
+use app\models\Block;
+use app\models\BlockItem;
 use app\utils\AdminClientHelper;
 use app\models\query\ActiveQuery;
 use Yii;
@@ -18,12 +18,11 @@ class BlockItemController extends RestController
     public function init()
     {
         if($blockId = Yii::$app->getRequest()->get('block_id')) {
-            $model = Block::find()->where(['id' => $blockId])->notDeleted()->one();
-            if(!$model) {
+            $block = Block::find()->where(['id' => $blockId])->notDeleted()->one();
+            if(!$block) {
                 throw new NotFoundHttpException('Block not found');
             }
-
-            $this->modelClass = get_class($model)::getBlockItemClass();
+            $this->createScenario = $block->type;
         }
 
         parent::init();

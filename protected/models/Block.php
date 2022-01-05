@@ -1,9 +1,9 @@
-<?php namespace app\models\blocks;
+<?php namespace app\models;
 
 use app\behaviors\FileBehavior;
 use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
-use app\models\query\ActiveQuery;
+use app\traits\ModelType;
 use Yii;
 use yii\helpers\Inflector;
 use yii2tech\ar\dynattribute\DynamicAttributeBehavior;
@@ -26,9 +26,19 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  */
 class Block extends ActiveRecord
 {
-    const TYPE = null;
+    use ModelType;
 
-    public $has_items = false;
+    const TYPE_SLIDER = 'slider';
+    const TYPE_SIMPLE_GALLERY = 'simple_gallery';
+
+    public $typeOptions = [
+        self::TYPE_SLIDER => 'Слайдер',
+        self::TYPE_SIMPLE_GALLERY => 'Простая галерея',
+    ];
+
+    public $typeWithItems = [
+        self::TYPE_SLIDER,
+    ];
 
     const STATUS_ACTIVE = true;
     const STATUS_NOT_ACTIVE = false;
@@ -58,12 +68,7 @@ class Block extends ActiveRecord
             [['key'], 'filter', 'filter'=>[Inflector::class, 'slug']],
         ];
 
-        foreach($this->getFileAttributes() as $attribute => $params) {
-            $attributeId = $params['attribute_id'] ?? $attribute.'_id';
-            $rules[] = [$attributeId, 'integer', 'allowArray' => true];
-        }
-
-        return $rules;
+        return array_merge($rules, $this->getTypeRules());
     }
 
     /**
@@ -71,7 +76,7 @@ class Block extends ActiveRecord
      */
     public function attributeLabels()
     {
-        return [
+        $labels = [
             'id' => 'ID',
             'name' => 'Название',
             'key' => 'Ключ',
@@ -82,21 +87,23 @@ class Block extends ActiveRecord
             'created_at' => 'Создано',
             'updated_at' => 'Изменено',
         ];
+
+        return array_merge($labels, $this->getTypeAttributeLabels());
     }
 
     public function fields()
     {
         $fields = parent::fields();
 
-        $fields['has_items'] = function ($model) {
-            return $model->has_items;
+        $fields['has_items'] = function (Block $model) {
+            return in_array($model->getCurrentType(), $model->typeWithItems);
         };
 
-        foreach($this->getFileAttributes() as $attribute => $params) {
+        foreach($this->getTypeFileAttributes() as $attribute => $params) {
             $fields[] = $params['attribute_id'] ?? $attribute.'_id';
         }
 
-        foreach($this->getDynamicAttributes() as $name => $defaultValue) {
+        foreach($this->getTypeDynamicAttributes() as $name => $defaultValue) {
             $fields[] = $name;
         }
 
@@ -111,17 +118,41 @@ class Block extends ActiveRecord
      */
     public function getBlockItems()
     {
-        return $this->hasMany($this->getBlockItemClass(), ['block_id' => 'id']);
+        return $this->hasMany(BlockItem::class, ['block_id' => 'id']);
     }
 
-    public function getFileAttributes()
+    protected function configureTypes()
     {
-        return [];
-    }
-
-    public function getDynamicAttributes()
-    {
-        return [];
+        return [
+            self::TYPE_SLIDER => [
+                'rules' => [
+                    ['title', 'string', 'max' => 255],
+                ],
+                'attributeLabels' => [
+                    'title' => 'Заголовок',
+                ],
+                'dynamicAttributes' => [
+                    'title' => '',
+                ],
+            ],
+            self::TYPE_SIMPLE_GALLERY => [
+                'rules' => [
+                    ['title', 'string', 'max' => 255],
+                ],
+                'attributeLabels' => [
+                    'title' => 'Заголовок',
+                ],
+                'fileAttributes' => [
+                    'images' => [
+                        'multiple' => true,
+                        'is_image' => true,
+                    ],
+                ],
+                'dynamicAttributes' => [
+                    'title' => '',
+                ],
+            ],
+        ];
     }
 
     public function init()
@@ -130,19 +161,7 @@ class Block extends ActiveRecord
         {
             $this->status = self::STATUS_NOT_ACTIVE;
         }
-        $this->type = static::TYPE;
         parent::init();
-    }
-
-    public static function find(): ActiveQuery
-    {
-        return new BlockQuery(get_called_class(), ['type' => static::TYPE]);
-    }
-
-    public function beforeSave($insert)
-    {
-        $this->type = static::TYPE;
-        return parent::beforeSave($insert);
     }
 
     public function afterDelete()
@@ -170,7 +189,7 @@ class Block extends ActiveRecord
             ],
         ];
 
-        if($dynamicAttributes = $this->getDynamicAttributes()) {
+        if($dynamicAttributes = $this->getTypeDynamicAttributes()) {
             $behaviors['DynamicAttribute'] = [
                 'class' => DynamicAttributeBehavior::class,
                 'storageAttribute' => 'data', // field to store serialized attributes
@@ -178,51 +197,12 @@ class Block extends ActiveRecord
             ];
         }
 
-        if($fileAttributes = $this->getFileAttributes()) {
+        if($fileAttributes = $this->getTypeFileAttributes()) {
             $behaviors['FileBehavior'] = [
                 'class' => FileBehavior::class,
                 'attributes' => $fileAttributes,
             ];
         }
         return $behaviors;
-    }
-
-    public static function instantiate($row)
-    {
-        switch ($row['type']) {
-            case SliderBlock::TYPE:
-                return new SliderBlock();
-            case GallerySimpleBlock::TYPE:
-                return new GallerySimpleBlock();
-            default:
-                return new self;
-        }
-    }
-
-    public static function types()
-    {
-        return [
-            SliderBlock::TYPE => SliderBlock::class,
-            GallerySimpleBlock::TYPE => GallerySimpleBlock::class,
-        ];
-    }
-
-    public static function getTypeLabels()
-    {
-        return [
-            SliderBlock::TYPE => 'Слайдер',
-            GallerySimpleBlock::TYPE => 'Простая галерея',
-        ];
-    }
-
-    public static function getTypeClass($type)
-    {
-        $types = self::types();
-        return $types[$type] ?? Block::class;
-    }
-
-    public static function getBlockItemClass()
-    {
-        return BlockItem::class;
     }
 }
