@@ -1,6 +1,6 @@
 import ModelForm from "../../components/crud/form/ModelForm";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import React, { FC, useLayoutEffect, useState } from "react";
+import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
 import { Col, Form, FormInstance, Input, Row, Select, Switch } from "antd";
@@ -15,29 +15,23 @@ import {
   SETTING_TYPE_STRING,
 } from "../../models/ISetting";
 import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
+import useModelType from "../../hooks/modelType.hook";
 
 const modelRoutes = routeNames.setting;
 
 const SettingPage: FC = () => {
   const { id } = useParams();
-  const [type, setType] = useState<number>();
 
   const modelForm = useModelForm<ISetting, ISettingModelOptions>(
     id,
     settingService
   );
 
-  const initType = modelForm.initData?.type;
+  const { type, typeChangeHandler } = useModelType<number>(
+    modelForm.initData?.type
+  );
 
-  useLayoutEffect(() => {
-    if (initType) setType(initType);
-  }, [initType]);
-
-  const typeChangeHandler = (value: number) => {
-    setType(value);
-  };
-
-  const getValueField = (type?: number) => {
+  const getValueField = () => {
     if (type === SETTING_TYPE_BOOL)
       return (
         <Form.Item
@@ -89,6 +83,7 @@ const SettingPage: FC = () => {
           style={{ width: "100%" }}
           placeholder="Выберите тип"
           onChange={typeChangeHandler}
+          disabled={!!id}
         >
           {modelOptions.type.map((type: any) => (
             <Select.Option key={type.value} value={type.value}>
@@ -98,17 +93,7 @@ const SettingPage: FC = () => {
         </Select>
       </Form.Item>
 
-      {/*<Form.Item label="Тип" name="type" rules={[rules.required()]}>*/}
-      {/*  <Radio.Group optionType="button" onChange={typeChangeHandler}>*/}
-      {/*    {modelOptions?.type.map((i) => (*/}
-      {/*      <Radio.Button key={i.value} value={i.value}>*/}
-      {/*        {i.text}*/}
-      {/*      </Radio.Button>*/}
-      {/*    ))}*/}
-      {/*  </Radio.Group>*/}
-      {/*</Form.Item>*/}
-
-      {getValueField(type)}
+      {getValueField()}
     </>
   );
 

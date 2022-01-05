@@ -1,17 +1,9 @@
 import ModelForm from "../../components/crud/form/ModelForm";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import React, { FC, useLayoutEffect, useState } from "react";
+import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
-import {
-  Col,
-  Form,
-  FormInstance,
-  Input,
-  Radio,
-  RadioChangeEvent,
-  Row,
-} from "antd";
+import { Col, Form, FormInstance, Input, Row, Select } from "antd";
 import rules from "../../utils/rules";
 import { routeNames } from "../../routes";
 import { chunkService } from "../../api/ChunkService";
@@ -25,26 +17,19 @@ import AceInput from "../../components/crud/form/AceInput/AceInput";
 import CkeditorInput from "../../components/crud/form/CkeditorInput/CkeditorInput";
 import { IModelOptions } from "../../types";
 import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
+import useModelType from "../../hooks/modelType.hook";
 
 const modelRoutes = routeNames.chunk;
 
 const ChunkPage: FC = () => {
   const { id } = useParams();
-  const [type, setType] = useState<number>();
-
   const modelForm = useModelForm<IChunk, IModelOptions>(id, chunkService, [
     "content",
   ]);
 
-  const initType = modelForm.initData?.type;
-
-  useLayoutEffect(() => {
-    if (initType) setType(initType);
-  }, [initType]);
-
-  const typeChangeHandler = (e: RadioChangeEvent) => {
-    setType(e.target.value);
-  };
+  const { type, typeChangeHandler } = useModelType<number>(
+    modelForm.initData?.type
+  );
 
   const getContentField = (type?: number) => {
     if (type === CHUNK_TYPE_TEXT) return <AceInput />;
@@ -73,14 +58,15 @@ const ChunkPage: FC = () => {
       </Row>
 
       <Form.Item label="Тип" name="type" rules={[rules.required()]}>
-        <Radio.Group optionType="button" onChange={typeChangeHandler}>
+        <Select onChange={typeChangeHandler} disabled={!!id}>
           {modelOptions?.type.map((i) => (
-            <Radio.Button key={i.value} value={i.value}>
+            <Select.Option key={i.value} value={i.value}>
               {i.text}
-            </Radio.Button>
+            </Select.Option>
           ))}
-        </Radio.Group>
+        </Select>
       </Form.Item>
+
       <Form.Item label="Содержимое" name="content" shouldUpdate={true}>
         {getContentField(type)}
       </Form.Item>

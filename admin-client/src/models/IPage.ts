@@ -1,11 +1,15 @@
 import { IModel, IModelOptions, IValueTextOption } from "../types";
 import { IFileModel } from "./IFileModel";
 
+export const PAGE_TYPE_COMMON = "common";
+export const PAGE_TYPE_MAIN = "main";
+
 export interface IPage extends IModel {
   name: string;
   alias: string;
   parent_id: number | null;
   description: string;
+  type: string;
   content: string;
   status: boolean;
   seo_title: string;
@@ -25,5 +29,6 @@ interface ParentOption {
 
 export interface IPageModelOptions extends IModelOptions {
   status: IValueTextOption[];
+  type: IValueTextOption[];
   parent: ParentOption[];
 }

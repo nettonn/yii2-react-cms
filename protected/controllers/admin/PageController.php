@@ -33,6 +33,7 @@ class PageController extends RestController
     {
         return [
             'status' => AdminClientHelper::getOptionsFromKeyValue(Page::instance()->statusOptions),
+            'type' => AdminClientHelper::getOptionsFromKeyValue(Page::instance()->typeOptions),
             'parent' => AdminClientHelper::getOptionsFromModelQuery(Page::find()->notDeleted()->asArray()),
         ];
     }

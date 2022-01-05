@@ -3,15 +3,21 @@ import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
-import { Col, Form, Input, Row, Switch, Tabs, TreeSelect } from "antd";
+import { Col, Form, Input, Row, Select, Switch, Tabs, TreeSelect } from "antd";
 import rules from "../../utils/rules";
 import { routeNames } from "../../routes";
-import { IPage, IPageModelOptions } from "../../models/IPage";
+import {
+  IPage,
+  IPageModelOptions,
+  PAGE_TYPE_COMMON,
+  PAGE_TYPE_MAIN,
+} from "../../models/IPage";
 import FileUpload from "../../components/crud/form/FileUpload/FileUpload";
 import { pageService } from "../../api/PageService";
 import CkeditorInput from "../../components/crud/form/CkeditorInput/CkeditorInput";
 import useGenerateAlias from "../../hooks/generateAlias.hook";
 import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
+import useModelType from "../../hooks/modelType.hook";
 
 const modelRoutes = routeNames.page;
 
@@ -21,6 +27,13 @@ const Page: FC = () => {
   const modelForm = useModelForm<IPage, IPageModelOptions>(id, pageService, [
     "content",
   ]);
+  const { type, typeChangeHandler } = useModelType(modelForm.initData?.type);
+
+  const getTypeForm = () => {
+    if (type === PAGE_TYPE_COMMON) return null;
+    if (type === PAGE_TYPE_MAIN) return null;
+    return null;
+  };
 
   const [onNameFieldChange, onAliasFieldChange] = useGenerateAlias(
     modelForm.form,
@@ -66,6 +79,20 @@ const Page: FC = () => {
         <Form.Item label="Содержимое" name="content">
           <CkeditorInput />
         </Form.Item>
+        <Form.Item label="Тип" name="type" rules={[rules.required()]}>
+          <Select
+            onChange={typeChangeHandler}
+            allowClear={true}
+            disabled={!!id}
+          >
+            {modelOptions?.type.map((i) => (
+              <Select.Option key={i.value} value={i.value}>
+                {i.text}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+        {getTypeForm()}
         <Form.Item label="Статус" name="status" valuePropName="checked">
           <Switch checked={false} />
         </Form.Item>

@@ -1,6 +1,6 @@
 import ModelForm from "../../components/crud/form/ModelForm";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import React, { FC, useLayoutEffect, useState } from "react";
+import React, { FC } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
 import { Button, Col, Form, Input, Row, Select, Switch } from "antd";
@@ -18,25 +18,17 @@ import { blockService } from "../../api/BlockService";
 import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
 import SliderBlockForm from "./SliderBlockForm";
 import GallerySimpleBlockForm from "./GallerySimpleBlockForm";
+import useModelType from "../../hooks/modelType.hook";
 
 const modelRoutes = routeNames.block;
 const blockItemRoutes = routeNames.blockItem;
 
 const BlockPage: FC = () => {
   const { id } = useParams();
-  const [type, setType] = useState<string>();
 
   const modelForm = useModelForm<IBlock, IBlockModelOptions>(id, blockService);
 
-  const initType = modelForm.initData?.type;
-
-  useLayoutEffect(() => {
-    if (initType) setType(initType);
-  }, [initType]);
-
-  const typeChangeHandler = (value: string) => {
-    setType(value);
-  };
+  const { type, typeChangeHandler } = useModelType(modelForm.initData?.type);
 
   const getTypeForm = () => {
     if (type === BLOCK_TYPE_SLIDER) return <SliderBlockForm />;
