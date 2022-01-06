@@ -3,7 +3,6 @@
 use app\behaviors\FileBehavior;
 use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
-use app\traits\ModelType;
 use Yii;
 use yii2tech\ar\dynattribute\DynamicAttributeBehavior;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
@@ -26,8 +25,6 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  */
 class BlockItem extends ActiveRecord
 {
-    use ModelType;
-
     const STATUS_ACTIVE = true;
     const STATUS_NOT_ACTIVE = false;
 
@@ -49,14 +46,17 @@ class BlockItem extends ActiveRecord
      */
     public function rules()
     {
-        $rules = [
+        return [
             [['name', 'status'], 'required'],
             [['sort', 'block_id'], 'integer'],
             [['status'], 'boolean'],
             [['name', 'type'], 'string', 'max' => 255],
-        ];
 
-        return array_merge($rules, $this->getTypeRules());
+            ['title', 'string', 'max' => 255],
+            ['description', 'string', 'max' => 1000],
+
+            [['image_id'], 'integer', 'allowArray' => true],
+        ];
     }
 
     /**
@@ -64,7 +64,7 @@ class BlockItem extends ActiveRecord
      */
     public function attributeLabels()
     {
-        $labels = [
+        return [
             'id' => 'ID',
             'name' => 'Название',
             'block_id' => 'Блок',
@@ -74,20 +74,20 @@ class BlockItem extends ActiveRecord
             'is_deleted' => 'Is Deleted',
             'created_at' => 'Создано',
             'updated_at' => 'Изменено',
+            'title' => 'Заголовок',
+            'description' => 'Описание',
         ];
-
-        return array_merge($labels, $this->getTypeAttributeLabels());
     }
 
     public function fields()
     {
         $fields = parent::fields();
 
-        foreach($this->getTypeFileAttributes() as $attribute => $params) {
-            $fields[] = $params['attribute_id'] ?? $attribute.'_id';
+        if($this->isRelationPopulated('image')) {
+            $fields[] = 'image_id';
         }
 
-        foreach($this->getTypeDynamicAttributes() as $name => $defaultValue) {
+        foreach($this->getDynamicAttributes() as $name => $value) {
             $fields[] = $name;
         }
 
@@ -102,32 +102,6 @@ class BlockItem extends ActiveRecord
     public function getBlock()
     {
         return $this->hasOne(Block::class, ['id' => 'block_id']);
-    }
-
-    protected function configureTypes()
-    {
-        return [
-            Block::TYPE_SLIDER => [
-                'rules' => [
-                    ['title', 'string', 'max' => 255],
-                    ['description', 'string', 'max' => 1000],
-                ],
-                'attributeLabels' => [
-                    'title' => 'Заголовок',
-                    'description' => 'Описание',
-                ],
-                'fileAttributes' => [
-                    'image' => [
-                        'multiple' => false,
-                        'is_image' => true,
-                    ],
-                ],
-                'dynamicAttributes' => [
-                    'title' => '',
-                    'description' => '',
-                ],
-            ],
-        ];
     }
 
     public function init()
@@ -150,7 +124,7 @@ class BlockItem extends ActiveRecord
      */
     public function behaviors(): array
     {
-        $behaviors = [
+        return [
             'TimestampBehavior' => [
                 'class' => TimestampBehavior::class,
             ],
@@ -160,24 +134,24 @@ class BlockItem extends ActiveRecord
                     'is_deleted' => true
                 ],
             ],
-        ];
-
-        if($dynamicAttributes = $this->getTypeDynamicAttributes()) {
-            $behaviors['DynamicAttribute'] = [
+            'FileBehavior' => [
+                'class' => FileBehavior::class,
+                'attributes' => [
+                    'image' => [
+                        'multiple' => false,
+                        'is_image' => true,
+                    ],
+                ],
+            ],
+            'DynamicAttribute' => [
                 'class' => DynamicAttributeBehavior::class,
                 'storageAttribute' => 'data', // field to store serialized attributes
-                'dynamicAttributeDefaults' => $dynamicAttributes, // default values for the dynamic attributes
-            ];
-        }
-
-        if($fileAttributes = $this->getTypeFileAttributes()) {
-            $behaviors['FileBehavior'] = [
-                'class' => FileBehavior::class,
-                'attributes' => $fileAttributes,
-            ];
-        }
-
-        return $behaviors;
+                'dynamicAttributeDefaults' => [
+                    'title' => '',
+                    'description' => '',
+                ], // default values for the dynamic attributes
+            ],
+        ];
     }
 
 }

@@ -13,12 +13,7 @@ class BlockController extends RestController
 
     public $indexQuerySelectExclude = ['data'];
 
-    public function init()
-    {
-        $this->createScenario = Yii::$app->getRequest()->post('type');
-
-        parent::init();
-    }
+    public $modelWith = ['images'];
 
     protected function prepareSearchQuery(ActiveQuery $query, string $search) : ActiveQuery
     {

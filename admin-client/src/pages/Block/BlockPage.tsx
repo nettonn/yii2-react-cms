@@ -53,7 +53,7 @@ const BlockPage: FC = () => {
       </Row>
 
       <Form.Item label="Тип" name="type" rules={[rules.required()]}>
-        <Select onChange={typeChangeHandler} allowClear={true} disabled={!!id}>
+        <Select onChange={typeChangeHandler}>
           {modelOptions?.type.map((i) => (
             <Select.Option key={i.value} value={i.value}>
               {i.text}

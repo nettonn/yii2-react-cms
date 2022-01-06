@@ -83,7 +83,6 @@ const SettingPage: FC = () => {
           style={{ width: "100%" }}
           placeholder="Выберите тип"
           onChange={typeChangeHandler}
-          disabled={!!id}
         >
           {modelOptions.type.map((type: any) => (
             <Select.Option key={type.value} value={type.value}>

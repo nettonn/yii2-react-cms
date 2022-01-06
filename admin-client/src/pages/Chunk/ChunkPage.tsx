@@ -31,7 +31,7 @@ const ChunkPage: FC = () => {
     modelForm.initData?.type
   );
 
-  const getContentField = (type?: number) => {
+  const getContentField = () => {
     if (type === CHUNK_TYPE_TEXT) return <AceInput />;
     if (type === CHUNK_TYPE_HTML) return <CkeditorInput />;
 
@@ -58,7 +58,7 @@ const ChunkPage: FC = () => {
       </Row>
 
       <Form.Item label="Тип" name="type" rules={[rules.required()]}>
-        <Select onChange={typeChangeHandler} disabled={!!id}>
+        <Select onChange={typeChangeHandler}>
           {modelOptions?.type.map((i) => (
             <Select.Option key={i.value} value={i.value}>
               {i.text}
@@ -68,7 +68,7 @@ const ChunkPage: FC = () => {
       </Form.Item>
 
       <Form.Item label="Содержимое" name="content" shouldUpdate={true}>
-        {getContentField(type)}
+        {getContentField()}
       </Form.Item>
     </>
   );

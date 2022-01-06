@@ -62,15 +62,9 @@ const Page: FC = () => {
         </Row>
         <Form.Item label="Родитель" name="parent_id">
           <TreeSelect
-            // style={{ width: "100%" }}
-            // dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
             treeData={modelOptions?.parent}
             placeholder="Выберите"
             allowClear
-            onClear={() => {
-              // data.parent_id = null;
-            }}
-            // treeDefaultExpandAll
           />
         </Form.Item>
         <Form.Item label="Краткое описание" name="description">
@@ -80,11 +74,7 @@ const Page: FC = () => {
           <CkeditorInput />
         </Form.Item>
         <Form.Item label="Тип" name="type" rules={[rules.required()]}>
-          <Select
-            onChange={typeChangeHandler}
-            allowClear={true}
-            disabled={!!id}
-          >
+          <Select onChange={typeChangeHandler}>
             {modelOptions?.type.map((i) => (
               <Select.Option key={i.value} value={i.value}>
                 {i.text}

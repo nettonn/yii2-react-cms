@@ -26,7 +26,7 @@ class SiteController extends FrontController
 
         Yii::$app->admin->setAdminLink(Url::to(['/admin/page/update', 'id' => $model->id]));
 
-        $this->setLayout($model->layout);
+        $this->setLayout($model->getLayout());
 
         return $this->render('page', [
             'model'=>$model,

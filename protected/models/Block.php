@@ -3,7 +3,6 @@
 use app\behaviors\FileBehavior;
 use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
-use app\traits\ModelType;
 use Yii;
 use yii\helpers\Inflector;
 use yii2tech\ar\dynattribute\DynamicAttributeBehavior;
@@ -23,11 +22,10 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property int|null $updated_at
  *
  * @property BlockItem[] $blockItems
+ * @method Array getDynamicAttributes() DynamicAttributeBehavior
  */
 class Block extends ActiveRecord
 {
-    use ModelType;
-
     const TYPE_SLIDER = 'slider';
     const TYPE_SIMPLE_GALLERY = 'simple_gallery';
 
@@ -61,14 +59,16 @@ class Block extends ActiveRecord
      */
     public function rules()
     {
-        $rules = [
+        return [
             [['name', 'key', 'type', 'status'], 'required'],
             [['status'], 'boolean'],
             [['name', 'key', 'type'], 'string', 'max' => 255],
             [['key'], 'filter', 'filter'=>[Inflector::class, 'slug']],
-        ];
 
-        return array_merge($rules, $this->getTypeRules());
+            ['title', 'string', 'max' => 255],
+
+            [['images_id'], 'integer', 'allowArray' => true],
+        ];
     }
 
     /**
@@ -76,7 +76,7 @@ class Block extends ActiveRecord
      */
     public function attributeLabels()
     {
-        $labels = [
+        return [
             'id' => 'ID',
             'name' => 'Название',
             'key' => 'Ключ',
@@ -86,24 +86,24 @@ class Block extends ActiveRecord
             'is_deleted' => 'Is Deleted',
             'created_at' => 'Создано',
             'updated_at' => 'Изменено',
+            'title' => 'Заголовок',
+            'images'=>'Изображения',
         ];
-
-        return array_merge($labels, $this->getTypeAttributeLabels());
     }
 
     public function fields()
     {
         $fields = parent::fields();
 
-        $fields['has_items'] = function (Block $model) {
-            return in_array($model->getCurrentType(), $model->typeWithItems);
-        };
-
-        foreach($this->getTypeFileAttributes() as $attribute => $params) {
-            $fields[] = $params['attribute_id'] ?? $attribute.'_id';
+        if($this->isRelationPopulated('images')) {
+            $fields[] = 'images_id';
         }
 
-        foreach($this->getTypeDynamicAttributes() as $name => $defaultValue) {
+        $fields['has_items'] = function (Block $model) {
+            return in_array($model->type, $model->typeWithItems);
+        };
+
+        foreach($this->getDynamicAttributes() as $name => $value) {
             $fields[] = $name;
         }
 
@@ -119,40 +119,6 @@ class Block extends ActiveRecord
     public function getBlockItems()
     {
         return $this->hasMany(BlockItem::class, ['block_id' => 'id']);
-    }
-
-    protected function configureTypes()
-    {
-        return [
-            self::TYPE_SLIDER => [
-                'rules' => [
-                    ['title', 'string', 'max' => 255],
-                ],
-                'attributeLabels' => [
-                    'title' => 'Заголовок',
-                ],
-                'dynamicAttributes' => [
-                    'title' => '',
-                ],
-            ],
-            self::TYPE_SIMPLE_GALLERY => [
-                'rules' => [
-                    ['title', 'string', 'max' => 255],
-                ],
-                'attributeLabels' => [
-                    'title' => 'Заголовок',
-                ],
-                'fileAttributes' => [
-                    'images' => [
-                        'multiple' => true,
-                        'is_image' => true,
-                    ],
-                ],
-                'dynamicAttributes' => [
-                    'title' => '',
-                ],
-            ],
-        ];
     }
 
     public function init()
@@ -177,7 +143,7 @@ class Block extends ActiveRecord
      */
     public function behaviors(): array
     {
-        $behaviors = [
+        return [
             'TimestampBehavior' => [
                 'class' => TimestampBehavior::class,
             ],
@@ -187,22 +153,22 @@ class Block extends ActiveRecord
                     'is_deleted' => true
                 ],
             ],
-        ];
-
-        if($dynamicAttributes = $this->getTypeDynamicAttributes()) {
-            $behaviors['DynamicAttribute'] = [
+            'FileBehavior' => [
+                'class' => FileBehavior::class,
+                'attributes' => [
+                    'images' => [
+                        'multiple' => true,
+                        'is_image' => true,
+                    ],
+                ],
+            ],
+            'DynamicAttribute' => [
                 'class' => DynamicAttributeBehavior::class,
                 'storageAttribute' => 'data', // field to store serialized attributes
-                'dynamicAttributeDefaults' => $dynamicAttributes, // default values for the dynamic attributes
-            ];
-        }
-
-        if($fileAttributes = $this->getTypeFileAttributes()) {
-            $behaviors['FileBehavior'] = [
-                'class' => FileBehavior::class,
-                'attributes' => $fileAttributes,
-            ];
-        }
-        return $behaviors;
+                'dynamicAttributeDefaults' => [
+                    'title' => '',
+                ], // default values for the dynamic attributes
+            ],
+        ];
     }
 }

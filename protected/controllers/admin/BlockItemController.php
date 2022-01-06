@@ -15,18 +15,7 @@ class BlockItemController extends RestController
 
     public $indexQuerySelectExclude = ['data'];
 
-    public function init()
-    {
-        if($blockId = Yii::$app->getRequest()->get('block_id')) {
-            $block = Block::find()->where(['id' => $blockId])->notDeleted()->one();
-            if(!$block) {
-                throw new NotFoundHttpException('Block not found');
-            }
-            $this->createScenario = $block->type;
-        }
-
-        parent::init();
-    }
+    public $modelWith = ['image'];
 
     protected function prepareSearchQuery(ActiveQuery $query, string $search) : ActiveQuery
     {

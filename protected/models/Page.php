@@ -7,7 +7,6 @@ use app\behaviors\TimestampBehavior;
 use app\behaviors\VersionBehavior;
 use app\models\base\ActiveRecord;
 use app\models\query\ActiveQuery;
-use app\traits\ModelType;
 use Yii;
 use yii\helpers\Inflector;
 use yii\helpers\Url;
@@ -43,8 +42,6 @@ use app\behaviors\TreeBehavior;
  */
 class Page extends ActiveRecord
 {
-    use ModelType;
-
     const TYPE_COMMON = 'common';
     const TYPE_MAIN = 'main';
 
@@ -74,7 +71,7 @@ class Page extends ActiveRecord
      */
     public function rules(): array
     {
-        $rules = [
+        return [
             [['name', 'alias'], 'required'],
             [['parent_id'], 'number', 'skipOnEmpty' => true],
             [['parent_id'], 'safe'],
@@ -85,7 +82,6 @@ class Page extends ActiveRecord
             [['alias'], 'filter', 'filter'=>[Inflector::class, 'slug']],
             [['images_id'], 'integer', 'allowArray' => true],
         ];
-        return array_merge($rules, $this->getTypeRules());
     }
 
     /**
@@ -93,7 +89,7 @@ class Page extends ActiveRecord
      */
     public function attributeLabels(): array
     {
-        $labels = [
+        return [
             'id' => 'ID',
             'name' => 'Название',
             'alias' => 'Псевдоним',
@@ -114,8 +110,6 @@ class Page extends ActiveRecord
             'image'=>'Главное изображение',
             'images'=>'Изображения',
         ];
-
-        return array_merge($labels, $this->getTypeAttributeLabels());
     }
 
     public static function getModelLabel(): string
@@ -131,11 +125,7 @@ class Page extends ActiveRecord
             $fields[] = 'images_id';
         }
 
-        foreach($this->getTypeFileAttributes() as $attribute => $params) {
-            $fields[] = $params['attribute_id'] ?? $attribute.'_id';
-        }
-
-        foreach($this->getTypeDynamicAttributes() as $name => $defaultValue) {
+        foreach($this->getDynamicAttributes() as $name => $value) {
             $fields[] = $name;
         }
 
@@ -156,20 +146,12 @@ class Page extends ActiveRecord
         return $this->hasMany(self::class, ['parent_id'=>'id']);
     }
 
-    protected function configureTypes()
-    {
-        return [
-            self::TYPE_COMMON => [],
-            self::TYPE_MAIN => [],
-        ];
-    }
-
     /**
      * @inheritdoc
      */
     public function behaviors(): array
     {
-        $behaviors = [
+        return [
             'TimestampBehavior' => [
                 'class' => TimestampBehavior::class,
             ],
@@ -192,8 +174,12 @@ class Page extends ActiveRecord
                             'multiple' => true,
                         ],
                     ],
-                    $this->getTypeFileAttributes()
                 ),
+            ],
+            'DynamicAttribute' => [
+                'class' => DynamicAttributeBehavior::class,
+                'storageAttribute' => 'data', // field to store serialized attributes
+                'dynamicAttributeDefaults' => [], // default values for the dynamic attributes
             ],
             'VersionBehavior' => [
                 'class' => VersionBehavior::class,
@@ -215,16 +201,6 @@ class Page extends ActiveRecord
                 ]
             ]
         ];
-
-        if($dynamicAttributes = $this->getTypeDynamicAttributes()) {
-            $behaviors['DynamicAttribute'] = [
-                'class' => DynamicAttributeBehavior::class,
-                'storageAttribute' => 'data', // field to store serialized attributes
-                'dynamicAttributeDefaults' => $dynamicAttributes, // default values for the dynamic attributes
-            ];
-        }
-
-        return $behaviors;
     }
 
     public function init()
@@ -250,4 +226,11 @@ class Page extends ActiveRecord
         return Url::to($this->_url, $scheme);
     }
 
+    public function getLayout()
+    {
+        switch($this->type) {
+            case self::TYPE_MAIN: return 'mainpage';
+        }
+        return 'common';
+    }
 }
