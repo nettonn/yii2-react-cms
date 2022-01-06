@@ -43,6 +43,13 @@ const ChunksPage: FC = () => {
       width: 120,
     },
     {
+      title: "Тип",
+      dataIndex: "type_label",
+      key: "type",
+      sorter: true,
+      filters: modelOptions.type,
+    },
+    {
       title: "Создано",
       dataIndex: "created_at_date",
       key: "created_at",

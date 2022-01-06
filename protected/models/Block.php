@@ -3,6 +3,7 @@
 use app\behaviors\FileBehavior;
 use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
+use app\models\query\ActiveQuery;
 use Yii;
 use yii\helpers\Inflector;
 use yii2tech\ar\dynattribute\DynamicAttributeBehavior;
@@ -20,6 +21,8 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property int $is_deleted
  * @property int|null $created_at
  * @property int|null $updated_at
+ *
+ * @property string $title
  *
  * @property BlockItem[] $blockItems
  * @method Array getDynamicAttributes() DynamicAttributeBehavior
@@ -63,7 +66,6 @@ class Block extends ActiveRecord
             [['name', 'key', 'type', 'status'], 'required'],
             [['status'], 'boolean'],
             [['name', 'key', 'type'], 'string', 'max' => 255],
-            [['key'], 'filter', 'filter'=>[Inflector::class, 'slug']],
 
             ['title', 'string', 'max' => 255],
 
@@ -95,6 +97,10 @@ class Block extends ActiveRecord
     {
         $fields = parent::fields();
 
+        $fields['type_label'] = function(Block $model) {
+            return $model->typeOptions[$model->type] ?? $model->type;
+        };
+
         if($this->isRelationPopulated('images')) {
             $fields[] = 'images_id';
         }
@@ -110,13 +116,12 @@ class Block extends ActiveRecord
         return $fields;
     }
 
-
     /**
      * Gets query for [[BlockItems]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getBlockItems()
+    public function getBlockItems(): ActiveQuery
     {
         return $this->hasMany(BlockItem::class, ['block_id' => 'id']);
     }

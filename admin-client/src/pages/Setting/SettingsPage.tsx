@@ -43,6 +43,13 @@ const SettingsPage: FC = () => {
       // width: 120,
     },
     {
+      title: "Тип",
+      dataIndex: "type_label",
+      key: "type",
+      sorter: true,
+      filters: modelOptions.type,
+    },
+    {
       title: "Значение",
       dataIndex: "value",
       // sorter: true,

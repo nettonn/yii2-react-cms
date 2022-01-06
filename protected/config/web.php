@@ -66,6 +66,7 @@ $config = [
             ],
             'widgets' => [
                 'chunk' => 'app\widgets\ChunkWidget',
+                'block' => 'app\widgets\BlockWidget',
             ],
         ],
         'microdata' => [

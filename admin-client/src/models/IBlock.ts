@@ -7,6 +7,7 @@ export interface IBlock extends IModel {
   name: string;
   key: string;
   type: string;
+  type_label: string;
   has_items: boolean;
   status: boolean;
   created_at: number;

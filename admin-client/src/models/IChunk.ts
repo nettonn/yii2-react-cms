@@ -7,6 +7,7 @@ export interface IChunk extends IModel {
   name: string;
   key: string;
   type: number;
+  type_label: string;
   content: string;
 }
 

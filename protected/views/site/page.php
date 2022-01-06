@@ -7,4 +7,6 @@ $this->breadcrumbs = $model->treeGetBreadcrumbs();
 
 ?>
 
+<?= \app\widgets\BlockWidget::widget(['key' => 'simple-gallery']) ?>
+
 <?= $model->content ?>

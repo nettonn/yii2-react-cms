@@ -74,8 +74,8 @@ class Chunk extends ActiveRecord
     public function fields(): array
     {
         $fields = parent::fields();
-        $fields['type_text'] = function ($model) {
-            return $model->typeOptions[$model->type];
+        $fields['type_label'] = function (self $model) {
+            return $model->typeOptions[$model->type] ?? $model->type;
         };
         return $fields;
     }
