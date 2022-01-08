@@ -63,6 +63,7 @@ const Item: FC<FileListItemProps> = ({
     transform: CSS.Transform.toString(transform),
     transition,
     zIndex: isDragging ? 100 : undefined,
+    position: "relative",
   };
 
   const mouseOverHandler = _throttle(() => {

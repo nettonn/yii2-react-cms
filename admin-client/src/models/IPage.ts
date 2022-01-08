@@ -30,5 +30,6 @@ interface ParentOption {
 export interface IPageModelOptions extends IModelOptions {
   status: IValueTextOption[];
   type: IValueTextOption[];
+  blocks: IValueTextOption[];
   parent: ParentOption[];
 }

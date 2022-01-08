@@ -130,7 +130,7 @@ class Version extends ActiveRecord
         $primaryKey = $class::primaryKey();
         $primaryKey = current($primaryKey);
         /** @var ActiveRecord $owner */
-        $owner = $class::find()->where([$primaryKey => $this->link_id])->notDeleted()->one();
+        $owner = $class::find()->where([$primaryKey => $this->link_id])->one();
         if($owner)
             return $owner;
         return $class::instance();

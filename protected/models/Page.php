@@ -1,5 +1,6 @@
 <?php namespace app\models;
 
+use app\behaviors\BlockBehavior;
 use app\behaviors\ContentImagesBehavior;
 use app\behaviors\FileBehavior;
 use app\behaviors\SearchBehavior;
@@ -39,6 +40,30 @@ use app\behaviors\TreeBehavior;
  *
  * @property Page[] $children
  * @property Page $parent
+ *
+ * FileBehavior
+ * @property array $images
+ * @property array $images_id
+ * @method array filesGet(string $attribute)
+ * @method array fileGet(string $attribute)
+ * @method array filesThumbsGet(string $attribute, array $variants = null, $relative = true)
+ * @method array filesThumbGet(string $attribute, string $variant = null, $relative = true)
+ * @method array fileThumbsGet(string $attribute, array $variants = null, $relative = true)
+ * @method array fileThumbGet(string $attribute, string $variant = null, $relative = true)
+ * @method ActiveQuery getImages()
+ *
+ * BlocksBehavior
+ * @property array $blocks
+ * @property array $topBlocks
+ * @property array $bottomBlocks
+ * @property array $blockOptions
+ * @property array $blockLinks
+ * @method array getBlocks()
+ * @method array setBlocks()
+ * @method array getTopBlocks()
+ * @method array getBottomBlocks()
+ * @method array getBlockOptions()
+ * @method ActiveQuery getBlockLinks()
  */
 class Page extends ActiveRecord
 {
@@ -81,6 +106,7 @@ class Page extends ActiveRecord
             [['status'], 'boolean',],
             [['alias'], 'filter', 'filter'=>[Inflector::class, 'slug']],
             [['images_id'], 'integer', 'allowArray' => true],
+            [['blocks'], 'safe'],
         ];
     }
 
@@ -120,6 +146,10 @@ class Page extends ActiveRecord
     public function fields(): array
     {
         $fields = parent::fields();
+
+        if($this->isRelationPopulated('blockLinks')) {
+            $fields[] = 'blocks';
+        }
 
         if($this->isRelationPopulated('images')) {
             $fields[] = 'images_id';
@@ -199,7 +229,10 @@ class Page extends ActiveRecord
                 'attributes' => [
                     'content',
                 ]
-            ]
+            ],
+            'BlockBehavior' => [
+                'class' => BlockBehavior::class,
+            ],
         ];
     }
 

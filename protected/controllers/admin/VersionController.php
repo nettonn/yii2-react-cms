@@ -26,7 +26,7 @@ class VersionController extends RestController
     public function modelOptions(): array
     {
         $linkClassOptions = [];
-        foreach(Version::find()->select('link_class')->notDeleted()->column() as $linkClass) {
+        foreach(Version::find()->select('link_class')->column() as $linkClass) {
             $label = ActiveRecord::getModelLabelForClass($linkClass);
             $linkClassOptions[$linkClass] = $label ?? $linkClass;
         }
@@ -36,7 +36,6 @@ class VersionController extends RestController
             ->select('DISTINCT(link_id)')
             ->orderBy('link_id ASC')
             ->indexBy('link_id')
-            ->notDeleted()
             ->column();
 
         return [

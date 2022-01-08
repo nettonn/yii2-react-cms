@@ -256,7 +256,7 @@ class FileBehavior extends Behavior
     /**
      * return for all files [[['variant1' => 'path/to/variant1'], ['variant2' => 'path/to/variant2']], [...], ...]
      */
-    public function filesThumbsGet(String $attribute, $variants = false, $relative = true)
+    public function filesThumbsGet(string $attribute, array $variants = null, $relative = true)
     {
         $fileStorage = Yii::$app->fileStorage;
         $result = [];
@@ -276,7 +276,7 @@ class FileBehavior extends Behavior
     /**
      * return for all files [['path/to/variant1', 'path/to/variant2'], [...], ...]
      */
-    public function filesThumbGet(String $attribute, String $variant = null, $relative = true)
+    public function filesThumbGet(string $attribute, string $variant = null, $relative = true)
     {
         $fileStorage = Yii::$app->fileStorage;
         $result = [];
@@ -292,7 +292,7 @@ class FileBehavior extends Behavior
     /**
      * return for one first file [['variant1' => 'path/to/variant1'], ['variant2' => 'path/to/variant2']]
      */
-    public function fileThumbsGet(String $attribute, $variants = false, $relative = true)
+    public function fileThumbsGet(string $attribute, array $variants = null, $relative = true)
     {
         $filename = $this->fileGet($attribute);
         if(!$filename)
@@ -308,7 +308,7 @@ class FileBehavior extends Behavior
     /**
      * return for one first file 'path/to/variant'
      */
-    public function fileThumbGet(String $attribute, $variant = false, $relative = true)
+    public function fileThumbGet(string $attribute, array $variant = null, $relative = true)
     {
         $filename = $this->fileGet($attribute);
         if(!$filename)

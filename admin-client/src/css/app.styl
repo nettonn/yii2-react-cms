@@ -160,4 +160,31 @@
     background: rgba(255, 120, 117, 0.2)
 
 
+.app-blocks-list
+  &__item
+    padding: 8px 5px
+    border: 1px solid #f0f0f0
+    margin-bottom 5px
+    display: flex
+    flex-direction row
+    align-items center
+    justify-content flex-start
+    width 100%
+    transition background 0.3s ease-in-out
+    &:hover
+      background: #f0f0f0
+  &__drag
+    width: 50px
+    margin-right: 20px
+    button
+      cursor: move;
+      cursor grab
+  &__name
+    flex-grow 1
 
+  &__delete
+    width: 50px
+    margin-left 20px
+    text-align: center
+  &__add
+    margin-top: 15px

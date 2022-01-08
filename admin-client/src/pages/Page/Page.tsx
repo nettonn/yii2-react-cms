@@ -18,6 +18,7 @@ import CkeditorInput from "../../components/crud/form/CkeditorInput/CkeditorInpu
 import useGenerateAlias from "../../hooks/generateAlias.hook";
 import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
 import useModelType from "../../hooks/modelType.hook";
+import BlocksInput from "../../components/crud/form/BlocksInput/BlocksInput";
 
 const modelRoutes = routeNames.page;
 
@@ -104,6 +105,11 @@ const Page: FC = () => {
         </Form.Item>
         <Form.Item label="SEO Keywords" name="seo_keywords">
           <Input.TextArea autoSize={{ minRows: 3, maxRows: 10 }} />
+        </Form.Item>
+      </Tabs.TabPane>
+      <Tabs.TabPane tab="Блоки" key="blocks">
+        <Form.Item name="blocks" label="Порядок блоков">
+          <BlocksInput blockOptions={modelOptions.blocks} />
         </Form.Item>
       </Tabs.TabPane>
     </Tabs>

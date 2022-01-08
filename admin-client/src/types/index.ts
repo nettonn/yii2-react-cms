@@ -68,3 +68,8 @@ export interface IValueTextOption {
   value: number | string;
   text: string;
 }
+
+export interface IValueStrTextOption {
+  value: string;
+  text: string;
+}

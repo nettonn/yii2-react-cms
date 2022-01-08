@@ -100,7 +100,7 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord
      */
     public static function find(): ActiveQuery
     {
-        return new ActiveQuery(get_called_class());
+        return (new ActiveQuery(get_called_class()))->notDeleted();
     }
 
     public static function getClassNameId(): string

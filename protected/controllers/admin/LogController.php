@@ -28,7 +28,6 @@ class LogController extends RestController
             ->select('DISTINCT(name)')
             ->orderBy('name ASC')
             ->indexBy('name')
-            ->notDeleted()
             ->column();
 
         return [

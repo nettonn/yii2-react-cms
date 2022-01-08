@@ -31,7 +31,7 @@ class SeoController extends RestController
     {
         return [
             'status' => AdminClientHelper::getOptionsFromKeyValue(Seo::instance()->statusOptions),
-            'parent' => AdminClientHelper::getOptionsFromModelQuery(Seo::find()->notDeleted()->asArray()),
+            'parent' => AdminClientHelper::getOptionsFromModelQuery(Seo::find()->asArray()),
         ];
     }
 }

@@ -143,7 +143,7 @@ abstract class RestController extends BaseApiController
     {
         $modelClass = $this->modelClass;
 
-        $query = $modelClass::find()->notDeleted();
+        $query = $modelClass::find();
 
         if($this->modelWith) {
             $query = $query->with($this->modelWith);
@@ -156,7 +156,7 @@ abstract class RestController extends BaseApiController
     {
         $modelClass = $this->modelClass;
 
-        $query = $modelClass::find()->notDeleted();
+        $query = $modelClass::find();
 
         if($this->indexModelWith) {
             $query = $query->with($this->indexModelWith);

@@ -18,7 +18,7 @@ class SettingComponent extends Component
         $this->data = Yii::$app->getCache()->get($cacheKey);
 
         if(false === $this->data) {
-            $models = Setting::find()->notDeleted()->all();
+            $models = Setting::find()->all();
             foreach($models as $model) {
                 if($model->key) {
                     $this->data['keys'][$model->key] = $model->id;

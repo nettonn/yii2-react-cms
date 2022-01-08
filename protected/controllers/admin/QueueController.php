@@ -27,7 +27,6 @@ class QueueController extends RestController
             ->select('DISTINCT(channel)')
             ->orderBy('channel ASC')
             ->indexBy('channel')
-            ->notDeleted()
             ->column();
 
         return [

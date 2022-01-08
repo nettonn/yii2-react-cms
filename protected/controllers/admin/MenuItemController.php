@@ -38,7 +38,6 @@ class MenuItemController extends RestController
         $menuId = Yii::$app->request->get('menuId');
 
         $parentOptionsQuery = MenuItem::find()
-            ->notDeleted()
             ->andWhere(['menu_id' => $menuId])
             ->asArray();
 
