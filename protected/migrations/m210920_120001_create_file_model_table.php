@@ -23,6 +23,7 @@ class m210920_120001_create_file_model_table extends Migration
             'mime' => $this->string(128)->notNull(),
             'size' => $this->integer()->notNull()->unsigned()->notNull(),
             'is_image' => $this->boolean()->notNull()->defaultValue(false),
+            'is_file_exists' => $this->boolean()->notNull()->defaultValue(true),
             'link_class' => $this->string(128),
             'link_id' => $this->integer()->unsigned(),
             'link_attribute' => $this->string(),
@@ -34,6 +35,7 @@ class m210920_120001_create_file_model_table extends Migration
 
         $this->createIndex('idx-file_model-name', $this->tableName, 'name');
         $this->createIndex('idx-file_model-is_image', $this->tableName, 'is_image');
+        $this->createIndex('idx-file_model-status', $this->tableName, 'status');
         $this->createIndex('idx-file_model-link_class', $this->tableName, 'link_class');
         $this->createIndex('idx-file_model-link_id', $this->tableName, 'link_id');
         $this->createIndex('idx-file_model-link_attribute', $this->tableName, 'link_attribute');

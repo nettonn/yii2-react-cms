@@ -229,7 +229,10 @@ class FileBehavior extends Behavior
         $useCache = Yii::$app->fileStorage->useModelPathCache;
         $filenames = [];
         foreach($this->owner->{$attribute} as $model) {
-            $filenames[] = $model->getFilename($useCache);
+            $filename = $model->getFilenameWithCheckExists($useCache);
+            if(!$filename)
+                continue;
+            $filenames[] = $filename;
         }
 
         return $filenames;
@@ -248,9 +251,9 @@ class FileBehavior extends Behavior
             return null;
         if(is_array($model)) {
             $first = reset($model);
-            return $first ? $first->getFilename($useCache) : null;
+            return $first ? $first->getFilenameWithCheckExists($useCache) : null;
         }
-        return $model->getFilename($useCache);
+        return $model->getFilenameWithCheckExists($useCache);
     }
 
     /**
@@ -329,6 +332,7 @@ class FileBehavior extends Behavior
                     ->hasMany(FileModel::class, ['link_id' => $this->pkAttribute])
                     ->andWhere(['link_attribute' => $attribute])
                     ->andWhere(['link_class' => $this->ownerClass])
+                    ->andWhere(['is_file_exists' => FileModel::FILE_EXISTS_YES])
                     ->orderBy('sort ASC');
                 if($extensions) {
                     $query = $query->andWhere(['in', 'ext', $extensions]);
@@ -339,6 +343,7 @@ class FileBehavior extends Behavior
                     ->hasOne(FileModel::class, ['link_id' => $this->pkAttribute])
                     ->andWhere(['link_attribute' => $attribute])
                     ->andWhere(['link_class' => $this->ownerClass])
+                    ->andWhere(['is_file_exists' => FileModel::FILE_EXISTS_YES])
                     ->orderBy('sort ASC');
                 if($extensions) {
                     $query = $query->andWhere(['in', 'ext', $extensions]);

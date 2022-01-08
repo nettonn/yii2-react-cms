@@ -19,6 +19,7 @@ use yii\web\UploadedFile;
  * @property string $mime
  * @property int $size
  * @property bool $is_image
+ * @property bool $is_file_exists
  * @property string|null $link_class
  * @property int|null $link_id
  * @property string|null $link_attribute
@@ -30,6 +31,14 @@ use yii\web\UploadedFile;
 class FileModel extends ActiveRecord
 {
     public $flushCache = false;
+
+    const FILE_EXISTS_YES = true;
+    const FILE_EXISTS_NO = false;
+
+    public $fileExistsOptions = [
+        self::FILE_EXISTS_YES => 'Да',
+        self::FILE_EXISTS_NO => 'Нет',
+    ];
 
     /**
      * @var UploadedFile
@@ -77,6 +86,15 @@ class FileModel extends ActiveRecord
         if($this->isNewRecord && !$this->file) {
             $this->addError($attribute, 'Need to upload file then create model');
         }
+    }
+
+    public function init()
+    {
+        if($this->getIsNewRecord()) {
+            $this->is_file_exists = self::FILE_EXISTS_YES;
+        }
+
+        parent::init();
     }
 
     public function beforeSave($insert)
@@ -148,8 +166,18 @@ class FileModel extends ActiveRecord
             if(file_exists($filename))
                 return $filename;
         }
-
         return $this->getPrivateStoragePath().DIRECTORY_SEPARATOR.$this->name;
+    }
+
+    public function getFilenameWithCheckExists($useCache = false)
+    {
+        $filename = $this->getFilename($useCache);
+        if(!file_exists($filename)) {
+            Yii::warning("FileModel ($this->id) filename ($filename) not exists");
+            $this->updateAttributes(['is_file_exists' => self::FILE_EXISTS_NO]);
+            return null;
+        }
+        return $filename;
     }
 
     public function getModelPath($useCache = false)
@@ -200,7 +228,12 @@ class FileModel extends ActiveRecord
     {
         if($this->is_image)
             return null;
-        return Yii::$app->fileStorage->getThumb($this->getFilename());
+
+        $filename = $this->getFilenameWithCheckExists();
+        if(!$filename)
+            return null;
+
+        return Yii::$app->fileStorage->getThumb($filename);
     }
 
     public function getImageThumbs()
@@ -210,7 +243,10 @@ class FileModel extends ActiveRecord
         $fileStorage = Yii::$app->fileStorage;
         $variants = array_keys($fileStorage->variants);
         $result = [];
-        $filename = $this->getFilename();
+        $filename = $this->getFilenameWithCheckExists();
+        if(!$filename)
+            return null;
+
         foreach($variants as $variant) {
             $result[$variant] = $fileStorage->getThumb($filename, $variant);
         }
