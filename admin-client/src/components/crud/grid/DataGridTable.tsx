@@ -17,6 +17,7 @@ interface DataGridTableProps {
   scroll?: { x?: number; y?: number };
   hasUrl?: boolean;
   actionButtons?: (record: any) => ReactNode;
+  updatePath?: string; // or use '${location.pathname}/${id}'
 }
 
 const DataGridTable: FC<DataGridTableProps> = ({
@@ -25,6 +26,7 @@ const DataGridTable: FC<DataGridTableProps> = ({
   scroll = { x: 600 },
   hasUrl,
   actionButtons,
+  updatePath,
 }) => {
   const {
     currentPage,
@@ -83,7 +85,7 @@ const DataGridTable: FC<DataGridTableProps> = ({
       <Space>
         {actionButtons ? actionButtons(record) : null}
         {viewButton(record)}
-        <Link to={`${pathname}/${record.id}`}>
+        <Link to={updatePath ?? `${pathname}/${record.id}`}>
           <EditOutlined />
         </Link>
         <Popconfirm title="Удалить?" onConfirm={() => deleteHandler(record.id)}>
