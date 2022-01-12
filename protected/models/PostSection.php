@@ -7,22 +7,20 @@ use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
 use app\models\query\ActiveQuery;
 use Yii;
-use yii\base\InvalidArgumentException;
 use yii\helpers\Inflector;
 use yii\helpers\Url;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
- * This is the model class for table "post".
+ * This is the model class for table "post_section".
  *
  * @property int $id
  * @property string $name
  * @property string $alias
- * @property string $path
  * @property string|null $description
  * @property string|null $content
+ * @property string|null $type
  * @property string|null $data
- * @property int $section_id
  * @property int|null $created_at
  * @property int|null $updated_at
  * @property int $status
@@ -32,10 +30,9 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property string|null $seo_keywords
  * @property string|null $seo_description
  *
- * @property PostSection $section
- * @property PostTag[] $tags
+ * @property Post[] $posts
  */
-class Post extends ActiveRecord
+class PostSection extends ActiveRecord
 {
     const STATUS_NOT_ACTIVE = false;
     const STATUS_ACTIVE = true;
@@ -45,14 +42,14 @@ class Post extends ActiveRecord
         self::STATUS_ACTIVE => 'Активно',
     ];
 
-    protected $adminUrlParams = ['section_id'];
+    public $typeOptions = [];
 
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return '{{%post}}';
+        return '{{%post_section}}';
     }
 
     /**
@@ -63,12 +60,11 @@ class Post extends ActiveRecord
         return [
             [['name', 'alias'], 'required'],
             [['description', 'content'], 'string'],
-            [['section_id'], 'integer'],
-            [['name', 'alias', 'seo_title', 'seo_h1'], 'string', 'max' => 255],
-            [['seo_keywords', 'seo_description'], 'string', 'max' => 500],
             [['status'], 'boolean'],
+            [['name', 'alias', 'type', 'seo_title', 'seo_h1'], 'string', 'max' => 255],
+            [['seo_keywords', 'seo_description'], 'string', 'max' => 500],
             [['alias'], 'filter', 'filter' => [Inflector::class, 'slug']],
-            [['images_id'], 'integer', 'allowArray' => true],
+            [['alias'], 'unique'],
         ];
     }
 
@@ -81,11 +77,10 @@ class Post extends ActiveRecord
             'id' => 'ID',
             'name' => 'Название',
             'alias' => 'Псевдоним',
-            'path' => 'Путь',
             'description' => 'Описание',
             'content' => 'Контент',
+            'type' => 'Тип',
             'data' => 'Data',
-            'section_id' => 'Раздел',
             'created_at' => 'Создано',
             'updated_at' => 'Изменено',
             'status' => 'Статус',
@@ -99,42 +94,18 @@ class Post extends ActiveRecord
 
     public static function getModelLabel(): string
     {
-        return 'Записи';
+        return 'Разделы записей';
     }
 
     /**
-     * Gets query for [[Section]].
+     * Gets query for [[Posts]].
      *
      * @return ActiveQuery
      */
-    public function getSection()
+    public function getPosts()
     {
-        return $this->hasOne(PostSection::class, ['id' => 'section_id'])
-            ->inverseOf('posts');
-    }
-
-    /**
-     * Gets query for [[Tags]].
-     *
-     * @return ActiveQuery
-     */
-    public function getTags()
-    {
-        return $this->hasMany(PostTag::class, ['id' => 'tag_id'])
-            ->viaTable('{{%post_tag_link}}', ['post_id' => 'id'])
-            ->inverseOf('posts');
-    }
-
-    public function fields(): array
-    {
-        $fields = parent::fields();
-
-        if($this->isRelationPopulated('images')) {
-            $fields[] = 'images';
-            $fields[] = 'images_id';
-        }
-
-        return $fields;
+        return $this->hasMany(Post::class, ['section_id' => 'id'])
+            ->inverseOf('section');
     }
 
     public function behaviors(): array
@@ -142,14 +113,6 @@ class Post extends ActiveRecord
         return [
             'TimestampBehavior' => [
                 'class' => TimestampBehavior::class,
-            ],
-            'FileBehavior' => [
-                'class' => FileBehavior::class,
-                'attributes' => [
-                    'images' => [
-                        'multiple' => true,
-                    ],
-                ]
             ],
             'softDeleteBehavior' => [
                 'class' => SoftDeleteBehavior::class,
@@ -169,25 +132,18 @@ class Post extends ActiveRecord
         parent::init();
     }
 
-    public function beforeSave($insert)
+    public function afterSave($insert, $changedAttributes)
     {
-        $this->path = $this->generatePath();
-        return parent::beforeSave($insert);
-    }
+        parent::afterSave($insert, $changedAttributes);
 
-    public function generatePath($update = false)
-    {
-        $path = $this->section->alias . '/' . $this->alias;
-        if($update) {
-            $this->path = $path;
-            $this->updateAttributes(['path' => $path]);
+        foreach ($this->posts as $post) {
+            $post->generatePath(true);
         }
-        return $path;
     }
 
     public function getUrl($scheme = false): ?string
     {
-        return Url::to(['/site/post', 'path' => $this->path], $scheme);
+        return Url::to(['/site/post-section', 'alias' => $this->alias], $scheme);
     }
 
     public function getLayout()

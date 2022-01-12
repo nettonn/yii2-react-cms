@@ -3,6 +3,7 @@ import { Reducer } from "redux";
 
 const selectors = [
   "page",
+  "postSection",
   "post",
   "user",
   "chunk",

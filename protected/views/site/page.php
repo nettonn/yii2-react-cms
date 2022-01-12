@@ -1,14 +1,14 @@
 <?php
 /* @var $this app\components\View */
-/* @var $model app\models\Page */
+/* @var $page app\models\Page */
 
-seo()->model = $model;
-$this->breadcrumbs = $model->treeGetBreadcrumbs();
+seo()->model = $page;
+$this->breadcrumbs = $page->treeGetBreadcrumbs();
 ?>
 
 <?php $this->beginBlock('top-blocks'); ?>
 
-    <?php foreach($model->topBlocks as $topBlock): ?>
+    <?php foreach($page->topBlocks as $topBlock): ?>
 
         <?= \app\widgets\BlockWidget::widget(['key' => $topBlock]) ?>
 
@@ -16,11 +16,11 @@ $this->breadcrumbs = $model->treeGetBreadcrumbs();
 
 <?php $this->endBlock(); ?>
 
-<?= $model->content ?>
+<?= $page->content ?>
 
 <?php $this->beginBlock('bottom-blocks'); ?>
 
-    <?php foreach($model->bottomBlocks as $bottomBlock): ?>
+    <?php foreach($page->bottomBlocks as $bottomBlock): ?>
 
         <?= \app\widgets\BlockWidget::widget(['key' => $bottomBlock]) ?>
 

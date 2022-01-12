@@ -264,6 +264,6 @@ class Page extends ActiveRecord
         switch($this->type) {
             case self::TYPE_MAIN: return 'mainpage';
         }
-        return 'common';
+        return false;
     }
 }

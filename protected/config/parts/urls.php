@@ -1,14 +1,13 @@
 <?php
 return [
-    'files/<_path:.+>'=>'file-thumb/get',
     [
         'class' => 'app\components\SiteUrlRule',
     ],
+    'files/<_path:.+>'=>'file-thumb/get',
     'ajax/<action:\w+>'=> 'site-ajax/<action>',
     [
         'class' => 'app\components\AdminClientUrlCreateRules',
         'restControllers' => [
-            'posts' => 'admin/post',
             'pages' => 'admin/page',
             'users' => 'admin/user',
             'chunks' => 'admin/chunk',
@@ -16,13 +15,15 @@ return [
             'settings' => 'admin/setting',
             'seo' => 'admin/seo',
             'menu' => 'admin/menu',
-            'menu-items' => 'admin/menu-item',
+            ['path' => 'menu/<menu_id>/items', 'controller' => 'admin/menu-item', 'params' => ['menu_id']],
             'versions' => 'admin/version',
             'logs' => 'admin/log',
             'queues' => 'admin/queue',
             'orders' => 'admin/order',
             'blocks' => 'admin/block',
-            'block-items' => 'admin/block-item',
+            ['path' => 'blocks/<block_id>/items', 'controller' => 'admin/block-item', 'params' => ['block_id']],
+            'post-sections' => 'admin/post-section',
+            ['path' => 'post-sections/<section_id>/posts', 'controller' => 'admin/post', 'params' => ['section_id']],
         ]
     ],
     [
@@ -67,7 +68,6 @@ return [
     [
         'class' => 'yii\rest\UrlRule',
         'controller' => [
-            'posts' => 'admin/post',
             'pages' => 'admin/page',
             'users' => 'admin/user',
             'chunks' => 'admin/chunk',
@@ -82,6 +82,8 @@ return [
             'orders' => 'admin/order',
             'blocks' => 'admin/block',
             'block-items' => 'admin/block-item',
+            'posts' => 'admin/post',
+            'post-sections' => 'admin/post-section',
         ],
         'prefix' => 'admin-api',
         'extraPatterns' => [

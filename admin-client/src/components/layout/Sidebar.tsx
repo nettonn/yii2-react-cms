@@ -34,7 +34,7 @@ const Sidebar: FC = () => {
   useEffect(() => {
     for (const route of [
       routeNames.user.index,
-      routeNames.post.index,
+      routeNames.postSection.index,
       routeNames.page.index,
       routeNames.chunk.index,
       routeNames.redirect.index,
@@ -65,7 +65,7 @@ const Sidebar: FC = () => {
       title: "Страницы",
     },
     {
-      route: routeNames.post.index,
+      route: routeNames.postSection.index,
       title: "Записи",
     },
     {

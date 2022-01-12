@@ -4,6 +4,7 @@ use app\behaviors\FileBehavior;
 use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
 use Yii;
+use yii\base\InvalidArgumentException;
 use yii2tech\ar\dynattribute\DynamicAttributeBehavior;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
@@ -32,6 +33,8 @@ class BlockItem extends ActiveRecord
         self::STATUS_ACTIVE => 'Активно',
         self::STATUS_NOT_ACTIVE => 'Не активно',
     ];
+
+    protected $adminUrlParams = ['block_id'];
 
     /**
      * {@inheritdoc}

@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%post}}`.
  */
-class m210901_176352_create_post_table extends Migration
+class m220110_176352_create_post_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -21,19 +21,25 @@ class m210901_176352_create_post_table extends Migration
             'id' => $this->primaryKey()->unsigned(),
             'name' => $this->string()->notNull(),
             'alias' => $this->string()->notNull(),
-            'introtext' => $this->string(),
+            'path' => $this->string()->notNull(),
+            'description' => $this->text(),
             'content' => $this->text(),
-            'user_id' => $this->integer()->unsigned()->notNull(),
+            'data'=>$this->text(),
+            'section_id' => $this->integer()->unsigned()->notNull(),
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),
-            'blocks' => $this->text(),
             'status' => $this->boolean()->notNull()->defaultValue(false),
             'is_deleted' => $this->boolean()->notNull()->defaultValue(false),
+
+            'seo_title' => $this->string(),
+            'seo_h1' => $this->string(),
+            'seo_keywords' => $this->string(500),
+            'seo_description' => $this->string(500),
         ], $tableOptions);
 
         $this->createIndex('idx-post-name', '{{%post}}', 'name');
         $this->createIndex('idx-post-alias', '{{%post}}', 'alias');
-        $this->createIndex('idx-post-introtext', '{{%post}}', 'introtext');
+        $this->createIndex('idx-post-path', '{{%post}}', 'path');
         $this->createIndex('idx-post-created_at', '{{%post}}', 'created_at');
         $this->createIndex('idx-post-updated_at', '{{%post}}', 'updated_at');
         $this->createIndex('idx-post-status', '{{%post}}', 'status');
@@ -42,10 +48,10 @@ class m210901_176352_create_post_table extends Migration
         if ($this->db->driverName !== 'sqlite') {
 
             $this->addForeignKey(
-                'fk-post-user_id',
+                'fk-post-section_id',
                 '{{%post}}',
-                'user_id',
-                '{{%user}}',
+                'section_id',
+                '{{%post_section}}',
                 'id',
                 'CASCADE'
             );
@@ -59,39 +65,10 @@ class m210901_176352_create_post_table extends Migration
     {
         if ($this->db->driverName !== 'sqlite') {
             $this->dropForeignKey(
-                'fk-post-user_id',
+                'fk-post-section_id',
                 '{{%post}}'
             );
         }
-
-        $this->dropIndex(
-            'idx-post-name',
-            '{{%post}}'
-        );
-        $this->dropIndex(
-            'idx-post-alias',
-            '{{%post}}'
-        );
-        $this->dropIndex(
-            'idx-post-introtext',
-            '{{%post}}'
-        );
-        $this->dropIndex(
-            'idx-post-created_at',
-            '{{%post}}'
-        );
-        $this->dropIndex(
-            'idx-post-updated_at',
-            '{{%post}}'
-        );
-        $this->dropIndex(
-            'idx-post-status',
-            '{{%post}}'
-        );
-        $this->dropIndex(
-            'idx-post-is_deleted',
-            '{{%post}}'
-        );
 
         $this->dropTable('{{%post}}');
     }

@@ -2,6 +2,7 @@
 
 use app\models\query\ActiveQuery;
 use Yii;
+use yii\base\InvalidArgumentException;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 use yii\helpers\Url;
@@ -17,6 +18,8 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord
     public static $flushCacheGlobal = true;
 
     protected $adminUrlPrefix = ADMIN_URL_PREFIX;
+
+    protected $adminUrlParams = [];
 
     public static function getModelLabel(): string
     {
@@ -110,6 +113,8 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord
 
     public function getAdminIndexUrl($params = [], $scheme = false): string
     {
+        $params = $this->prepareAdminUrlParams($params);
+
         $name = self::getClassNameId();
 
         return Url::to(array_merge(["{$this->adminUrlPrefix}/$name"], (array) $params), $scheme);
@@ -117,22 +122,29 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord
 
     public function getAdminUpdateUrl($params = [], $scheme = false): string
     {
+        $params = $this->prepareAdminUrlParams($params);
+
         $name = self::getClassNameId();
 
         return Url::to(array_merge(["{$this->adminUrlPrefix}/$name/update", 'id' => $this->id], (array) $params), $scheme);
     }
 
-    public function getAdminUpdateUrlById($id, $params = [], $scheme = false): string
-    {
-        $name = self::getClassNameId();
-
-        return Url::to(array_merge(["{$this->adminUrlPrefix}/$name/update", 'id' => $id], (array) $params), $scheme);
-    }
-
     public function getAdminCreateUrl($params = [], $scheme = false): string
     {
+        $params = $this->prepareAdminUrlParams($params);
+
         $name = self::getClassNameId();
 
         return Url::to(array_merge(["{$this->adminUrlPrefix}/$name/create"], (array) $params), $scheme);
+    }
+
+    protected function prepareAdminUrlParams($params)
+    {
+        if($this->adminUrlParams) {
+            foreach($this->adminUrlParams as $param) {
+                $params[$param] = $this->{$param};
+            }
+        }
+        return $params;
     }
 }

@@ -1,44 +1,34 @@
 import ModelForm from "../../components/crud/form/ModelForm";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import React, { FC, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import React, { FC } from "react";
+import { Link, useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
-import { Col, Form, Input, Row, Switch, Tabs } from "antd";
+import { Button, Col, Form, Input, Row, Select, Switch, Tabs } from "antd";
 import rules from "../../utils/rules";
 import { routeNames } from "../../routes";
-import { IPost, IPostModelOptions } from "../../models/IPost";
-import FileUpload from "../../components/crud/form/FileUpload/FileUpload";
-import PostService from "../../api/PostService";
+import {
+  IPostSection,
+  IPostSectionModelOptions,
+} from "../../models/IPostSection";
+import { postSectionService } from "../../api/PostSectionService";
 import useGenerateAlias from "../../hooks/generateAlias.hook";
 import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
 import CkeditorInput from "../../components/crud/form/CkeditorInput/CkeditorInput";
-import { useQuery } from "react-query";
-import { postSectionService } from "../../api/PostSectionService";
-import { IPostSection } from "../../models/IPostSection";
 import useModelType from "../../hooks/modelType.hook";
+import { MenuOutlined } from "@ant-design/icons";
 
-const modelRoutes = routeNames.post;
-const postSectionRoutes = routeNames.postSection;
+const modelRoutes = routeNames.postSection;
+const postRoutes = routeNames.post;
 
-const PostPage: FC = () => {
-  const { id, sectionId } = useParams();
+const PostSectionPage: FC = () => {
+  const { id } = useParams();
 
-  const { data: sectionData } = useQuery(
-    [postSectionService.viewQueryKey(), sectionId],
-    async ({ signal }) => {
-      if (!sectionId) throw Error("Id not set");
-      return await postSectionService.view<IPostSection>(sectionId, signal);
-    },
-    {
-      refetchOnMount: false,
-    }
+  const modelForm = useModelForm<IPostSection, IPostSectionModelOptions>(
+    id,
+    postSectionService
   );
 
-  const postService = useMemo(() => new PostService(sectionId), [sectionId]);
-
-  const modelForm = useModelForm<IPost, IPostModelOptions>(id, postService);
-
-  const { type } = useModelType(sectionData?.type);
+  const { type, typeChangeHandler } = useModelType(modelForm.initData?.type);
 
   const getTypeForm = () => {
     if (type === null) return null;
@@ -52,7 +42,10 @@ const PostPage: FC = () => {
     "alias"
   );
 
-  const formContent = (initData: IPost, modelOptions: IPostModelOptions) => (
+  const formContent = (
+    initData: IPostSection,
+    modelOptions: IPostSectionModelOptions
+  ) => (
     <Tabs type="card">
       <Tabs.TabPane tab="Общее" key="common">
         <Row gutter={DEFAULT_ROW_GUTTER}>
@@ -80,20 +73,27 @@ const PostPage: FC = () => {
           <CkeditorInput />
         </Form.Item>
 
+        <Form.Item label="Тип" name="type">
+          <Select onChange={typeChangeHandler}>
+            {modelOptions?.type.map((i) => (
+              <Select.Option key={i.value} value={i.value}>
+                {i.text}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+
         {getTypeForm()}
 
         <Form.Item label="Статус" name="status" valuePropName="checked">
           <Switch />
         </Form.Item>
-      </Tabs.TabPane>
-      <Tabs.TabPane tab="Файлы" key="files">
-        <Form.Item name="images_id" noStyle={true}>
-          <FileUpload
-            label="Изображения"
-            accept=".jpg,.png,.gif"
-            // multiple={true}
-          />
-        </Form.Item>
+
+        {id ? (
+          <Link to={postRoutes.indexUrl(id)}>
+            <Button icon={<MenuOutlined />}>Записи</Button>
+          </Link>
+        ) : null}
       </Tabs.TabPane>
       <Tabs.TabPane tab="SEO" key="seo">
         <Form.Item label="SEO Title" name="seo_title">
@@ -115,31 +115,23 @@ const PostPage: FC = () => {
   return (
     <>
       <PageHeader
-        title={`${id ? "Редактирование" : "Создание"} записей`}
-        backPath={modelRoutes.indexUrl(sectionId)}
+        title={`${id ? "Редактирование" : "Создание"} разделов записей`}
+        backPath={modelRoutes.index}
         breadcrumbItems={[
-          { path: postSectionRoutes.index, label: "Разделы записей" },
-          {
-            path: postSectionRoutes.updateUrl(sectionId),
-            label: sectionData ? sectionData.name : sectionId ?? "",
-          },
-          {
-            path: modelRoutes.indexUrl(sectionId),
-            label: "Записи",
-          },
+          { path: modelRoutes.index, label: "Разделы записей" },
         ]}
       />
 
       <ModelForm
         modelForm={modelForm}
         formContent={formContent}
-        exitRoute={modelRoutes.indexUrl(sectionId)}
-        createRoute={modelRoutes.createUrl(sectionId)}
-        updateRoute={modelRoutes.updateUrl(sectionId)}
+        exitRoute={modelRoutes.index}
+        createRoute={modelRoutes.create}
+        updateRoute={modelRoutes.update}
         hasViewUrl={true}
       />
     </>
   );
 };
 
-export default PostPage;
+export default PostSectionPage;

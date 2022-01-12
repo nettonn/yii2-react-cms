@@ -5,11 +5,22 @@ const Posts = React.lazy(() => import("../../pages/Post/PostsPage"));
 const Post = React.lazy(() => import("../../pages/Post/PostPage"));
 
 const names = {
-  index: "/posts",
-  create: "/posts/create",
-  update: "/posts/:id",
-  updateUrl: (id?: string | number) =>
-    stringReplace("/posts/:id", { ":id": id }),
+  index: "/post-sections/:sectionId/posts",
+  create: "/post-sections/:sectionId/posts/create",
+  update: "/post-sections/:sectionId/posts/:id",
+  indexUrl: (sectionId?: string | number) =>
+    stringReplace("/post-sections/:sectionId/posts", {
+      ":sectionId": sectionId,
+    }),
+  createUrl: (sectionId?: string | number) =>
+    stringReplace("/post-sections/:sectionId/posts/create", {
+      ":sectionId": sectionId,
+    }),
+  updateUrl: (sectionId?: string | number, id?: string | number) =>
+    stringReplace("/post-sections/:sectionId/posts/:id", {
+      ":sectionId": sectionId,
+      ":id": id,
+    }),
 };
 
 const routes = [

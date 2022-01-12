@@ -21,7 +21,7 @@ const HomePage: FC = () => {
       title: "Страницы",
     },
     {
-      route: routeNames.post.index,
+      route: routeNames.postSection.index,
       title: "Записи",
     },
     {

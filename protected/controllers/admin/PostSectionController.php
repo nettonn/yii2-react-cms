@@ -1,17 +1,15 @@
 <?php namespace app\controllers\admin;
 
 use app\controllers\base\RestController;
-use app\models\Post;
+use app\models\PostSection;
 use app\utils\AdminClientHelper;
 use app\models\query\ActiveQuery;
 
-class PostController extends RestController
+class PostSectionController extends RestController
 {
-    public $modelClass = Post::class;
+    public $modelClass = PostSection::class;
 
     public $indexQuerySelectExclude = ['content', 'description'];
-
-    public $modelWith = ['images'];
 
     protected function prepareSearchQuery(ActiveQuery $query, string $search) : ActiveQuery
     {
@@ -26,8 +24,11 @@ class PostController extends RestController
 
     public function modelOptions(): array
     {
+        $instance = PostSection::instance();
+
         return [
-            'status' => AdminClientHelper::getOptionsFromKeyValue(Post::instance()->statusOptions),
+            'status' => AdminClientHelper::getOptionsFromKeyValue($instance->statusOptions),
+            'type' => AdminClientHelper::getOptionsFromKeyValue($instance->typeOptions),
         ];
     }
 

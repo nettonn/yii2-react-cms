@@ -2,6 +2,7 @@ import common from "./parts/common";
 import error from "./parts/error";
 import user from "./parts/user";
 import post from "./parts/post";
+import postSection from "./parts/post-section";
 import page from "./parts/page";
 import chunk from "./parts/chunk";
 import redirect from "./parts/redirect";
@@ -22,6 +23,7 @@ export const routeNames = {
   error: error.names,
   user: user.names,
   post: post.names,
+  postSection: postSection.names,
   page: page.names,
   chunk: chunk.names,
   redirect: redirect.names,
@@ -42,6 +44,7 @@ export const routes: readonly IRoute[] = [
   ...error.routes,
   ...user.routes,
   ...post.routes,
+  ...postSection.routes,
   ...page.routes,
   ...chunk.routes,
   ...redirect.routes,
@@ -61,6 +64,7 @@ export const routeIcons = {
   ...common.icons,
   ...user.icons,
   ...post.icons,
+  ...postSection.icons,
   ...page.icons,
   ...chunk.icons,
   ...redirect.icons,

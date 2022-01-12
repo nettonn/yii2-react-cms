@@ -6,6 +6,7 @@ use app\behaviors\TimestampBehavior;
 use app\behaviors\TreeBehavior;
 use app\models\base\ActiveRecord;
 use app\models\query\ActiveQuery;
+use yii\base\InvalidArgumentException;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -38,6 +39,8 @@ class MenuItem extends ActiveRecord
         self::STATUS_ACTIVE => 'Активно',
         self::STATUS_NOT_ACTIVE => 'Не активно',
     ];
+
+    protected $adminUrlParams = ['menu_id'];
 
     /**
      * {@inheritdoc}
