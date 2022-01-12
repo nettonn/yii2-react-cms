@@ -9,6 +9,7 @@ use app\models\query\ActiveQuery;
 use Yii;
 use yii\helpers\Inflector;
 use yii\helpers\Url;
+use yii2tech\ar\dynattribute\DynamicAttributeBehavior;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -113,6 +114,11 @@ class PostSection extends ActiveRecord
         return [
             'TimestampBehavior' => [
                 'class' => TimestampBehavior::class,
+            ],
+            'DynamicAttribute' => [
+                'class' => DynamicAttributeBehavior::class,
+                'storageAttribute' => 'data', // field to store serialized attributes
+                'dynamicAttributeDefaults' => [], // default values for the dynamic attributes
             ],
             'softDeleteBehavior' => [
                 'class' => SoftDeleteBehavior::class,

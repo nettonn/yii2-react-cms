@@ -27,7 +27,13 @@ const OrderPage: FC = () => {
       <PageHeader
         title="Просмотр заявки"
         backPath={modelRoutes.index}
-        breadcrumbItems={[{ path: modelRoutes.index, label: "Заявки" }]}
+        breadcrumbItems={[
+          { path: modelRoutes.index, label: "Заявки" },
+          {
+            path: modelRoutes.updateUrl(id),
+            label: `${id}`,
+          },
+        ]}
       />
 
       <Descriptions bordered style={{ marginBottom: "20px" }} column={1}>

@@ -81,7 +81,13 @@ const BlockPage: FC = () => {
       <PageHeader
         title={`${id ? "Редактирование" : "Создание"} блока`}
         backPath={modelRoutes.index}
-        breadcrumbItems={[{ path: modelRoutes.index, label: "Блоки" }]}
+        breadcrumbItems={[
+          { path: modelRoutes.index, label: "Блоки" },
+          {
+            path: modelRoutes.updateUrl(id),
+            label: modelForm.initData?.name ?? id,
+          },
+        ]}
       />
 
       <ModelForm

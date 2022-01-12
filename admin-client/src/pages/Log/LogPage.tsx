@@ -23,7 +23,13 @@ const LogPage: FC = () => {
       <PageHeader
         title="Просмотр лога"
         backPath={modelRoutes.index}
-        breadcrumbItems={[{ path: modelRoutes.index, label: "Логи" }]}
+        breadcrumbItems={[
+          { path: modelRoutes.index, label: "Логи" },
+          {
+            path: modelRoutes.updateUrl(id),
+            label: data?.name ?? id,
+          },
+        ]}
       />
 
       <Descriptions bordered style={{ marginBottom: "30px" }}>

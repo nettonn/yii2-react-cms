@@ -58,7 +58,16 @@ const QueuesPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Задачи" backPath={routeNames.home} />
+      <PageHeader
+        title="Задачи"
+        backPath={routeNames.home}
+        breadcrumbItems={[
+          {
+            path: modelRoutes.index,
+            label: "Задачи",
+          },
+        ]}
+      />
 
       <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
     </>

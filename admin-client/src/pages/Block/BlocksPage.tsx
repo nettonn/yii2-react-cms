@@ -23,17 +23,10 @@ const BlocksPage: FC = () => {
   const getColumns = (
     modelOptions: IBlockModelOptions
   ): ColumnsType<IBlock> => [
-    // {
-    //   title: "Id",
-    //   dataIndex: "id",
-    //   sorter: true,
-    //   width: 160,
-    // },
     {
       title: "Название",
       dataIndex: "name",
       sorter: true,
-      // filters: ,
       ellipsis: true,
       render: (value, record) => {
         return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
@@ -71,7 +64,16 @@ const BlocksPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Блоки" backPath={routeNames.home} />
+      <PageHeader
+        title="Блоки"
+        backPath={routeNames.home}
+        breadcrumbItems={[
+          {
+            path: modelRoutes.index,
+            label: "Блоки",
+          },
+        ]}
+      />
 
       <DataGridTable
         dataGridHook={dataGridHook}

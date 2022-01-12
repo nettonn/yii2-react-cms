@@ -1,7 +1,7 @@
 import React from "react";
 import { MenuOutlined } from "@ant-design/icons";
 import { stringReplace } from "../../utils/functions";
-const MenuGridPage = React.lazy(() => import("../../pages/Menu/MenuGridPage"));
+const MenusPage = React.lazy(() => import("../../pages/Menu/MenusPage"));
 const MenuPage = React.lazy(() => import("../../pages/Menu/MenuPage"));
 
 const names = {
@@ -13,7 +13,7 @@ const names = {
 };
 
 const routes = [
-  { path: names.index, element: MenuGridPage },
+  { path: names.index, element: MenusPage },
   {
     path: names.create,
     element: MenuPage,

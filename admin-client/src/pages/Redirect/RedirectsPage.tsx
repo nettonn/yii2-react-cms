@@ -31,7 +31,6 @@ const RedirectsPage: FC = () => {
       title: "Откуда",
       dataIndex: "from",
       sorter: true,
-      // filters: ,
       ellipsis: true,
       render: (value, record) => {
         return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
@@ -61,7 +60,16 @@ const RedirectsPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Редиректы" backPath={routeNames.home} />
+      <PageHeader
+        title="Редиректы"
+        backPath={routeNames.home}
+        breadcrumbItems={[
+          {
+            path: modelRoutes.index,
+            label: "Редиректы",
+          },
+        ]}
+      />
 
       <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
 

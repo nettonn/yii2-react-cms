@@ -29,7 +29,6 @@ const VersionsPage: FC = () => {
       title: "Название",
       dataIndex: "name",
       sorter: true,
-      // filters: ,
       ellipsis: true,
       render: (value, record) => {
         return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
@@ -68,7 +67,16 @@ const VersionsPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Версии" backPath={routeNames.home} />
+      <PageHeader
+        title="Версии"
+        backPath={routeNames.home}
+        breadcrumbItems={[
+          {
+            path: modelRoutes.index,
+            label: "Версии",
+          },
+        ]}
+      />
 
       <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
     </>

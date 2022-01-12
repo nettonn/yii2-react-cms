@@ -84,6 +84,10 @@ const BlockItemPage: FC = () => {
             path: modelRoutes.indexUrl(blockId),
             label: "Элементы блока",
           },
+          {
+            path: modelRoutes.updateUrl(blockId, id),
+            label: modelForm.initData?.name ?? id,
+          },
         ]}
       />
 

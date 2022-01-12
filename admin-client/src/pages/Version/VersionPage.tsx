@@ -57,7 +57,13 @@ const VersionPage: FC = () => {
       <PageHeader
         title="Просмотр версии"
         backPath={modelRoutes.index}
-        breadcrumbItems={[{ path: modelRoutes.index, label: "Версии" }]}
+        breadcrumbItems={[
+          { path: modelRoutes.index, label: "Версии" },
+          {
+            path: modelRoutes.updateUrl(id),
+            label: `${id}`,
+          },
+        ]}
       />
 
       <Descriptions

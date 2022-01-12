@@ -57,15 +57,9 @@ const MenuItemPage: FC = () => {
 
       <Form.Item label="Родитель" name="parent_id">
         <TreeSelect
-          // style={{ width: "100%" }}
-          // dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
           treeData={modelOptions?.parent}
           placeholder="Выберите"
           allowClear
-          onClear={() => {
-            // data.parent_id = null;
-          }}
-          // treeDefaultExpandAll
         />
       </Form.Item>
 
@@ -105,6 +99,10 @@ const MenuItemPage: FC = () => {
           {
             path: modelRoutes.indexUrl(menuId),
             label: "Пункты меню",
+          },
+          {
+            path: modelRoutes.updateUrl(menuId, id),
+            label: modelForm.initData?.name ?? id,
           },
         ]}
       />

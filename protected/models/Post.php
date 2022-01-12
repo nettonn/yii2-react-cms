@@ -10,6 +10,7 @@ use Yii;
 use yii\base\InvalidArgumentException;
 use yii\helpers\Inflector;
 use yii\helpers\Url;
+use yii2tech\ar\dynattribute\DynamicAttributeBehavior;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -103,7 +104,7 @@ class Post extends ActiveRecord
     }
 
     /**
-     * Gets query for [[Section]].
+     * Gets query for [[PostSection]].
      *
      * @return ActiveQuery
      */
@@ -150,6 +151,11 @@ class Post extends ActiveRecord
                         'multiple' => true,
                     ],
                 ]
+            ],
+            'DynamicAttribute' => [
+                'class' => DynamicAttributeBehavior::class,
+                'storageAttribute' => 'data', // field to store serialized attributes
+                'dynamicAttributeDefaults' => [], // default values for the dynamic attributes
             ],
             'softDeleteBehavior' => [
                 'class' => SoftDeleteBehavior::class,

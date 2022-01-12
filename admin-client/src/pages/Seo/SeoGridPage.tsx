@@ -16,17 +16,10 @@ const SeoGridPage: FC = () => {
   const dataGridHook = useDataGrid<ISeo, ISeoModelOptions>(seoService, "seo");
 
   const getColumns = (modelOptions: ISeoModelOptions): ColumnsType<ISeo> => [
-    // {
-    //   title: "Id",
-    //   dataIndex: "id",
-    //   sorter: true,
-    //   width: 160,
-    // },
     {
       title: "Название",
       dataIndex: "name",
       sorter: true,
-      // filters: ,
       ellipsis: true,
       render: (value, record) => {
         return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
@@ -57,7 +50,16 @@ const SeoGridPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="SEO" backPath={routeNames.home} />
+      <PageHeader
+        title="SEO"
+        backPath={routeNames.home}
+        breadcrumbItems={[
+          {
+            path: modelRoutes.index,
+            label: "SEO",
+          },
+        ]}
+      />
 
       <DataGridTable
         dataGridHook={dataGridHook}

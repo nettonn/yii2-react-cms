@@ -120,7 +120,13 @@ const Page: FC = () => {
       <PageHeader
         title={`${id ? "Редактирование" : "Создание"} страниц`}
         backPath={modelRoutes.index}
-        breadcrumbItems={[{ path: modelRoutes.index, label: "Страницы" }]}
+        breadcrumbItems={[
+          { path: modelRoutes.index, label: "Страницы" },
+          {
+            path: modelRoutes.updateUrl(id),
+            label: modelForm.initData?.name ?? id,
+          },
+        ]}
       />
 
       <ModelForm

@@ -42,7 +42,6 @@ const PostsPage: FC = () => {
       title: "Название",
       dataIndex: "name",
       sorter: true,
-      // filters: ,
       ellipsis: true,
       render: (value, record) => {
         return (
@@ -77,6 +76,10 @@ const PostsPage: FC = () => {
           {
             path: postSectionRoutes.updateUrl(sectionId),
             label: sectionData ? sectionData.name : sectionId ?? "",
+          },
+          {
+            path: modelRoutes.indexUrl(sectionId),
+            label: "Записи",
           },
         ]}
       />

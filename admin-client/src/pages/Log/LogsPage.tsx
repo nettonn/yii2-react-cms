@@ -47,7 +47,16 @@ const LogsPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Логи" backPath={routeNames.home} />
+      <PageHeader
+        title="Логи"
+        backPath={routeNames.home}
+        breadcrumbItems={[
+          {
+            path: modelRoutes.index,
+            label: "Логи",
+          },
+        ]}
+      />
 
       <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
     </>

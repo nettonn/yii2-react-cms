@@ -127,6 +127,10 @@ const PostPage: FC = () => {
             path: modelRoutes.indexUrl(sectionId),
             label: "Записи",
           },
+          {
+            path: modelRoutes.updateUrl(sectionId, id),
+            label: modelForm.initData?.name ?? id,
+          },
         ]}
       />
 

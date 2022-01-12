@@ -19,17 +19,10 @@ const Pages: FC = () => {
   );
 
   const getColumns = (modelOptions: IPageModelOptions): ColumnsType<IPage> => [
-    // {
-    //   title: "Id",
-    //   dataIndex: "id",
-    //   sorter: true,
-    //   width: 160,
-    // },
     {
       title: "Название",
       dataIndex: "name",
       sorter: true,
-      // filters: ,
       ellipsis: true,
       render: (value, record) => {
         return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
@@ -54,7 +47,16 @@ const Pages: FC = () => {
 
   return (
     <>
-      <PageHeader title="Страницы" backPath={routeNames.home} />
+      <PageHeader
+        title="Страницы"
+        backPath={routeNames.home}
+        breadcrumbItems={[
+          {
+            path: modelRoutes.index,
+            label: "Страницы",
+          },
+        ]}
+      />
 
       <DataGridTable
         dataGridHook={dataGridHook}

@@ -45,7 +45,13 @@ const MenuPage: FC = () => {
       <PageHeader
         title={`${id ? "Редактирование" : "Создание"} меню`}
         backPath={modelRoutes.index}
-        breadcrumbItems={[{ path: modelRoutes.index, label: "Меню" }]}
+        breadcrumbItems={[
+          { path: modelRoutes.index, label: "Меню" },
+          {
+            path: modelRoutes.updateUrl(id),
+            label: modelForm.initData?.name ?? id,
+          },
+        ]}
       />
 
       <ModelForm

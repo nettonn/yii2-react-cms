@@ -63,7 +63,16 @@ const OrdersPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Заявки" backPath={routeNames.home} />
+      <PageHeader
+        title="Заявки"
+        backPath={routeNames.home}
+        breadcrumbItems={[
+          {
+            path: modelRoutes.index,
+            label: "Заявки",
+          },
+        ]}
+      />
 
       <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
     </>

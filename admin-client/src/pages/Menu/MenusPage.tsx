@@ -14,24 +14,17 @@ import useDataGrid from "../../hooks/dataGrid.hook";
 const modelRoutes = routeNames.menu;
 const menuItemRoutes = routeNames.menuItem;
 
-const MenuGridPage: FC = () => {
+const MenusPage: FC = () => {
   const dataGridHook = useDataGrid<IMenu, IMenuModelOptions>(
     menuService,
     "menu"
   );
 
   const getColumns = (modelOptions: IMenuModelOptions): ColumnsType<IMenu> => [
-    // {
-    //   title: "Id",
-    //   dataIndex: "id",
-    //   sorter: true,
-    //   width: 160,
-    // },
     {
       title: "Название",
       dataIndex: "name",
       sorter: true,
-      // filters: ,
       ellipsis: true,
       render: (value, record) => {
         return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
@@ -62,7 +55,16 @@ const MenuGridPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Меню" backPath={routeNames.home} />
+      <PageHeader
+        title="Меню"
+        backPath={routeNames.home}
+        breadcrumbItems={[
+          {
+            path: modelRoutes.index,
+            label: "Меню",
+          },
+        ]}
+      />
 
       <DataGridTable
         dataGridHook={dataGridHook}
@@ -84,4 +86,4 @@ const MenuGridPage: FC = () => {
   );
 };
 
-export default MenuGridPage;
+export default MenusPage;

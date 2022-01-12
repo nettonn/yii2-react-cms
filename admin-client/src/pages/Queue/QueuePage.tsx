@@ -26,7 +26,13 @@ const QueuePage: FC = () => {
       <PageHeader
         title="Просмотр задачи"
         backPath={modelRoutes.index}
-        breadcrumbItems={[{ path: modelRoutes.index, label: "Задачи" }]}
+        breadcrumbItems={[
+          { path: modelRoutes.index, label: "Задачи" },
+          {
+            path: modelRoutes.updateUrl(id),
+            label: `${id}`,
+          },
+        ]}
       />
 
       <Descriptions bordered style={{ marginBottom: "30px" }}>

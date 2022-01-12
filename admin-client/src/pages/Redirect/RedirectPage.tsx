@@ -58,7 +58,13 @@ const RedirectPage: FC = () => {
       <PageHeader
         title={`${id ? "Редактирование" : "Создание"} редиректа`}
         backPath={modelRoutes.index}
-        breadcrumbItems={[{ path: modelRoutes.index, label: "Редиректы" }]}
+        breadcrumbItems={[
+          { path: modelRoutes.index, label: "Редиректы" },
+          {
+            path: modelRoutes.updateUrl(id),
+            label: modelForm.initData?.from ?? id,
+          },
+        ]}
       />
 
       <ModelForm

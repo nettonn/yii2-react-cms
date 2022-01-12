@@ -46,7 +46,16 @@ const UsersPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Пользователи" backPath={routeNames.home} />
+      <PageHeader
+        title="Пользователи"
+        backPath={routeNames.home}
+        breadcrumbItems={[
+          {
+            path: modelRoutes.index,
+            label: "Пользователи",
+          },
+        ]}
+      />
 
       <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
 

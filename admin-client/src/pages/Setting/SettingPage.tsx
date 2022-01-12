@@ -101,7 +101,13 @@ const SettingPage: FC = () => {
       <PageHeader
         title={`${id ? "Редактирование" : "Добавление"} параметра`}
         backPath={modelRoutes.index}
-        breadcrumbItems={[{ path: modelRoutes.index, label: "Настройки" }]}
+        breadcrumbItems={[
+          { path: modelRoutes.index, label: "Настройки" },
+          {
+            path: modelRoutes.updateUrl(id),
+            label: modelForm.initData?.name ?? id,
+          },
+        ]}
       />
 
       <ModelForm

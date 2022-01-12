@@ -30,7 +30,6 @@ const ChunksPage: FC = () => {
       title: "Название",
       dataIndex: "name",
       sorter: true,
-      // filters: ,
       ellipsis: true,
       render: (value, record) => {
         return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
@@ -67,7 +66,16 @@ const ChunksPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Чанки" backPath={routeNames.home} />
+      <PageHeader
+        title="Чанки"
+        backPath={routeNames.home}
+        breadcrumbItems={[
+          {
+            path: modelRoutes.index,
+            label: "Чанки",
+          },
+        ]}
+      />
 
       <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
 

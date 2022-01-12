@@ -12,7 +12,6 @@ import { statusColumn } from "../../components/crud/grid/columns";
 import { Link } from "react-router-dom";
 import { postSectionService } from "../../api/PostSectionService";
 import useDataGrid from "../../hooks/dataGrid.hook";
-import { MenuOutlined } from "@ant-design/icons";
 
 const modelRoutes = routeNames.postSection;
 const postRoutes = routeNames.post;
@@ -30,7 +29,6 @@ const PostSectionsPage: FC = () => {
       title: "Название",
       dataIndex: "name",
       sorter: true,
-      // filters: ,
       ellipsis: true,
       render: (value, record) => {
         return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
@@ -62,7 +60,16 @@ const PostSectionsPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Разделы записей" backPath={routeNames.home} />
+      <PageHeader
+        title="Разделы записей"
+        backPath={routeNames.home}
+        breadcrumbItems={[
+          {
+            path: modelRoutes.index,
+            label: "Разделы записей",
+          },
+        ]}
+      />
 
       <DataGridTable
         dataGridHook={dataGridHook}

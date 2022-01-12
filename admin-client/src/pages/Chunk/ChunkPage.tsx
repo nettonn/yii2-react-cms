@@ -78,7 +78,13 @@ const ChunkPage: FC = () => {
       <PageHeader
         title={`${id ? "Редактирование" : "Создание"} чанков`}
         backPath={modelRoutes.index}
-        breadcrumbItems={[{ path: modelRoutes.index, label: "Чанки" }]}
+        breadcrumbItems={[
+          { path: modelRoutes.index, label: "Чанки" },
+          {
+            path: modelRoutes.updateUrl(id),
+            label: modelForm.initData?.name ?? id,
+          },
+        ]}
       />
 
       <ModelForm

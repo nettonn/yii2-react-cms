@@ -30,7 +30,6 @@ const SettingsPage: FC = () => {
       title: "Название",
       dataIndex: "name",
       sorter: true,
-      // filters: ,
       ellipsis: true,
       render: (value, record) => {
         return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
@@ -40,7 +39,6 @@ const SettingsPage: FC = () => {
       title: "Ключ",
       dataIndex: "key",
       sorter: true,
-      // width: 120,
     },
     {
       title: "Тип",
@@ -52,8 +50,6 @@ const SettingsPage: FC = () => {
     {
       title: "Значение",
       dataIndex: "value",
-      // sorter: true,
-      // width: 200,
     },
     {
       title: "Изменено",
@@ -66,7 +62,16 @@ const SettingsPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Настройки" backPath={routeNames.home} />
+      <PageHeader
+        title="Настройки"
+        backPath={routeNames.home}
+        breadcrumbItems={[
+          {
+            path: modelRoutes.index,
+            label: "Настройки",
+          },
+        ]}
+      />
 
       <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
 

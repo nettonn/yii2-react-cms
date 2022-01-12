@@ -30,15 +30,9 @@ const SeoPage: FC = () => {
 
         <Form.Item label="Родитель" name="parent_id">
           <TreeSelect
-            // style={{ width: "100%" }}
-            // dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
             treeData={modelOptions?.parent}
             placeholder="Выберите"
             allowClear
-            onClear={() => {
-              // data.parent_id = null;
-            }}
-            // treeDefaultExpandAll
           />
         </Form.Item>
         <Form.Item label="Seo Title" name="title">
@@ -73,7 +67,13 @@ const SeoPage: FC = () => {
       <PageHeader
         title={`${id ? "Редактирование" : "Создание"} SEO`}
         backPath={modelRoutes.index}
-        breadcrumbItems={[{ path: modelRoutes.index, label: "SEO" }]}
+        breadcrumbItems={[
+          { path: modelRoutes.index, label: "SEO" },
+          {
+            path: modelRoutes.updateUrl(id),
+            label: modelForm.initData?.name ?? id,
+          },
+        ]}
       />
 
       <ModelForm

@@ -119,6 +119,10 @@ const PostSectionPage: FC = () => {
         backPath={modelRoutes.index}
         breadcrumbItems={[
           { path: modelRoutes.index, label: "Разделы записей" },
+          {
+            path: modelRoutes.updateUrl(id),
+            label: modelForm.initData?.name ?? id,
+          },
         ]}
       />
 

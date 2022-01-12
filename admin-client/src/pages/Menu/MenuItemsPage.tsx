@@ -40,17 +40,10 @@ const MenuItemsPage: FC = () => {
   const getColumns = (
     modelOptions: IMenuItemModelOptions
   ): ColumnsType<IMenuItem> => [
-    // {
-    //   title: "Id",
-    //   dataIndex: "id",
-    //   sorter: true,
-    //   width: 160,
-    // },
     {
       title: "Название",
       dataIndex: "name",
       sorter: true,
-      // filters: ,
       ellipsis: true,
       render: (value, record) => {
         return (
@@ -91,6 +84,10 @@ const MenuItemsPage: FC = () => {
           {
             path: menuRoutes.updateUrl(menuId),
             label: menuData ? menuData.name : menuId ?? "",
+          },
+          {
+            path: modelRoutes.indexUrl(menuId),
+            label: "Пункты меню",
           },
         ]}
       />

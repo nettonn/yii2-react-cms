@@ -43,17 +43,10 @@ const BlockItemsPage: FC = () => {
   const getColumns = (
     modelOptions: IBlockItemModelOptions
   ): ColumnsType<IBlockItem> => [
-    // {
-    //   title: "Id",
-    //   dataIndex: "id",
-    //   sorter: true,
-    //   width: 160,
-    // },
     {
       title: "Название",
       dataIndex: "name",
       sorter: true,
-      // filters: ,
       ellipsis: true,
       render: (value, record) => {
         return (
@@ -94,6 +87,10 @@ const BlockItemsPage: FC = () => {
           {
             path: blockRoutes.updateUrl(blockId),
             label: blockData ? blockData.name : blockId ?? "",
+          },
+          {
+            path: modelRoutes.indexUrl(blockId),
+            label: "Элементы блока",
           },
         ]}
       />
