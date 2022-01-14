@@ -2,8 +2,11 @@
 
 namespace app\models;
 
+use app\behaviors\ContentImagesBehavior;
 use app\behaviors\FileBehavior;
+use app\behaviors\SearchBehavior;
 use app\behaviors\TimestampBehavior;
+use app\behaviors\VersionBehavior;
 use app\models\base\ActiveRecord;
 use app\models\query\ActiveQuery;
 use Yii;
@@ -144,12 +147,33 @@ class Post extends ActiveRecord
             'TimestampBehavior' => [
                 'class' => TimestampBehavior::class,
             ],
+            'ContentImagesBehavior' => [
+                'class' => ContentImagesBehavior::class,
+                'imagesAttribute' => 'content_images',
+                'contentAttributes' => ['content'],
+            ],
             'FileBehavior' => [
                 'class' => FileBehavior::class,
                 'attributes' => [
+                    'content_images' => [
+                        'multiple' => true,
+                    ],
                     'images' => [
                         'multiple' => true,
                     ],
+                ]
+            ],
+            'VersionBehavior' => [
+                'class' => VersionBehavior::class,
+                'attributes' => [
+                    'name', 'alias', 'description', 'content', 'status',
+                    'seo_title', 'seo_h1', 'seo_description', 'seo_keywords',
+                ]
+            ],
+            'SearchBehavior' => [
+                'class' => SearchBehavior::class,
+                'attributes' => [
+                    'content',
                 ]
             ],
             'DynamicAttribute' => [

@@ -12,7 +12,7 @@ class ContentImagesBehavior extends Behavior
 {
     public $contentAttributes = ['content'];
 
-    public $imagesAttribute = 'content_images_id';
+    public $imagesAttribute = 'content_images';
 
     /**
      * if not set will add suffix _id to $imagesAttribute

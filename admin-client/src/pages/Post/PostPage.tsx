@@ -36,7 +36,9 @@ const PostPage: FC = () => {
 
   const postService = useMemo(() => new PostService(sectionId), [sectionId]);
 
-  const modelForm = useModelForm<Post, PostModelOptions>(id, postService);
+  const modelForm = useModelForm<Post, PostModelOptions>(id, postService, [
+    "content",
+  ]);
 
   const { type } = useModelType(sectionData?.type);
 

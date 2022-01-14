@@ -22,7 +22,8 @@ const PostSectionPage: FC = () => {
 
   const modelForm = useModelForm<PostSection, PostSectionModelOptions>(
     id,
-    postSectionService
+    postSectionService,
+    ["content"]
   );
 
   const { type, typeChangeHandler } = useModelType(modelForm.initData?.type);
