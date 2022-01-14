@@ -4,17 +4,14 @@ use app\models\Block;
 use app\models\BlockLink;
 use app\models\query\ActiveQuery;
 use Yii;
-use yii\base\Behavior;
 use yii\base\InvalidConfigException;
-use yii\db\ActiveRecord;
 use yii\db\BaseActiveRecord;
-use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
  * Handle blocks order on page
  */
-class BlockBehavior extends Behavior
+class BlockBehavior extends BaseBehavior
 {
     public $relationName = 'blockLinks';
 
@@ -31,9 +28,6 @@ class BlockBehavior extends Behavior
     public $contentBlock = 'content';
 
     public $useCache = true;
-
-    protected $pkAttribute;
-    protected $ownerClass;
 
     protected $_blocks;
 
@@ -56,23 +50,15 @@ class BlockBehavior extends Behavior
     public function attach($owner)
     {
         parent::attach($owner);
+    }
+
+    protected function validate()
+    {
+        parent::validate();
 
         if(!is_array($this->defaultValue) || !is_array($this->defaultOptions) || !is_array($this->specialValues)) {
             throw new InvalidConfigException('$defaultValue and $defaultOptions and $specialValues must be array');
         }
-
-        $ownerClass = get_class($this->owner);
-        if(!is_subclass_of($ownerClass, ActiveRecord::class)) {
-            throw new InvalidConfigException('Attach allowed only for children of ActiveRecord');
-        }
-
-        $primaryKey = $ownerClass::primaryKey();
-
-        if(count($primaryKey) > 1) {
-            throw new InvalidConfigException('Composite primary keys not allowed');
-        }
-        $this->ownerClass = $ownerClass;
-        $this->pkAttribute = current($primaryKey);
     }
 
     public function afterSave()
@@ -87,7 +73,7 @@ class BlockBehavior extends Behavior
 
         BlockLink::deleteAll([
             'link_class' => $this->ownerClass,
-            'link_id' => $this->owner->{$this->pkAttribute},
+            'link_id' => $this->owner->{$this->ownerPkAttribute},
         ]);
 
         if(!$blocks)
@@ -115,7 +101,7 @@ class BlockBehavior extends Behavior
 
             $row = [
                 'link_class' => $this->ownerClass,
-                'link_id' => $this->owner->{$this->pkAttribute},
+                'link_id' => $this->owner->{$this->ownerPkAttribute},
                 'value' => $value,
                 'sort' => $sort++,
             ];
@@ -136,14 +122,14 @@ class BlockBehavior extends Behavior
     {
         BlockLink::deleteAll([
             'link_class' => $this->ownerClass,
-            'link_id' => $this->owner->{$this->pkAttribute},
+            'link_id' => $this->owner->{$this->ownerPkAttribute},
         ]);
     }
 
     public function getBlocks($reselect = false)
     {
         if(null === $this->_blocks || $reselect) {
-            $cacheKey = self::class.'-blocks-'.($this->ownerClass).'-'.($this->owner->{$this->pkAttribute});
+            $cacheKey = self::class.'-blocks-'.($this->ownerClass).'-'.($this->owner->{$this->ownerPkAttribute});
             if(
                 !$this->useCache
                 || $reselect
@@ -211,7 +197,7 @@ class BlockBehavior extends Behavior
      */
     protected function getRelation()
     {
-        return $this->owner->hasMany(BlockLink::class, ['link_id' => $this->pkAttribute])
+        return $this->owner->hasMany(BlockLink::class, ['link_id' => $this->ownerPkAttribute])
             ->andWhere(['link_class' => $this->ownerClass])
             ->orderBy('sort ASC');
     }

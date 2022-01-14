@@ -1,8 +1,11 @@
 <?php namespace app\behaviors;
 
+use app\components\FileStorageComponent;
 use Yii;
 use yii\base\Behavior;
+use yii\base\InvalidConfigException;
 use yii\db\BaseActiveRecord;
+use yii\di\Instance;
 
 /**
  * Behavior attach uploaded FileModel images from content attributes to model
@@ -20,6 +23,8 @@ class ContentImagesBehavior extends Behavior
      */
     public $imagesAttributeId;
 
+    public $fileStorageComponent = 'fileStorage';
+
     /**
      * @inheritdoc
      */
@@ -29,6 +34,20 @@ class ContentImagesBehavior extends Behavior
             BaseActiveRecord::EVENT_BEFORE_INSERT => 'beforeSave',
             BaseActiveRecord::EVENT_BEFORE_UPDATE => 'beforeSave',
         ];
+    }
+
+    protected $_fileStorage;
+
+    /**
+     * @return FileStorageComponent
+     * @throws InvalidConfigException
+     */
+    protected function getFileStorage()
+    {
+        if(null === $this->_fileStorage) {
+            $this->_fileStorage = Instance::ensure($this->fileStorageComponent, FileStorageComponent::class);
+        }
+        return $this->_fileStorage;
     }
 
     public function beforeSave($event)
@@ -57,7 +76,7 @@ class ContentImagesBehavior extends Behavior
 
     protected function getUrlPregPatternPart()
     {
-        $fileStorage = Yii::$app->fileStorage;
+        $fileStorage = $this->getFileStorage();
 
         $pattern = '';
 

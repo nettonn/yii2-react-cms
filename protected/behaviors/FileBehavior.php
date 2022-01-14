@@ -1,26 +1,23 @@
 <?php namespace app\behaviors;
 
+use app\components\FileStorageComponent;
 use app\models\FileModel;
 use Yii;
-use yii\base\Behavior;
 use yii\base\InvalidArgumentException;
 use yii\base\InvalidConfigException;
-use yii\db\ActiveRecord;
 use yii\db\BaseActiveRecord;
 use yii\db\Expression;
+use yii\di\Instance;
 use yii\helpers\ArrayHelper;
-use yii\helpers\FileHelper;
 use yii\helpers\VarDumper;
-use yii\validators\Validator;
-use yii\web\UploadedFile;
 
-class FileBehavior extends Behavior
+class FileBehavior extends BaseBehavior
 {
     /**
-     * @var BaseActiveRecord
+     * Add validators to model [['images_id'], 'integer', 'allowArray' => true]
+     *
+     * @var array[]
      */
-    public $owner;
-
     public $attributes = [
         'images' => [
             'attribute_id' => 'images_id', // default {$attribute}_id
@@ -29,11 +26,6 @@ class FileBehavior extends Behavior
             'extensions' => ['jpg', 'jpeg', 'png'], // if image is true will use from component config
         ]
     ];
-
-
-    protected $ownerClass;
-
-    protected $pkAttribute;
 
     protected $attributeIds = [];
 
@@ -51,12 +43,7 @@ class FileBehavior extends Behavior
 
     public $deleteOldNotAttachedAfterSave = true;
 
-    /**
-     * if false add validators in attached model
-     * [['images_id', 'photo_id'], 'each', 'rule' => ['integer']]
-     * @var bool
-     */
-    public $addValidatorsOnAttach = false;
+    public $fileStorageComponent = 'fileStorage';
 
     protected $_related = [];
 
@@ -81,21 +68,16 @@ class FileBehavior extends Behavior
     public function attach($owner)
     {
         parent::attach($owner);
+    }
 
-        $ownerClass = get_class($this->owner);
-        if(!is_subclass_of($ownerClass, ActiveRecord::class)) {
-            throw new InvalidConfigException('Attach allowed only for children of ActiveRecord');
-        }
+    protected $_prepared = false;
 
-        $primaryKey = $ownerClass::primaryKey();
+    protected function prepare()
+    {
+        if($this->_prepared)
+            return;
 
-        if(count($primaryKey) > 1) {
-            throw new InvalidConfigException('Composite primary keys not allowed');
-        }
-        $this->ownerClass = $ownerClass;
-        $this->pkAttribute = current($primaryKey);
-
-        $fileStorage = Yii::$app->fileStorage;
+        $fileStorage = $this->getFileStorage();
 
         if(!$this->touchCallback)
             $this->touchCallback = function ($owner) {
@@ -115,13 +97,25 @@ class FileBehavior extends Behavior
 
             $this->attributeIds[$options['attribute_id']] = $attribute;
 
-            if($this->addValidatorsOnAttach) {
-                $owner->getValidators()->append(Validator::createValidator('safe', $owner, $options['attribute_id']));
-            }
-
             $attributes[$attribute] = $options;
         }
         $this->attributes = $attributes;
+
+        $this->_prepared = true;
+    }
+
+    protected $_fileStorage;
+
+    /**
+     * @return FileStorageComponent
+     * @throws InvalidConfigException
+     */
+    protected function getFileStorage()
+    {
+        if(null === $this->_fileStorage) {
+            $this->_fileStorage = Instance::ensure($this->fileStorageComponent, FileStorageComponent::class);
+        }
+        return $this->_fileStorage;
     }
 
     /**
@@ -129,6 +123,8 @@ class FileBehavior extends Behavior
      */
     public function afterSave($event)
     {
+        $this->prepare();
+
         $needTouch = false;
         foreach($this->attributes as $attribute => $options) {
             if(!isset($this->_values[$attribute]))
@@ -143,13 +139,13 @@ class FileBehavior extends Behavior
             }
 
             if($options['multiple']) {
-                $currentIds = $this->getRelation($attribute)->select($this->pkAttribute)->column();
+                $currentIds = $this->getRelation($attribute)->select($this->ownerPkAttribute)->column();
             } else {
                 if(count($newIds) >1) {
                     $newIds = array_slice($newIds, 0, 1);
                 }
 
-                $currentIds = [$this->getRelation($attribute)->select($this->pkAttribute)->scalar()];
+                $currentIds = [$this->getRelation($attribute)->select($this->ownerPkAttribute)->scalar()];
             }
 
             if($currentIds !== $newIds) {
@@ -157,7 +153,7 @@ class FileBehavior extends Behavior
             }
 
             if($deleteIds = array_filter(array_diff($currentIds, $newIds))) {
-                foreach(FileModel::find()->where(['in', $this->pkAttribute, $deleteIds])->all() as $model) {
+                foreach(FileModel::find()->where(['in', $this->ownerPkAttribute, $deleteIds])->all() as $model) {
                     $model->delete();
                 }
             }
@@ -169,15 +165,15 @@ class FileBehavior extends Behavior
             if($newIds) {
                 $idsString = implode(',', $newIds);
                 $query = FileModel::find()
-                    ->where(['in', $this->pkAttribute, $newIds])
-                    ->orderBy(new Expression("FIELD (`{$this->pkAttribute}`, $idsString)"));
+                    ->where(['in', $this->ownerPkAttribute, $newIds])
+                    ->orderBy(new Expression("FIELD (`{$this->ownerPkAttribute}`, $idsString)"));
                 if($extensions) {
                     $query = $query->andWhere(['in', 'ext', $extensions]);
                 }
 
                 foreach($query->all() as $model) {
                     $model->link_class = $this->ownerClass;
-                    $model->link_id = $this->owner->{$this->pkAttribute};
+                    $model->link_id = $this->owner->{$this->ownerPkAttribute};
                     $model->link_attribute = $attribute;
                     $model->sort = $sort++;
                     if(!$model->save()) {
@@ -201,14 +197,16 @@ class FileBehavior extends Behavior
         }
 
         if($this->deleteOldNotAttachedAfterSave) {
-            Yii::$app->fileStorage->deleteOldNotAttachedFileModels();
+            $this->getFileStorage()->deleteOldNotAttachedFileModels();
         }
     }
 
     public function beforeDelete($event)
     {
+        $this->prepare();
+
         $models = FileModel::find()
-            ->where(['link_class' => $this->ownerClass, 'link_id' => $this->owner->{$this->pkAttribute}])
+            ->where(['link_class' => $this->ownerClass, 'link_id' => $this->owner->{$this->ownerPkAttribute}])
             ->all();
         foreach($models as $model) {
             $model->delete();
@@ -222,11 +220,13 @@ class FileBehavior extends Behavior
      */
     public function filesGet($attribute)
     {
+        $this->prepare();
+
         if(!$this->attributes[$attribute]['multiple']) {
             return [$this->fileGet($attribute)];
         }
 
-        $useCache = Yii::$app->fileStorage->useModelPathCache;
+        $useCache = $this->getFileStorage()->useModelPathCache;
         $filenames = [];
         foreach($this->owner->{$attribute} as $model) {
             $filename = $model->getFilenameWithCheckExists($useCache);
@@ -245,8 +245,10 @@ class FileBehavior extends Behavior
      */
     public function fileGet($attribute)
     {
+        $this->prepare();
+
         $model = $this->owner->{$attribute};
-        $useCache = Yii::$app->fileStorage->useModelPathCache;
+        $useCache = $this->getFileStorage()->useModelPathCache;
         if(!$model)
             return null;
         if(is_array($model)) {
@@ -261,7 +263,9 @@ class FileBehavior extends Behavior
      */
     public function filesThumbsGet(string $attribute, array $variants = null, $relative = true)
     {
-        $fileStorage = Yii::$app->fileStorage;
+        $this->prepare();
+
+        $fileStorage = $this->getFileStorage();
         $result = [];
         if(!$variants) {
             $variants = array_keys($fileStorage->variants);
@@ -281,7 +285,9 @@ class FileBehavior extends Behavior
      */
     public function filesThumbGet(string $attribute, string $variant = null, $relative = true)
     {
-        $fileStorage = Yii::$app->fileStorage;
+        $this->prepare();
+
+        $fileStorage = $this->getFileStorage();
         $result = [];
         if(!$variant) {
             $variant = $fileStorage->defaultVariant;
@@ -297,10 +303,12 @@ class FileBehavior extends Behavior
      */
     public function fileThumbsGet(string $attribute, array $variants = null, $relative = true)
     {
+        $this->prepare();
+
         $filename = $this->fileGet($attribute);
         if(!$filename)
             return null;
-        $fileStorage = Yii::$app->fileStorage;
+        $fileStorage = $this->getFileStorage();
         $thumbs = [];
         foreach($variants as $variant) {
             $thumbs[$variant] = $fileStorage->getThumb($filename, $variant, $relative);
@@ -313,10 +321,12 @@ class FileBehavior extends Behavior
      */
     public function fileThumbGet(string $attribute, array $variant = null, $relative = true)
     {
+        $this->prepare();
+
         $filename = $this->fileGet($attribute);
         if(!$filename)
             return null;
-        return Yii::$app->fileStorage->getThumb($filename, $variant, $relative);
+        return $this->getFileStorage()->getThumb($filename, $variant, $relative);
     }
 
     protected function getRelation($attribute)
@@ -329,7 +339,7 @@ class FileBehavior extends Behavior
 
             if($this->attributes[$attribute]['multiple']) {
                 $query = $this->owner
-                    ->hasMany(FileModel::class, ['link_id' => $this->pkAttribute])
+                    ->hasMany(FileModel::class, ['link_id' => $this->ownerPkAttribute])
                     ->andWhere(['link_attribute' => $attribute])
                     ->andWhere(['link_class' => $this->ownerClass])
                     ->andWhere(['is_file_exists' => FileModel::FILE_EXISTS_YES])
@@ -340,7 +350,7 @@ class FileBehavior extends Behavior
                 $this->_related[$attribute] = $query;
             } else {
                 $query = $this->owner
-                    ->hasOne(FileModel::class, ['link_id' => $this->pkAttribute])
+                    ->hasOne(FileModel::class, ['link_id' => $this->ownerPkAttribute])
                     ->andWhere(['link_attribute' => $attribute])
                     ->andWhere(['link_class' => $this->ownerClass])
                     ->andWhere(['is_file_exists' => FileModel::FILE_EXISTS_YES])
@@ -356,6 +366,8 @@ class FileBehavior extends Behavior
 
     public function canGetProperty($name, $checkVars = true)
     {
+        $this->prepare();
+
         if(isset($this->attributes[$name])) {
             return true;
         }
@@ -369,6 +381,8 @@ class FileBehavior extends Behavior
 
     public function canSetProperty($name, $checkVars = true)
     {
+        $this->prepare();
+
         $attribute = $this->attributeIds[$name] ?? false;
         if($attribute && isset($this->attributes[$attribute])) {
             return true;
@@ -379,6 +393,8 @@ class FileBehavior extends Behavior
 
     public function __set($name, $value)
     {
+        $this->prepare();
+
         $attribute = $this->attributeIds[$name] ?? false;
         if($attribute && isset($this->attributes[$attribute])) {
             $this->_values[$attribute] = $value;
@@ -389,6 +405,8 @@ class FileBehavior extends Behavior
 
     public function __get($name)
     {
+        $this->prepare();
+
         $relation = $this->getRelation($name);
         if($relation) {
             return $relation->findFor($name, $this->owner);
@@ -409,6 +427,8 @@ class FileBehavior extends Behavior
 
     public function __call($name, $params)
     {
+        $this->prepare();
+
         if(strlen($name) > 3 && 0 === strpos(strtolower($name), 'get')) {
             $attribute = lcfirst(substr($name, 3));
             $relation = $this->getRelation($attribute);
@@ -421,6 +441,8 @@ class FileBehavior extends Behavior
 
     public function hasMethod($name)
     {
+        $this->prepare();
+
         if(strlen($name) > 3 && 0 === strpos(strtolower($name), 'get')) {
             $attribute = lcfirst(substr($name, 3));
             if(isset($this->attributes[$attribute]))
@@ -431,6 +453,8 @@ class FileBehavior extends Behavior
 
     public function fileAttachByFilename($attribute,  $fileData, $replace = false)
     {
+        $this->prepare();
+
         if(!isset($this->attributes[$attribute]))
             throw new InvalidArgumentException('No such attribute: '.$attribute);
 
@@ -443,7 +467,7 @@ class FileBehavior extends Behavior
 
         $fileIds = $this->_values[$attribute] ?? [];
         if(!$replace)
-            $fileIds = $this->getRelation($attribute)->select($this->pkAttribute)->column();
+            $fileIds = $this->getRelation($attribute)->select($this->ownerPkAttribute)->column();
 
         foreach($filenames as $filename) {
             $fileModel = FileModel::createByFilename($filename);
