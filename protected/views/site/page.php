@@ -4,13 +4,20 @@
 
 seo()->model = $page;
 $this->breadcrumbs = $page->treeGetBreadcrumbs();
+
+function renderBlock($block) {
+    switch($block) {
+        default:
+            return \app\widgets\BlockWidget::widget(['key' => $block]);
+    }
+}
 ?>
 
 <?php $this->beginBlock('top-blocks'); ?>
 
     <?php foreach($page->topBlocks as $topBlock): ?>
 
-        <?= \app\widgets\BlockWidget::widget(['key' => $topBlock]) ?>
+        <?= renderBlock($topBlock) ?>
 
     <?php endforeach ?>
 
@@ -22,7 +29,7 @@ $this->breadcrumbs = $page->treeGetBreadcrumbs();
 
     <?php foreach($page->bottomBlocks as $bottomBlock): ?>
 
-        <?= \app\widgets\BlockWidget::widget(['key' => $bottomBlock]) ?>
+        <?= renderBlock($bottomBlock) ?>
 
     <?php endforeach ?>
 

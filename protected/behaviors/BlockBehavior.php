@@ -30,6 +30,8 @@ class BlockBehavior extends Behavior
 
     public $contentBlock = 'content';
 
+    public $useCache = true;
+
     protected $pkAttribute;
     protected $ownerClass;
 
@@ -141,15 +143,26 @@ class BlockBehavior extends Behavior
     public function getBlocks($reselect = false)
     {
         if(null === $this->_blocks || $reselect) {
-            /**
-             * @var BlockLink[] $blockLinks
-             */
-            $blockLinks = $this->owner->{$this->relationName};
+            $cacheKey = self::class.'-blocks-'.($this->ownerClass).'-'.($this->owner->{$this->pkAttribute});
+            if(
+                !$this->useCache
+                || $reselect
+                || $this->owner->isRelationPopulated($this->relationName)
+                || false === $result = Yii::$app->getCache()->get($cacheKey)
+            ) {
+                /**
+                 * @var BlockLink[] $blockLinks
+                 */
+                $blockLinks = $this->owner->{$this->relationName};
 
-            $result = [];
-            foreach($blockLinks as $blockLink) {
-                $result[] = $blockLink->value;
+                $result = [];
+                foreach($blockLinks as $blockLink) {
+                    $result[] = $blockLink->value;
+                }
+                if($this->useCache)
+                    Yii::$app->getCache()->set($cacheKey, $result);
             }
+
             $this->_blocks = $result;
         }
         if(!$this->_blocks) {
