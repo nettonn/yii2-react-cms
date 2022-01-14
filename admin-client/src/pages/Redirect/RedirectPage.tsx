@@ -7,21 +7,21 @@ import { Form, FormInstance, Input, Switch } from "antd";
 import rules from "../../utils/rules";
 import { routeNames } from "../../routes";
 import { redirectService } from "../../api/RedirectService";
-import { IRedirect, IRedirectModelOptions } from "../../models/IRedirect";
+import { Redirect, RedirectModelOptions } from "../../models/Redirect";
 
 const modelRoutes = routeNames.redirect;
 
 const RedirectPage: FC = () => {
   const { id } = useParams();
 
-  const modelForm = useModelForm<IRedirect, IRedirectModelOptions>(
+  const modelForm = useModelForm<Redirect, RedirectModelOptions>(
     id,
     redirectService
   );
 
   const formContent = (
-    initData: IRedirect,
-    modelOptions: IRedirectModelOptions,
+    initData: Redirect,
+    modelOptions: RedirectModelOptions,
     form: FormInstance
   ) => (
     <>

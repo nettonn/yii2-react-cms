@@ -13,7 +13,7 @@ import {
 } from "@ant-design/icons";
 
 import _throttle from "lodash/throttle";
-import { IFileModel } from "../../../models/IFileModel";
+import { FileModel } from "../../../models/FileModel";
 import {
   openNewWindow,
   stopPropagation,
@@ -38,7 +38,7 @@ const renderFileIcon = (ext: string) => {
 };
 
 interface FileListItemProps {
-  fileModel: IFileModel;
+  fileModel: FileModel;
   deleteHandler: (id: number) => void;
   hasControls?: boolean;
 }

@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
-import { IUser, IUserModelOptions } from "../../models/IUser";
+import { User, UserModelOptions } from "../../models/User";
 import { ColumnsType } from "antd/lib/table/Table";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { routeNames } from "../../routes";
@@ -13,12 +13,9 @@ import { statusColumn } from "../../components/crud/grid/columns";
 const modelRoutes = routeNames.user;
 
 const UsersPage: FC = () => {
-  const dataGridHook = useDataGrid<IUser, IUserModelOptions>(
-    userService,
-    "user"
-  );
+  const dataGridHook = useDataGrid<User, UserModelOptions>(userService, "user");
 
-  const getColumns = (modelOptions: IUserModelOptions): ColumnsType<IUser> => [
+  const getColumns = (modelOptions: UserModelOptions): ColumnsType<User> => [
     {
       title: "Id",
       dataIndex: "id",
@@ -41,7 +38,7 @@ const UsersPage: FC = () => {
       sorter: true,
       filters: modelOptions.role,
     },
-    statusColumn<IUser>({ filters: modelOptions.status }),
+    statusColumn<User>({ filters: modelOptions.status }),
   ];
 
   return (

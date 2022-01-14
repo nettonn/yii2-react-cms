@@ -1,6 +1,6 @@
-import { IModel, IModelOptions } from "../types";
+import { Model, ModelOptions } from "../types";
 
-export interface IOrder extends IModel {
+export interface Order extends Model {
   subject: string;
   name: string;
   phone: string;
@@ -21,4 +21,4 @@ export interface IOrder extends IModel {
   files_id: number[];
 }
 
-export interface IOrderModelOptions extends IModelOptions {}
+export interface OrderModelOptions extends ModelOptions {}

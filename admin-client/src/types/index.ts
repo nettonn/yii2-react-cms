@@ -1,36 +1,18 @@
 import React from "react";
 
-export interface IPaginationType {
-  current: number;
-  pageSize: number;
-  total: number;
-}
-
-export interface IApiServicePagination {
+export interface ApiServicePagination {
   currentPage?: number;
   totalCount?: number;
   perPage?: number;
   pageCount?: number;
 }
 
-export interface IValidationErrorType {
+export interface ValidationError {
   field: string;
   message: string;
 }
 
-export interface ISortType {
-  field: string | null;
-  direction: string | null;
-}
-
-export interface IDataTableParamsType {
-  page: number;
-  sortField: string | null;
-  sortDirection: string | null;
-  search: string;
-}
-
-export interface IRoute {
+export interface RouteType {
   path: string;
   element: React.ElementType;
   elementProps?: React.Attributes;
@@ -39,37 +21,31 @@ export interface IRoute {
   hideIfAuth?: boolean;
 }
 
-export interface IModelRouteNames {
-  index: string;
-  create: string;
-  view: string;
-}
-
-export interface IModel {
+export interface Model {
   id: number;
   model_class: string;
   view_url?: string;
   has_versions?: boolean;
 }
 
-export interface IModelOptions {}
+export interface ModelOptions {}
 
-export interface IImageThumbs {
+export interface ImageThumbs {
   normal: string;
   original: string;
   thumb: string;
 }
 
-export interface IFiltersParam {
+export interface FilterParams {
   [key: string]: string[] | number[];
 }
 
-export interface IValueTextOption {
+export interface ValueTextOption {
   value: number | string;
   text: string;
 }
 
-export interface IValueStrTextOption {
+export interface ValueStrTextOption {
   value: string;
   text: string;
 }

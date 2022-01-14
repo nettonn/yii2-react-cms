@@ -4,7 +4,7 @@ import { prepareAxiosConfig } from "../../../../utils/functions";
 import { $api } from "../../../../http/axios";
 import { Button, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { IFileModel } from "../../../../models/IFileModel";
+import { FileModel } from "../../../../models/FileModel";
 import FileList from "../../FileList/FileList";
 
 interface FileUploadProps {
@@ -56,7 +56,7 @@ const FileUpload: FC<FileUploadProps> = ({
           formData.append(inputName, file);
           const config = prepareAxiosConfig(fileService.createConfig());
           config.data = formData;
-          const response = await $api.request<IFileModel>(config);
+          const response = await $api.request<FileModel>(config);
           newFileIds.push(response.data.id);
         } catch (e: any) {
           message.error(e.message || `Error uploading file "${file.name}"`);

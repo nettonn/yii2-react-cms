@@ -1,18 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IFiltersParam } from "../../../types";
+import { FilterParams } from "../../../types";
 
-interface IPaginationFields {
+interface PaginationFields {
   currentPage: number | null;
   pageCount: number | null;
   pageSize: number | null;
   dataCount: number | null;
 }
 
-export interface DataGridState extends IPaginationFields {
+export interface DataGridState extends PaginationFields {
   sortField: string | null;
   sortDirection: string | null;
   searchQuery: string | null;
-  filters: IFiltersParam | null;
+  filters: FilterParams | null;
   expandedRows: number[];
 }
 
@@ -44,9 +44,9 @@ const createGridSlice = <Name extends string = string>(name: Name) => {
       setDataCount(state, action: PayloadAction<number>) {
         state.dataCount = action.payload;
       },
-      setPagination(state, action: PayloadAction<Partial<IPaginationFields>>) {
+      setPagination(state, action: PayloadAction<Partial<PaginationFields>>) {
         const fieldNames = Object.keys(action.payload) as Array<
-          Extract<IPaginationFields, string>
+          Extract<PaginationFields, string>
         >;
         fieldNames.forEach((key) => {
           if (action.payload[key] === undefined) return;
@@ -62,7 +62,7 @@ const createGridSlice = <Name extends string = string>(name: Name) => {
       setSearchQuery(state, action: PayloadAction<string | null>) {
         state.searchQuery = action.payload;
       },
-      setFilters(state, action: PayloadAction<IFiltersParam | null>) {
+      setFilters(state, action: PayloadAction<FilterParams | null>) {
         state.filters = action.payload;
       },
       setExpandedRows(state, action: PayloadAction<number[]>) {

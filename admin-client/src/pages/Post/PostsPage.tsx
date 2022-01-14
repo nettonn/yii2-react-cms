@@ -3,14 +3,14 @@ import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
-import { IPost, IPostModelOptions } from "../../models/IPost";
+import { Post, PostModelOptions } from "../../models/Post";
 import { ColumnsType } from "antd/lib/table/interface";
 import { statusColumn } from "../../components/crud/grid/columns";
 import { Link, useParams } from "react-router-dom";
 import PostService from "../../api/PostService";
 import useDataGrid from "../../hooks/dataGrid.hook";
 import { useQuery } from "react-query";
-import { IPostSection } from "../../models/IPostSection";
+import { PostSection } from "../../models/PostSection";
 import { postSectionService } from "../../api/PostSectionService";
 
 const modelRoutes = routeNames.post;
@@ -23,7 +23,7 @@ const PostsPage: FC = () => {
     [postSectionService.viewQueryKey(), sectionId],
     async ({ signal }) => {
       if (!sectionId) throw Error("Id not set");
-      return await postSectionService.view<IPostSection>(sectionId, signal);
+      return await postSectionService.view<PostSection>(sectionId, signal);
     },
     {
       refetchOnMount: false,
@@ -32,12 +32,9 @@ const PostsPage: FC = () => {
 
   const postService = useMemo(() => new PostService(sectionId), [sectionId]);
 
-  const dataGridHook = useDataGrid<IPost, IPostModelOptions>(
-    postService,
-    "post"
-  );
+  const dataGridHook = useDataGrid<Post, PostModelOptions>(postService, "post");
 
-  const getColumns = (modelOptions: IPostModelOptions): ColumnsType<IPost> => [
+  const getColumns = (modelOptions: PostModelOptions): ColumnsType<Post> => [
     {
       title: "Название",
       dataIndex: "name",
@@ -63,7 +60,7 @@ const PostsPage: FC = () => {
       sorter: true,
       width: 120,
     },
-    statusColumn<IPost>({ filters: modelOptions.status }),
+    statusColumn<Post>({ filters: modelOptions.status }),
   ];
 
   return (

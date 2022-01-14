@@ -5,21 +5,21 @@ import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
 import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
-import { ISetting, ISettingModelOptions } from "../../models/ISetting";
+import { Setting, SettingModelOptions } from "../../models/Setting";
 import { settingService } from "../../api/SettingService";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = routeNames.setting;
 
 const SettingsPage: FC = () => {
-  const dataGridHook = useDataGrid<ISetting, ISettingModelOptions>(
+  const dataGridHook = useDataGrid<Setting, SettingModelOptions>(
     settingService,
     "setting"
   );
 
   const getColumns = (
-    modelOptions: ISettingModelOptions
-  ): ColumnsType<ISetting> => [
+    modelOptions: SettingModelOptions
+  ): ColumnsType<Setting> => [
     {
       title: "Id",
       dataIndex: "id",

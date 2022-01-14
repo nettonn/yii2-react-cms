@@ -3,7 +3,7 @@ import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
-import { IBlock, IBlockModelOptions } from "../../models/IBlock";
+import { Block, BlockModelOptions } from "../../models/Block";
 import { ColumnsType } from "antd/lib/table/interface";
 import { MenuOutlined } from "@ant-design/icons";
 import { statusColumn } from "../../components/crud/grid/columns";
@@ -15,14 +15,12 @@ const modelRoutes = routeNames.block;
 const blockItemRoutes = routeNames.blockItem;
 
 const BlocksPage: FC = () => {
-  const dataGridHook = useDataGrid<IBlock, IBlockModelOptions>(
+  const dataGridHook = useDataGrid<Block, BlockModelOptions>(
     blockService,
     "block"
   );
 
-  const getColumns = (
-    modelOptions: IBlockModelOptions
-  ): ColumnsType<IBlock> => [
+  const getColumns = (modelOptions: BlockModelOptions): ColumnsType<Block> => [
     {
       title: "Название",
       dataIndex: "name",
@@ -59,7 +57,7 @@ const BlocksPage: FC = () => {
       sorter: true,
       width: 120,
     },
-    statusColumn<IBlock>({ filters: modelOptions.status }),
+    statusColumn<Block>({ filters: modelOptions.status }),
   ];
 
   return (
@@ -79,7 +77,7 @@ const BlocksPage: FC = () => {
         dataGridHook={dataGridHook}
         getColumns={getColumns}
         scroll={{ x: 800 }}
-        actionButtons={(record: IBlock) =>
+        actionButtons={(record: Block) =>
           record.has_items && [
             <Link
               key="blockItems"

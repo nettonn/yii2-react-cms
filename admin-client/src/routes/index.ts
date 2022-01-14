@@ -16,7 +16,7 @@ import queue from "./parts/queue";
 import order from "./parts/order";
 import block from "./parts/block";
 import blockItem from "./parts/block-item";
-import { IRoute } from "../types";
+import { RouteType } from "../types";
 
 export const routeNames = {
   ...common.names,
@@ -39,7 +39,7 @@ export const routeNames = {
   blockItem: blockItem.names,
 };
 
-export const routes: readonly IRoute[] = [
+export const routes: readonly RouteType[] = [
   ...common.routes,
   ...error.routes,
   ...user.routes,

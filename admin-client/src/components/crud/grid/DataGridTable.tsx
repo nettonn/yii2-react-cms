@@ -4,7 +4,7 @@ import { Popconfirm, Space, Table, Spin, Button, Col, Row, Input } from "antd";
 import { ColumnsType } from "antd/lib/table/interface";
 import React, { FC, ReactNode, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { IModel } from "../../../types";
+import { Model } from "../../../types";
 import { DEFAULT_ROW_GUTTER } from "../../../utils/constants";
 import { useAppActions, useAppSelector } from "../../../hooks/redux";
 import { dataGridActions } from "../../../store/reducers/grid/grids";
@@ -62,7 +62,7 @@ const DataGridTable: FC<DataGridTableProps> = ({
 
   if (error) return null;
 
-  const viewButton = (record: IModel) => {
+  const viewButton = (record: Model) => {
     if (hasUrl) {
       return (
         <a href={record.view_url}>
@@ -81,7 +81,7 @@ const DataGridTable: FC<DataGridTableProps> = ({
     key: "x",
     width: 70,
     fixed: "right",
-    render: (_: any, record: IModel) => (
+    render: (_: any, record: Model) => (
       <Space>
         {actionButtons ? actionButtons(record) : null}
         {viewButton(record)}
@@ -148,7 +148,7 @@ const DataGridTable: FC<DataGridTableProps> = ({
       <Table
         columns={allColumns}
         rowKey="id"
-        dataSource={data as IModel[]}
+        dataSource={data as Model[]}
         loading={isLoading}
         pagination={{
           total: dataCount ?? undefined,

@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { Descriptions, Spin } from "antd";
 import { routeNames } from "../../routes";
 import { orderService } from "../../api/OrderService";
-import { IOrder, IOrderModelOptions } from "../../models/IOrder";
+import { Order, OrderModelOptions } from "../../models/Order";
 import { useModelView } from "../../hooks/modelView.hook";
 import FileList from "../../components/crud/FileList/FileList";
 
@@ -13,7 +13,7 @@ const modelRoutes = routeNames.order;
 const OrderPage: FC = () => {
   const { id } = useParams();
 
-  const { data, isInit } = useModelView<IOrder, IOrderModelOptions>(
+  const { data, isInit } = useModelView<Order, OrderModelOptions>(
     id,
     orderService
   );

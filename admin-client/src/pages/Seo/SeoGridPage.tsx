@@ -3,7 +3,7 @@ import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
-import { ISeo, ISeoModelOptions } from "../../models/ISeo";
+import { Seo, SeoModelOptions } from "../../models/Seo";
 import { ColumnsType } from "antd/lib/table/interface";
 import { statusColumn } from "../../components/crud/grid/columns";
 import { seoService } from "../../api/SeoService";
@@ -13,9 +13,9 @@ import useDataGrid from "../../hooks/dataGrid.hook";
 const modelRoutes = routeNames.seo;
 
 const SeoGridPage: FC = () => {
-  const dataGridHook = useDataGrid<ISeo, ISeoModelOptions>(seoService, "seo");
+  const dataGridHook = useDataGrid<Seo, SeoModelOptions>(seoService, "seo");
 
-  const getColumns = (modelOptions: ISeoModelOptions): ColumnsType<ISeo> => [
+  const getColumns = (modelOptions: SeoModelOptions): ColumnsType<Seo> => [
     {
       title: "Название",
       dataIndex: "name",
@@ -45,7 +45,7 @@ const SeoGridPage: FC = () => {
       sorter: true,
       width: 120,
     },
-    statusColumn<ISeo>({ filters: modelOptions.status }),
+    statusColumn<Seo>({ filters: modelOptions.status }),
   ];
 
   return (

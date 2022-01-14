@@ -6,11 +6,11 @@ import { useModelForm } from "../../hooks/modelForm.hook";
 import { Form, Input, Switch, TreeSelect } from "antd";
 import rules from "../../utils/rules";
 import { routeNames } from "../../routes";
-import { IMenuItem, IMenuItemModelOptions } from "../../models/IMenuItem";
+import { MenuItem, MenuItemModelOptions } from "../../models/MenuItem";
 import MenuItemService from "../../api/MenuItemService";
 import { useQuery } from "react-query";
 import { menuService } from "../../api/MenuService";
-import { IMenu } from "../../models/IMenu";
+import { Menu } from "../../models/Menu";
 
 const modelRoutes = routeNames.menuItem;
 
@@ -21,7 +21,7 @@ const MenuItemPage: FC = () => {
     [menuService.viewQueryKey(), menuId],
     async ({ signal }) => {
       if (!menuId) throw Error("Id not set");
-      return await menuService.view<IMenu>(menuId, signal);
+      return await menuService.view<Menu>(menuId, signal);
     },
     {
       refetchOnMount: false,
@@ -30,14 +30,14 @@ const MenuItemPage: FC = () => {
 
   const menuItemService = useMemo(() => new MenuItemService(menuId), [menuId]);
 
-  const modelForm = useModelForm<IMenuItem, IMenuItemModelOptions>(
+  const modelForm = useModelForm<MenuItem, MenuItemModelOptions>(
     id,
     menuItemService
   );
 
   const formContent = (
-    initData: IMenuItem,
-    modelOptions: IMenuItemModelOptions
+    initData: MenuItem,
+    modelOptions: MenuItemModelOptions
   ) => (
     <>
       {!id ? (

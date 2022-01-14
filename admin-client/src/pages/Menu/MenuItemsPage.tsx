@@ -3,7 +3,7 @@ import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
-import { IMenuItem, IMenuItemModelOptions } from "../../models/IMenuItem";
+import { MenuItem, MenuItemModelOptions } from "../../models/MenuItem";
 import { ColumnsType } from "antd/lib/table/interface";
 import { statusColumn } from "../../components/crud/grid/columns";
 import { Link, useParams } from "react-router-dom";
@@ -11,7 +11,7 @@ import useDataGrid from "../../hooks/dataGrid.hook";
 import MenuItemService from "../../api/MenuItemService";
 import { useQuery } from "react-query";
 import { menuService } from "../../api/MenuService";
-import { IMenu } from "../../models/IMenu";
+import { Menu } from "../../models/Menu";
 
 const modelRoutes = routeNames.menuItem;
 const menuRoutes = routeNames.menu;
@@ -23,7 +23,7 @@ const MenuItemsPage: FC = () => {
     [menuService.viewQueryKey(), menuId],
     async ({ signal }) => {
       if (!menuId) throw Error("Id not set");
-      return await menuService.view<IMenu>(menuId, signal);
+      return await menuService.view<Menu>(menuId, signal);
     },
     {
       refetchOnMount: false,
@@ -32,14 +32,14 @@ const MenuItemsPage: FC = () => {
 
   const menuItemService = useMemo(() => new MenuItemService(menuId), [menuId]);
 
-  const dataGridHook = useDataGrid<IMenuItem, IMenuItemModelOptions>(
+  const dataGridHook = useDataGrid<MenuItem, MenuItemModelOptions>(
     menuItemService,
     "menuItem"
   );
 
   const getColumns = (
-    modelOptions: IMenuItemModelOptions
-  ): ColumnsType<IMenuItem> => [
+    modelOptions: MenuItemModelOptions
+  ): ColumnsType<MenuItem> => [
     {
       title: "Название",
       dataIndex: "name",
@@ -71,7 +71,7 @@ const MenuItemsPage: FC = () => {
       sorter: true,
       width: 120,
     },
-    statusColumn<IMenuItem>({ filters: modelOptions.status }),
+    statusColumn<MenuItem>({ filters: modelOptions.status }),
   ];
 
   return (

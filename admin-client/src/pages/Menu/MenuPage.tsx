@@ -6,7 +6,7 @@ import { useModelForm } from "../../hooks/modelForm.hook";
 import { Button, Form, Input, Switch } from "antd";
 import rules from "../../utils/rules";
 import { routeNames } from "../../routes";
-import { IMenu, IMenuModelOptions } from "../../models/IMenu";
+import { Menu, MenuModelOptions } from "../../models/Menu";
 import { menuService } from "../../api/MenuService";
 import { MenuOutlined } from "@ant-design/icons";
 
@@ -16,9 +16,9 @@ const menuItemRoutes = routeNames.menuItem;
 const MenuPage: FC = () => {
   const { id } = useParams();
 
-  const modelForm = useModelForm<IMenu, IMenuModelOptions>(id, menuService);
+  const modelForm = useModelForm<Menu, MenuModelOptions>(id, menuService);
 
-  const formContent = (initData: IMenu, modelOptions: IMenuModelOptions) => (
+  const formContent = (initData: Menu, modelOptions: MenuModelOptions) => (
     <>
       <Form.Item label="Название" name="name" rules={[rules.required()]}>
         <Input />

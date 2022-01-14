@@ -1,14 +1,14 @@
 import RestService from "../api/RestService";
 import { useEffect, useState } from "react";
-import { IModel, IModelOptions } from "../types";
+import { Model, ModelOptions } from "../types";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { routeNames } from "../routes";
 import { requestErrorHandler } from "../utils/functions";
 
 export function useModelView<
-  T extends IModel = IModel,
-  M extends IModelOptions = IModelOptions
+  T extends Model = Model,
+  M extends ModelOptions = ModelOptions
 >(id: number | string | undefined, modelService: RestService) {
   const [isInit, setIsInit] = useState(false);
   const [viewUrl, setViewUrl] = useState<string | undefined>();

@@ -1,5 +1,5 @@
 import React, { FC, Suspense } from "react";
-import { IRoute } from "../types";
+import { RouteType } from "../types";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { routeNames, routes } from "../routes";
 import withAuth from "../hoc/auth";
@@ -10,13 +10,13 @@ import FullScreenLoader from "./ui/FullScreenLoader";
 
 interface LayoutRoute {
   element: React.ElementType;
-  routes: IRoute[];
+  routes: RouteType[];
 }
 
 const AppRoutes: FC = () => {
   const layoutRoutes: LayoutRoute[] = [];
 
-  const getLayout = (route: IRoute) => {
+  const getLayout = (route: RouteType) => {
     if (!route) return PublicLayout;
 
     if (route.layout) return route.layout;
@@ -37,7 +37,7 @@ const AppRoutes: FC = () => {
     }
   }
 
-  const createRouteElement = (route: IRoute) => {
+  const createRouteElement = (route: RouteType) => {
     const createElement = () => (
       <Suspense fallback={<FullScreenLoader />}>
         {React.createElement(route.element, route.elementProps)}

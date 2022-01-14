@@ -3,7 +3,7 @@ import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
-import { IPage, IPageModelOptions } from "../../models/IPage";
+import { Page, PageModelOptions } from "../../models/Page";
 import { ColumnsType } from "antd/lib/table/Table";
 import { statusColumn } from "../../components/crud/grid/columns";
 import { pageService } from "../../api/PageService";
@@ -12,13 +12,10 @@ import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = routeNames.page;
 
-const Pages: FC = () => {
-  const dataGridHook = useDataGrid<IPage, IPageModelOptions>(
-    pageService,
-    "page"
-  );
+const PagesPage: FC = () => {
+  const dataGridHook = useDataGrid<Page, PageModelOptions>(pageService, "page");
 
-  const getColumns = (modelOptions: IPageModelOptions): ColumnsType<IPage> => [
+  const getColumns = (modelOptions: PageModelOptions): ColumnsType<Page> => [
     {
       title: "Название",
       dataIndex: "name",
@@ -42,7 +39,7 @@ const Pages: FC = () => {
       sorter: true,
       width: 120,
     },
-    statusColumn<IPage>({ filters: modelOptions.status }),
+    statusColumn<Page>({ filters: modelOptions.status }),
   ];
 
   return (
@@ -70,4 +67,4 @@ const Pages: FC = () => {
   );
 };
 
-export default Pages;
+export default PagesPage;

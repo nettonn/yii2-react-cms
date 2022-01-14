@@ -3,7 +3,7 @@ import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
-import { IBlockItem, IBlockItemModelOptions } from "../../models/IBlockItem";
+import { BlockItem, BlockItemModelOptions } from "../../models/BlockItem";
 import { ColumnsType } from "antd/lib/table/interface";
 import { statusColumn } from "../../components/crud/grid/columns";
 import { Link, useParams } from "react-router-dom";
@@ -11,7 +11,7 @@ import useDataGrid from "../../hooks/dataGrid.hook";
 import BlockItemService from "../../api/BlockItemService";
 import { useQuery } from "react-query";
 import { blockService } from "../../api/BlockService";
-import { IBlock } from "../../models/IBlock";
+import { Block } from "../../models/Block";
 
 const modelRoutes = routeNames.blockItem;
 const blockRoutes = routeNames.block;
@@ -23,7 +23,7 @@ const BlockItemsPage: FC = () => {
     [blockService.viewQueryKey(), blockId],
     async ({ signal }) => {
       if (!blockId) throw Error("Id not set");
-      return await blockService.view<IBlock>(blockId, signal);
+      return await blockService.view<Block>(blockId, signal);
     },
     {
       refetchOnMount: false,
@@ -35,14 +35,14 @@ const BlockItemsPage: FC = () => {
     [blockId]
   );
 
-  const dataGridHook = useDataGrid<IBlockItem, IBlockItemModelOptions>(
+  const dataGridHook = useDataGrid<BlockItem, BlockItemModelOptions>(
     blockItemService,
     "blockItem"
   );
 
   const getColumns = (
-    modelOptions: IBlockItemModelOptions
-  ): ColumnsType<IBlockItem> => [
+    modelOptions: BlockItemModelOptions
+  ): ColumnsType<BlockItem> => [
     {
       title: "Название",
       dataIndex: "name",
@@ -74,7 +74,7 @@ const BlockItemsPage: FC = () => {
       sorter: true,
       width: 120,
     },
-    statusColumn<IBlockItem>({ filters: modelOptions.status }),
+    statusColumn<BlockItem>({ filters: modelOptions.status }),
   ];
 
   return (

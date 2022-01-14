@@ -4,21 +4,21 @@ import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { routeNames } from "../../routes";
 import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
-import { IVersion, IVersionModelOptions } from "../../models/IVersion";
+import { Version, VersionModelOptions } from "../../models/Version";
 import { versionService } from "../../api/VersionService";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = routeNames.version;
 
 const VersionsPage: FC = () => {
-  const dataGridHook = useDataGrid<IVersion, IVersionModelOptions>(
+  const dataGridHook = useDataGrid<Version, VersionModelOptions>(
     versionService,
     "version"
   );
 
   const getColumns = (
-    modelOptions: IVersionModelOptions
-  ): ColumnsType<IVersion> => [
+    modelOptions: VersionModelOptions
+  ): ColumnsType<Version> => [
     {
       title: "Id",
       dataIndex: "id",

@@ -1,5 +1,5 @@
 import React, { FC, useMemo } from "react";
-import { IValueStrTextOption, IValueTextOption } from "../../../../types";
+import { ValueStrTextOption, ValueTextOption } from "../../../../types";
 import {
   DndContext,
   closestCenter,
@@ -25,7 +25,7 @@ interface Item {
 interface BlocksListProps {
   blocks: string[];
   setBlocks: (blocks: string[]) => void;
-  blockOptions: IValueTextOption[];
+  blockOptions: ValueTextOption[];
 }
 
 const BlocksList: FC<BlocksListProps> = ({
@@ -57,16 +57,16 @@ const BlocksList: FC<BlocksListProps> = ({
     setBlocks(newBlocks);
   };
 
-  const blockOptions: IValueStrTextOption[] = useMemo(
+  const blockOptions: ValueStrTextOption[] = useMemo(
     () =>
       blockOptionsDefault.map((option) => {
         option.value = option.value.toString();
-        return option as IValueStrTextOption;
+        return option as ValueStrTextOption;
       }),
     [blockOptionsDefault]
   );
 
-  const restBlockOptions: IValueTextOption[] = useMemo(
+  const restBlockOptions: ValueTextOption[] = useMemo(
     () => blockOptions.filter((option) => !blocks.includes(option.value)),
     [blocks, blockOptions]
   );

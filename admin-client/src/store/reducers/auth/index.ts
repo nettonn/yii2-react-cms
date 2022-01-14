@@ -1,17 +1,17 @@
-import { IIdentity } from "../../../models/IIdentity";
+import { Identity } from "../../../models/Identity";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface AuthState {
   isAuthChecked: boolean;
   isAuth: boolean;
-  identity: IIdentity;
+  identity: Identity;
   token: string | null;
 }
 
 const initialState: AuthState = {
   isAuthChecked: false,
   isAuth: false,
-  identity: {} as IIdentity,
+  identity: {} as Identity,
   token: null, // TODO not updated on refresh token
 };
 
@@ -21,7 +21,7 @@ const slice = createSlice({
   reducers: {
     authorize(
       state,
-      action: PayloadAction<{ identity: IIdentity; token: string | null }>
+      action: PayloadAction<{ identity: Identity; token: string | null }>
     ) {
       const { identity, token } = action.payload;
       state.identity = identity;
@@ -31,7 +31,7 @@ const slice = createSlice({
     },
     clearAuth(state) {
       state.isAuth = false;
-      state.identity = {} as IIdentity;
+      state.identity = {} as Identity;
       state.token = null;
       state.isAuthChecked = true;
     },

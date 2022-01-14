@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
 import { Form, Input, Select, Switch } from "antd";
 import rules from "../../utils/rules";
-import { IUser, IUserModelOptions } from "../../models/IUser";
+import { User, UserModelOptions } from "../../models/User";
 import { routeNames } from "../../routes";
 import { userService } from "../../api/UserService";
 
@@ -14,9 +14,9 @@ const modelRoutes = routeNames.user;
 const UserPage: FC = () => {
   const { id } = useParams();
 
-  const modelForm = useModelForm<IUser, IUserModelOptions>(id, userService);
+  const modelForm = useModelForm<User, UserModelOptions>(id, userService);
 
-  const formContent = (initData: IUser, modelOptions: IUserModelOptions) => (
+  const formContent = (initData: User, modelOptions: UserModelOptions) => (
     <>
       <Form.Item label="Username" name="username">
         <Input />

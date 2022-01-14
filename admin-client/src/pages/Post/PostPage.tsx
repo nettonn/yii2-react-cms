@@ -6,7 +6,7 @@ import { useModelForm } from "../../hooks/modelForm.hook";
 import { Col, Form, Input, Row, Switch, Tabs } from "antd";
 import rules from "../../utils/rules";
 import { routeNames } from "../../routes";
-import { IPost, IPostModelOptions } from "../../models/IPost";
+import { Post, PostModelOptions } from "../../models/Post";
 import FileUpload from "../../components/crud/form/FileUpload/FileUpload";
 import PostService from "../../api/PostService";
 import useGenerateAlias from "../../hooks/generateAlias.hook";
@@ -14,7 +14,7 @@ import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
 import CkeditorInput from "../../components/crud/form/CkeditorInput/CkeditorInput";
 import { useQuery } from "react-query";
 import { postSectionService } from "../../api/PostSectionService";
-import { IPostSection } from "../../models/IPostSection";
+import { PostSection } from "../../models/PostSection";
 import useModelType from "../../hooks/modelType.hook";
 
 const modelRoutes = routeNames.post;
@@ -27,7 +27,7 @@ const PostPage: FC = () => {
     [postSectionService.viewQueryKey(), sectionId],
     async ({ signal }) => {
       if (!sectionId) throw Error("Id not set");
-      return await postSectionService.view<IPostSection>(sectionId, signal);
+      return await postSectionService.view<PostSection>(sectionId, signal);
     },
     {
       refetchOnMount: false,
@@ -36,7 +36,7 @@ const PostPage: FC = () => {
 
   const postService = useMemo(() => new PostService(sectionId), [sectionId]);
 
-  const modelForm = useModelForm<IPost, IPostModelOptions>(id, postService);
+  const modelForm = useModelForm<Post, PostModelOptions>(id, postService);
 
   const { type } = useModelType(sectionData?.type);
 
@@ -52,7 +52,7 @@ const PostPage: FC = () => {
     "alias"
   );
 
-  const formContent = (initData: IPost, modelOptions: IPostModelOptions) => (
+  const formContent = (initData: Post, modelOptions: PostModelOptions) => (
     <Tabs type="card">
       <Tabs.TabPane tab="Общее" key="common">
         <Row gutter={DEFAULT_ROW_GUTTER}>

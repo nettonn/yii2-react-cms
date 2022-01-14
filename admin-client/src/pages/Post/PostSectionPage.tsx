@@ -6,10 +6,7 @@ import { useModelForm } from "../../hooks/modelForm.hook";
 import { Button, Col, Form, Input, Row, Select, Switch, Tabs } from "antd";
 import rules from "../../utils/rules";
 import { routeNames } from "../../routes";
-import {
-  IPostSection,
-  IPostSectionModelOptions,
-} from "../../models/IPostSection";
+import { PostSection, PostSectionModelOptions } from "../../models/PostSection";
 import { postSectionService } from "../../api/PostSectionService";
 import useGenerateAlias from "../../hooks/generateAlias.hook";
 import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
@@ -23,7 +20,7 @@ const postRoutes = routeNames.post;
 const PostSectionPage: FC = () => {
   const { id } = useParams();
 
-  const modelForm = useModelForm<IPostSection, IPostSectionModelOptions>(
+  const modelForm = useModelForm<PostSection, PostSectionModelOptions>(
     id,
     postSectionService
   );
@@ -43,8 +40,8 @@ const PostSectionPage: FC = () => {
   );
 
   const formContent = (
-    initData: IPostSection,
-    modelOptions: IPostSectionModelOptions
+    initData: PostSection,
+    modelOptions: PostSectionModelOptions
   ) => (
     <Tabs type="card">
       <Tabs.TabPane tab="Общее" key="common">

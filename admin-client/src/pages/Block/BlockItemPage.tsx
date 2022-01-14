@@ -6,9 +6,9 @@ import { useModelForm } from "../../hooks/modelForm.hook";
 import { Form, Input, Switch } from "antd";
 import rules from "../../utils/rules";
 import { routeNames } from "../../routes";
-import { IBlockItem, IBlockItemModelOptions } from "../../models/IBlockItem";
+import { BlockItem, BlockItemModelOptions } from "../../models/BlockItem";
 import BlockItemService from "../../api/BlockItemService";
-import { BLOCK_TYPE_SLIDER, IBlock } from "../../models/IBlock";
+import { BLOCK_TYPE_SLIDER, Block } from "../../models/Block";
 import SliderBlockItemForm from "./SliderBlockItemForm";
 import { useQuery } from "react-query";
 import { blockService } from "../../api/BlockService";
@@ -23,7 +23,7 @@ const BlockItemPage: FC = () => {
     [blockService.viewQueryKey(), blockId],
     async ({ signal }) => {
       if (!blockId) throw Error("Id not set");
-      return await blockService.view<IBlock>(blockId, signal);
+      return await blockService.view<Block>(blockId, signal);
     },
     {
       refetchOnMount: false,
@@ -35,7 +35,7 @@ const BlockItemPage: FC = () => {
     [blockId]
   );
 
-  const modelForm = useModelForm<IBlockItem, IBlockItemModelOptions>(
+  const modelForm = useModelForm<BlockItem, BlockItemModelOptions>(
     id,
     blockItemService
   );
@@ -49,8 +49,8 @@ const BlockItemPage: FC = () => {
   };
 
   const formContent = (
-    initData: IBlockItem,
-    modelOptions: IBlockItemModelOptions
+    initData: BlockItem,
+    modelOptions: BlockItemModelOptions
   ) => (
     <>
       <Form.Item label="Название" name="name" rules={[rules.required()]}>

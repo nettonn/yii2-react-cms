@@ -1,6 +1,6 @@
-import { IModel, IModelOptions, IValueTextOption } from "../types";
+import { Model, ModelOptions, ValueTextOption } from "../types";
 
-export interface IMenuItem extends IModel {
+export interface MenuItem extends Model {
   name: string;
   menu_id: number;
   parent_id: number | null;
@@ -18,7 +18,7 @@ interface ParentOption {
   children?: ParentOption[];
 }
 
-export interface IMenuItemModelOptions extends IModelOptions {
-  status: IValueTextOption[];
+export interface MenuItemModelOptions extends ModelOptions {
+  status: ValueTextOption[];
   parent: ParentOption[];
 }

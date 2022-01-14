@@ -3,7 +3,7 @@ import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
-import { IMenu, IMenuModelOptions } from "../../models/IMenu";
+import { Menu, MenuModelOptions } from "../../models/Menu";
 import { ColumnsType } from "antd/lib/table/interface";
 import { MenuOutlined } from "@ant-design/icons";
 import { statusColumn } from "../../components/crud/grid/columns";
@@ -15,12 +15,9 @@ const modelRoutes = routeNames.menu;
 const menuItemRoutes = routeNames.menuItem;
 
 const MenusPage: FC = () => {
-  const dataGridHook = useDataGrid<IMenu, IMenuModelOptions>(
-    menuService,
-    "menu"
-  );
+  const dataGridHook = useDataGrid<Menu, MenuModelOptions>(menuService, "menu");
 
-  const getColumns = (modelOptions: IMenuModelOptions): ColumnsType<IMenu> => [
+  const getColumns = (modelOptions: MenuModelOptions): ColumnsType<Menu> => [
     {
       title: "Название",
       dataIndex: "name",
@@ -50,7 +47,7 @@ const MenusPage: FC = () => {
       sorter: true,
       width: 120,
     },
-    statusColumn<IMenu>({ filters: modelOptions.status }),
+    statusColumn<Menu>({ filters: modelOptions.status }),
   ];
 
   return (
@@ -70,7 +67,7 @@ const MenusPage: FC = () => {
         dataGridHook={dataGridHook}
         getColumns={getColumns}
         scroll={{ x: 800 }}
-        actionButtons={(record: IMenu) => [
+        actionButtons={(record: Menu) => [
           <Link
             key="menuItems"
             to={menuItemRoutes.indexUrl(record.id)}

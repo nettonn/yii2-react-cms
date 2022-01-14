@@ -1,12 +1,12 @@
 import { AxiosRequestConfig } from "axios";
 import { $api, $apiNoAuth } from "../http/axios";
-import { IIdentity } from "../models/IIdentity";
+import { Identity } from "../models/Identity";
 import { prepareAxiosConfig } from "../utils/functions";
 
 export interface IAuthStorage {
   isAuth: boolean;
   token: string;
-  identity: IIdentity;
+  identity: Identity;
 }
 
 const authStorageName = "auth";
@@ -17,7 +17,7 @@ export default class AuthService {
   protected refreshTokenUrl = "/auth/refresh-token";
 
   async login(values: { email: string; password: string }): Promise<{
-    identity: IIdentity;
+    identity: Identity;
     token: string;
   }> {
     const config = prepareAxiosConfig(this.loginConfig(), { data: values });

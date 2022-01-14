@@ -5,21 +5,19 @@ import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
 import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
-import { IChunk, IChunkModelOptions } from "../../models/IChunk";
+import { Chunk, ChunkModelOptions } from "../../models/Chunk";
 import { chunkService } from "../../api/ChunkService";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = routeNames.chunk;
 
 const ChunksPage: FC = () => {
-  const dataGridHook = useDataGrid<IChunk, IChunkModelOptions>(
+  const dataGridHook = useDataGrid<Chunk, ChunkModelOptions>(
     chunkService,
     "chunk"
   );
 
-  const getColumns = (
-    modelOptions: IChunkModelOptions
-  ): ColumnsType<IChunk> => [
+  const getColumns = (modelOptions: ChunkModelOptions): ColumnsType<Chunk> => [
     {
       title: "Id",
       dataIndex: "id",

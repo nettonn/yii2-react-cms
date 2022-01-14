@@ -1,7 +1,7 @@
 import React from "react";
 import { FormOutlined } from "@ant-design/icons";
 import { stringReplace } from "../../utils/functions";
-import { IRoute } from "../../types";
+import { RouteType } from "../../types";
 const PostSectionsPage = React.lazy(
   () => import("../../pages/Post/PostSectionsPage")
 );
@@ -17,7 +17,7 @@ const names = {
     stringReplace("/post-sections/:id", { ":id": id }),
 };
 
-const routes: IRoute[] = [
+const routes: RouteType[] = [
   { path: names.index, element: PostSectionsPage },
   {
     path: names.create,

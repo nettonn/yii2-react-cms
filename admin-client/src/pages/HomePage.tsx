@@ -8,14 +8,14 @@ import PageHeader from "../components/ui/PageHeader/PageHeader";
 
 const Title = Typography.Title;
 
-interface IItem {
+interface Item {
   title: string;
   route: string;
   icon?: React.ReactNode;
 }
 
 const HomePage: FC = () => {
-  const items: IItem[] = [
+  const items: Item[] = [
     {
       route: routeNames.page.index,
       title: "Страницы",
@@ -42,7 +42,7 @@ const HomePage: FC = () => {
     },
   ];
 
-  const serviceItems: IItem[] = [
+  const serviceItems: Item[] = [
     {
       route: routeNames.redirect.index,
       title: "Редиректы",
@@ -69,7 +69,7 @@ const HomePage: FC = () => {
     },
   ];
 
-  const renderItem = (item: IItem) => {
+  const renderItem = (item: Item) => {
     return (
       <List.Item>
         <Link to={item.route}>

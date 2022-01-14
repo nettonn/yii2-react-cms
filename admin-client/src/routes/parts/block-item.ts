@@ -1,6 +1,6 @@
 import React from "react";
 import { stringReplace } from "../../utils/functions";
-import { IRoute } from "../../types";
+import { RouteType } from "../../types";
 import { BlockOutlined } from "@ant-design/icons";
 const BlockItemsPage = React.lazy(
   () => import("../../pages/Block/BlockItemsPage")
@@ -24,7 +24,7 @@ const names = {
     }),
 };
 
-const routes: IRoute[] = [
+const routes: RouteType[] = [
   { path: names.index, element: BlockItemsPage },
   {
     path: names.create,

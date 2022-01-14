@@ -1,9 +1,9 @@
-import { IModel, IModelOptions, IValueTextOption } from "../types";
+import { Model, ModelOptions, ValueTextOption } from "../types";
 
 export const BLOCK_TYPE_SLIDER = "slider";
 export const BLOCK_TYPE_GALLERY_SIMPLE = "simple_gallery";
 
-export interface IBlock extends IModel {
+export interface Block extends Model {
   name: string;
   key: string;
   type: string;
@@ -16,7 +16,7 @@ export interface IBlock extends IModel {
   updated_at_date: string;
 }
 
-export interface IBlockModelOptions extends IModelOptions {
-  status: IValueTextOption[];
-  type: IValueTextOption[];
+export interface BlockModelOptions extends ModelOptions {
+  status: ValueTextOption[];
+  type: ValueTextOption[];
 }

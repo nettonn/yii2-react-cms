@@ -10,9 +10,9 @@ import { MenuOutlined } from "@ant-design/icons";
 import {
   BLOCK_TYPE_GALLERY_SIMPLE,
   BLOCK_TYPE_SLIDER,
-  IBlock,
-  IBlockModelOptions,
-} from "../../models/IBlock";
+  Block,
+  BlockModelOptions,
+} from "../../models/Block";
 import { blockService } from "../../api/BlockService";
 
 import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
@@ -26,7 +26,7 @@ const blockItemRoutes = routeNames.blockItem;
 const BlockPage: FC = () => {
   const { id } = useParams();
 
-  const modelForm = useModelForm<IBlock, IBlockModelOptions>(id, blockService);
+  const modelForm = useModelForm<Block, BlockModelOptions>(id, blockService);
 
   const { type, typeChangeHandler } = useModelType(modelForm.initData?.type);
 
@@ -37,7 +37,7 @@ const BlockPage: FC = () => {
     return null;
   };
 
-  const formContent = (initData: IBlock, modelOptions: IBlockModelOptions) => (
+  const formContent = (initData: Block, modelOptions: BlockModelOptions) => (
     <>
       <Row gutter={DEFAULT_ROW_GUTTER}>
         <Col span={24} md={12}>

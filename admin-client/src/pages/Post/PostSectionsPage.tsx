@@ -3,10 +3,7 @@ import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
-import {
-  IPostSection,
-  IPostSectionModelOptions,
-} from "../../models/IPostSection";
+import { PostSection, PostSectionModelOptions } from "../../models/PostSection";
 import { ColumnsType } from "antd/lib/table/interface";
 import { statusColumn } from "../../components/crud/grid/columns";
 import { Link } from "react-router-dom";
@@ -17,14 +14,14 @@ const modelRoutes = routeNames.postSection;
 const postRoutes = routeNames.post;
 
 const PostSectionsPage: FC = () => {
-  const dataGridHook = useDataGrid<IPostSection, IPostSectionModelOptions>(
+  const dataGridHook = useDataGrid<PostSection, PostSectionModelOptions>(
     postSectionService,
     "postSection"
   );
 
   const getColumns = (
-    modelOptions: IPostSectionModelOptions
-  ): ColumnsType<IPostSection> => [
+    modelOptions: PostSectionModelOptions
+  ): ColumnsType<PostSection> => [
     {
       title: "Название",
       dataIndex: "name",
@@ -55,7 +52,7 @@ const PostSectionsPage: FC = () => {
       sorter: true,
       width: 120,
     },
-    statusColumn<IPostSection>({ filters: modelOptions.status }),
+    statusColumn<PostSection>({ filters: modelOptions.status }),
   ];
 
   return (

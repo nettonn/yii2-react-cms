@@ -1,11 +1,11 @@
 import React, { FC } from "react";
-import { IValueTextOption } from "../../../../types";
+import { ValueTextOption } from "../../../../types";
 import BlocksList from "./BlocksList";
 
 interface BlocksInputProps {
   value?: string[] | null; // blocks
   onChange?: (blocks: string[]) => void;
-  blockOptions: IValueTextOption[];
+  blockOptions: ValueTextOption[];
 }
 
 const BlocksInput: FC<BlocksInputProps> = ({

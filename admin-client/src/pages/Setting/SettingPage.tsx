@@ -8,12 +8,12 @@ import rules from "../../utils/rules";
 import { routeNames } from "../../routes";
 import { settingService } from "../../api/SettingService";
 import {
-  ISetting,
-  ISettingModelOptions,
+  Setting,
+  SettingModelOptions,
   SETTING_TYPE_BOOL,
   SETTING_TYPE_INT,
   SETTING_TYPE_STRING,
-} from "../../models/ISetting";
+} from "../../models/Setting";
 import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
 import useModelType from "../../hooks/modelType.hook";
 
@@ -22,7 +22,7 @@ const modelRoutes = routeNames.setting;
 const SettingPage: FC = () => {
   const { id } = useParams();
 
-  const modelForm = useModelForm<ISetting, ISettingModelOptions>(
+  const modelForm = useModelForm<Setting, SettingModelOptions>(
     id,
     settingService
   );
@@ -60,8 +60,8 @@ const SettingPage: FC = () => {
   };
 
   const formContent = (
-    initData: ISetting,
-    modelOptions: ISettingModelOptions,
+    initData: Setting,
+    modelOptions: SettingModelOptions,
     form: FormInstance
   ) => (
     <>

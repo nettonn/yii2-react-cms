@@ -22,7 +22,7 @@ import {
 import Item from "./Item";
 import { parseInt, uniq } from "lodash";
 import { useQuery } from "react-query";
-import { IFileModel } from "../../../models/IFileModel";
+import { FileModel } from "../../../models/FileModel";
 import { fileService } from "../../../api/FileService";
 import { sortObjectByIds } from "../../../utils/functions";
 
@@ -35,7 +35,7 @@ interface FileListProps {
 const FileList: FC<FileListProps> = ({ fileIds, onChange, hasControls }) => {
   const [isInit, setIsInit] = useState(false);
   const [toFetchIds, setToFetchIds] = useState<number[]>([]);
-  const [fileModels, setFileModels] = useState<IFileModel[]>([]);
+  const [fileModels, setFileModels] = useState<FileModel[]>([]);
 
   const sensors = useSensors(
     useSensor(MouseSensor),
@@ -88,7 +88,7 @@ const FileList: FC<FileListProps> = ({ fileIds, onChange, hasControls }) => {
     [fileService.indexQueryKey(), { ids: toFetchIds }],
     async ({ signal }) => {
       const params = { ids: toFetchIds };
-      const result = await fileService.index<IFileModel>(params, signal);
+      const result = await fileService.index<FileModel>(params, signal);
       return result.data;
     },
     {
@@ -125,7 +125,7 @@ const FileList: FC<FileListProps> = ({ fileIds, onChange, hasControls }) => {
     if (fileModel) files.push(fileModel);
   }
 
-  const renderList = (files: IFileModel[]) => {
+  const renderList = (files: FileModel[]) => {
     return (
       <Row className="app-file-list">
         <Image.PreviewGroup>

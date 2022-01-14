@@ -1,5 +1,5 @@
 import React from "react";
-import { IRoute } from "../../types";
+import { RouteType } from "../../types";
 const Error403 = React.lazy(() => import("../../pages/Error/Error403Page"));
 const Error404 = React.lazy(() => import("../../pages/Error/Error404Page"));
 const Error500 = React.lazy(() => import("../../pages/Error/Error500Page"));
@@ -10,7 +10,7 @@ const names = {
   e500: "/error500",
 };
 
-const routes: IRoute[] = [
+const routes: RouteType[] = [
   { path: names.e403, element: Error403, isPublic: true },
   { path: names.e404, element: Error404, isPublic: true },
   { path: names.e500, element: Error500, isPublic: true },

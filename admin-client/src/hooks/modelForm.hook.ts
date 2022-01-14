@@ -7,7 +7,7 @@ import { Form } from "antd";
 import { FieldData } from "rc-field-form/es/interface";
 import { useEffect, useState } from "react";
 import { ValidateErrorEntity } from "rc-field-form/lib/interface";
-import { IModel, IModelOptions } from "../types";
+import { Model, ModelOptions } from "../types";
 import { useQuery, useMutation } from "react-query";
 import { queryClient } from "../http/query-client";
 import { useNavigate } from "react-router-dom";
@@ -16,8 +16,8 @@ import { useIsMounted } from "usehooks-ts";
 const pretty = require("pretty");
 
 export function useModelForm<
-  T extends IModel = IModel,
-  M extends IModelOptions = IModelOptions
+  T extends Model = Model,
+  M extends ModelOptions = ModelOptions
 >(
   id: number | string | undefined,
   modelService: RestService,

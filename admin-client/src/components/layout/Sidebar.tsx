@@ -9,14 +9,14 @@ import useLogout from "../../hooks/logout.hook";
 import { useAppActions, useAppSelector } from "../../hooks/redux";
 import { layoutActions } from "../../store/reducers/layout";
 
-interface IItem {
+interface MenuItem {
   title: string;
   key?: string;
   route?: string;
   hideIcon?: boolean;
   icon?: React.ReactNode;
   onClick?: MenuClickEventHandler;
-  children?: IItem[];
+  children?: MenuItem[];
 }
 
 const Sidebar: FC = () => {
@@ -55,7 +55,7 @@ const Sidebar: FC = () => {
     setSelectedKeys([pathname]);
   }, [pathname]);
 
-  const menuItems: (IItem | ReactElement)[] = [
+  const menuItems: (MenuItem | ReactElement)[] = [
     {
       route: routeNames.home,
       title: "Панель",
@@ -146,7 +146,7 @@ const Sidebar: FC = () => {
     setSidebarOpenKeys([...newOpenKeys]);
   };
 
-  const getMenuItemIcon = (menuItem: IItem) => {
+  const getMenuItemIcon = (menuItem: MenuItem) => {
     if (menuItem.hideIcon) return null;
 
     if (menuItem.icon) {
@@ -157,19 +157,19 @@ const Sidebar: FC = () => {
     }
   };
 
-  const getMenuItemText = (menuItem: IItem) => {
+  const getMenuItemText = (menuItem: MenuItem) => {
     if (menuItem.route)
       return <Link to={menuItem.route}>{menuItem.title}</Link>;
     return menuItem.title;
   };
 
-  const getMenuItemKey = (menuItem: IItem) => {
+  const getMenuItemKey = (menuItem: MenuItem) => {
     if (menuItem.route) return menuItem.route;
     if (menuItem.key) return menuItem.key;
     return menuItem.title;
   };
 
-  const renderMenuItem = (menuItem: IItem | ReactElement) => {
+  const renderMenuItem = (menuItem: MenuItem | ReactElement) => {
     if (React.isValidElement(menuItem)) {
       return menuItem;
     }

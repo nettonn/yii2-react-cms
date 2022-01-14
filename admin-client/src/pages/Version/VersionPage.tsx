@@ -5,11 +5,11 @@ import { Descriptions, Spin, Table } from "antd";
 import { routeNames } from "../../routes";
 import { versionService } from "../../api/VersionService";
 import {
-  IVersion,
-  IVersionAttributesCompare,
-  IVersionModelOptions,
+  Version,
+  VersionAttributesCompare,
+  VersionModelOptions,
   VERSION_ACTION_UPDATE,
-} from "../../models/IVersion";
+} from "../../models/Version";
 import { useModelView } from "../../hooks/modelView.hook";
 import { ColumnsType } from "antd/lib/table/Table";
 import { withoutBaseUrl } from "../../utils/functions";
@@ -19,7 +19,7 @@ const modelRoutes = routeNames.version;
 const VersionPage: FC = () => {
   const { id } = useParams();
 
-  const { data, isInit } = useModelView<IVersion, IVersionModelOptions>(
+  const { data, isInit } = useModelView<Version, VersionModelOptions>(
     id,
     versionService
   );
@@ -28,7 +28,7 @@ const VersionPage: FC = () => {
 
   if (!data) return null;
 
-  const columns: ColumnsType<IVersionAttributesCompare> = [
+  const columns: ColumnsType<VersionAttributesCompare> = [
     {
       title: "Поле",
       dataIndex: "label",

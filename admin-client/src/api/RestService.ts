@@ -1,5 +1,5 @@
 import { $api } from "../http/axios";
-import { IApiServicePagination, IModel } from "../types";
+import { ApiServicePagination, Model } from "../types";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { prepareAxiosConfig } from "../utils/functions";
 import { queryClient } from "../http/query-client";
@@ -39,14 +39,14 @@ export default class RestService {
     return `${this.name}-view`;
   }
 
-  async index<T extends IModel = IModel>(
+  async index<T extends Model = Model>(
     params?: IRestServiceIndexQueryParams,
     signal?: AbortSignal
-  ): Promise<{ pagination: IApiServicePagination; data: T[] }> {
+  ): Promise<{ pagination: ApiServicePagination; data: T[] }> {
     const config = prepareAxiosConfig(this.indexConfig(), { params });
     if (signal) config.signal = signal;
     const response = await $api.request<T[]>(config);
-    const pagination: IApiServicePagination = {};
+    const pagination: ApiServicePagination = {};
 
     if (response.headers["x-pagination-current-page"] !== undefined)
       pagination.currentPage = parseInt(

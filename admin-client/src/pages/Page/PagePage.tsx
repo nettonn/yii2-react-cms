@@ -7,11 +7,11 @@ import { Col, Form, Input, Row, Select, Switch, Tabs, TreeSelect } from "antd";
 import rules from "../../utils/rules";
 import { routeNames } from "../../routes";
 import {
-  IPage,
-  IPageModelOptions,
+  Page,
+  PageModelOptions,
   PAGE_TYPE_COMMON,
   PAGE_TYPE_MAIN,
-} from "../../models/IPage";
+} from "../../models/Page";
 import FileUpload from "../../components/crud/form/FileUpload/FileUpload";
 import { pageService } from "../../api/PageService";
 import CkeditorInput from "../../components/crud/form/CkeditorInput/CkeditorInput";
@@ -22,10 +22,10 @@ import BlocksInput from "../../components/crud/form/BlocksInput/BlocksInput";
 
 const modelRoutes = routeNames.page;
 
-const Page: FC = () => {
+const PagePage: FC = () => {
   const { id } = useParams();
 
-  const modelForm = useModelForm<IPage, IPageModelOptions>(id, pageService, [
+  const modelForm = useModelForm<Page, PageModelOptions>(id, pageService, [
     "content",
   ]);
   const { type, typeChangeHandler } = useModelType(modelForm.initData?.type);
@@ -42,7 +42,7 @@ const Page: FC = () => {
     "alias"
   );
 
-  const formContent = (initData: IPage, modelOptions: IPageModelOptions) => (
+  const formContent = (initData: Page, modelOptions: PageModelOptions) => (
     <Tabs type="card">
       <Tabs.TabPane tab="Общее" key="common">
         <Row gutter={DEFAULT_ROW_GUTTER}>
@@ -141,4 +141,4 @@ const Page: FC = () => {
   );
 };
 
-export default Page;
+export default PagePage;

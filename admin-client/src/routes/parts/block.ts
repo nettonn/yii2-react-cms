@@ -1,7 +1,7 @@
 import React from "react";
 import { BlockOutlined } from "@ant-design/icons";
 import { stringReplace } from "../../utils/functions";
-import { IRoute } from "../../types";
+import { RouteType } from "../../types";
 const BlocksPage = React.lazy(() => import("../../pages/Block/BlocksPage"));
 const BlockPage = React.lazy(() => import("../../pages/Block/BlockPage"));
 
@@ -13,7 +13,7 @@ const names = {
     stringReplace("/blocks/:id", { ":id": id }),
 };
 
-const routes: IRoute[] = [
+const routes: RouteType[] = [
   { path: names.index, element: BlocksPage },
   {
     path: names.create,

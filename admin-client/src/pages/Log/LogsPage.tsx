@@ -4,16 +4,16 @@ import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { routeNames } from "../../routes";
 import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
-import { ILog, ILogModelOptions } from "../../models/ILog";
+import { Log, LogModelOptions } from "../../models/Log";
 import { logService } from "../../api/LogService";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = routeNames.log;
 
 const LogsPage: FC = () => {
-  const dataGridHook = useDataGrid<ILog, ILogModelOptions>(logService, "log");
+  const dataGridHook = useDataGrid<Log, LogModelOptions>(logService, "log");
 
-  const getColumns = (modelOptions: ILogModelOptions): ColumnsType<ILog> => [
+  const getColumns = (modelOptions: LogModelOptions): ColumnsType<Log> => [
     {
       title: "Id",
       dataIndex: "id",

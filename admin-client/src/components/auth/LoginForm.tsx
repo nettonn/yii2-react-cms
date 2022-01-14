@@ -12,19 +12,19 @@ import {
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { routeNames } from "../../routes";
 
-interface ILoginFormValues {
+interface LoginFormValues {
   email: string;
   password: string;
 }
 
 const LoginForm: FC = () => {
-  const [form] = Form.useForm<ILoginFormValues>();
+  const [form] = Form.useForm<LoginFormValues>();
   const { authorize } = useAppActions(authActions);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const { isLoading, mutate: login } = useMutation(
-    async (values: ILoginFormValues) => {
+    async (values: LoginFormValues) => {
       const { identity, token } = await authService.login(values);
 
       authService.setStorage({

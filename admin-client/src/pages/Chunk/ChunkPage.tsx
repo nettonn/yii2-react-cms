@@ -8,14 +8,14 @@ import rules from "../../utils/rules";
 import { routeNames } from "../../routes";
 import { chunkService } from "../../api/ChunkService";
 import {
-  IChunk,
-  IChunkModelOptions,
+  Chunk,
+  ChunkModelOptions,
   CHUNK_TYPE_TEXT,
   CHUNK_TYPE_HTML,
-} from "../../models/IChunk";
+} from "../../models/Chunk";
 import AceInput from "../../components/crud/form/AceInput/AceInput";
 import CkeditorInput from "../../components/crud/form/CkeditorInput/CkeditorInput";
-import { IModelOptions } from "../../types";
+import { ModelOptions } from "../../types";
 import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
 import useModelType from "../../hooks/modelType.hook";
 
@@ -23,7 +23,7 @@ const modelRoutes = routeNames.chunk;
 
 const ChunkPage: FC = () => {
   const { id } = useParams();
-  const modelForm = useModelForm<IChunk, IModelOptions>(id, chunkService, [
+  const modelForm = useModelForm<Chunk, ModelOptions>(id, chunkService, [
     "content",
   ]);
 
@@ -39,8 +39,8 @@ const ChunkPage: FC = () => {
   };
 
   const formContent = (
-    initData: IChunk,
-    modelOptions: IChunkModelOptions,
+    initData: Chunk,
+    modelOptions: ChunkModelOptions,
     form: FormInstance
   ) => (
     <>

@@ -1,6 +1,6 @@
-import { IModel, IModelOptions, IValueTextOption } from "../types";
+import { Model, ModelOptions, ValueTextOption } from "../types";
 
-export interface ISeo extends IModel {
+export interface Seo extends Model {
   name: string;
   parent_id: number | null;
   top_content: string;
@@ -19,7 +19,7 @@ interface ParentOption {
   children?: ParentOption[];
 }
 
-export interface ISeoModelOptions extends IModelOptions {
-  status: IValueTextOption[];
+export interface SeoModelOptions extends ModelOptions {
+  status: ValueTextOption[];
   parent: ParentOption[];
 }

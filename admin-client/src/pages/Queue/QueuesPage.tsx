@@ -4,21 +4,19 @@ import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { routeNames } from "../../routes";
 import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
-import { IQueue, IQueueModelOptions } from "../../models/IQueue";
+import { Queue, QueueModelOptions } from "../../models/Queue";
 import { queueService } from "../../api/QueueService";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = routeNames.queue;
 
 const QueuesPage: FC = () => {
-  const dataGridHook = useDataGrid<IQueue, IQueueModelOptions>(
+  const dataGridHook = useDataGrid<Queue, QueueModelOptions>(
     queueService,
     "queue"
   );
 
-  const getColumns = (
-    modelOptions: IQueueModelOptions
-  ): ColumnsType<IQueue> => [
+  const getColumns = (modelOptions: QueueModelOptions): ColumnsType<Queue> => [
     {
       title: "Id",
       dataIndex: "id",

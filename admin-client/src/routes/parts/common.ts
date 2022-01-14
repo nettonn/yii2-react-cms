@@ -1,6 +1,6 @@
 import React from "react";
 import { HomeOutlined } from "@ant-design/icons";
-import { IRoute } from "../../types";
+import { RouteType } from "../../types";
 
 const Login = React.lazy(() => import("../../pages/LoginPage"));
 const Home = React.lazy(() => import("../../pages/HomePage"));
@@ -10,7 +10,7 @@ const names = {
   home: "/",
 };
 
-const routes: IRoute[] = [
+const routes: RouteType[] = [
   { path: names.login, element: Login, isPublic: true, hideIfAuth: true },
   { path: names.home, element: Home },
 ];

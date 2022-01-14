@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { Descriptions, Spin } from "antd";
 import { routeNames } from "../../routes";
 import { logService } from "../../api/LogService";
-import { ILog, ILogModelOptions } from "../../models/ILog";
+import { Log, LogModelOptions } from "../../models/Log";
 import { useModelView } from "../../hooks/modelView.hook";
 
 const modelRoutes = routeNames.log;
@@ -12,7 +12,7 @@ const modelRoutes = routeNames.log;
 const LogPage: FC = () => {
   const { id } = useParams();
 
-  const { data, isInit } = useModelView<ILog, ILogModelOptions>(id, logService);
+  const { data, isInit } = useModelView<Log, LogModelOptions>(id, logService);
 
   if (!isInit) return <Spin spinning={true} />;
 

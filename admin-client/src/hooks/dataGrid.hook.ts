@@ -1,6 +1,6 @@
 import RestService, { IRestServiceIndexQueryParams } from "../api/RestService";
 import { TablePaginationConfig } from "antd/lib/table/interface";
-import { IFiltersParam, IModel, IModelOptions } from "../types";
+import { FilterParams, Model, ModelOptions } from "../types";
 import { useQuery, useMutation } from "react-query";
 import { useAppActions, useAppSelector } from "./redux";
 import { useEffect, useState } from "react";
@@ -12,8 +12,8 @@ import {
 import { message } from "antd";
 
 export default function useDataGrid<
-  T extends IModel = IModel,
-  M extends IModelOptions = any
+  T extends Model = Model,
+  M extends ModelOptions = any
 >(modelService: RestService, dataGridSelector: DataGridSelector) {
   const [isInit, setIsInit] = useState(false);
 
@@ -203,7 +203,7 @@ function parseTableFilters(tableFilters: any) {
 
   if (!filterKeys.length) return false;
 
-  const filterParams = {} as IFiltersParam;
+  const filterParams = {} as FilterParams;
   for (const key of filterKeys) {
     filterParams[key] = tableFilters[key];
   }

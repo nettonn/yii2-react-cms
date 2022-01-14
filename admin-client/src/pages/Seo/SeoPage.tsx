@@ -6,7 +6,7 @@ import { useModelForm } from "../../hooks/modelForm.hook";
 import { Form, Input, Switch, Tabs, TreeSelect } from "antd";
 import rules from "../../utils/rules";
 import { routeNames } from "../../routes";
-import { ISeo, ISeoModelOptions } from "../../models/ISeo";
+import { Seo, SeoModelOptions } from "../../models/Seo";
 import { seoService } from "../../api/SeoService";
 import CkeditorInput from "../../components/crud/form/CkeditorInput/CkeditorInput";
 
@@ -15,9 +15,9 @@ const modelRoutes = routeNames.seo;
 const SeoPage: FC = () => {
   const { id } = useParams();
 
-  const modelForm = useModelForm<ISeo, ISeoModelOptions>(id, seoService);
+  const modelForm = useModelForm<Seo, SeoModelOptions>(id, seoService);
 
-  const formContent = (initData: ISeo, modelOptions: ISeoModelOptions) => (
+  const formContent = (initData: Seo, modelOptions: SeoModelOptions) => (
     <Tabs type="card">
       <Tabs.TabPane tab="Общее" key="common">
         <Form.Item label="Название" name="name" rules={[rules.required()]}>

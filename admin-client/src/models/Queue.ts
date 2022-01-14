@@ -1,6 +1,6 @@
-import { IModel, IModelOptions, IValueTextOption } from "../types";
+import { Model, ModelOptions, ValueTextOption } from "../types";
 
-export interface IQueue extends IModel {
+export interface Queue extends Model {
   channel: string;
   ttr: number;
   delay: number;
@@ -15,6 +15,6 @@ export interface IQueue extends IModel {
   done_at_datetime: string;
 }
 
-export interface IQueueModelOptions extends IModelOptions {
-  channel: IValueTextOption[];
+export interface QueueModelOptions extends ModelOptions {
+  channel: ValueTextOption[];
 }

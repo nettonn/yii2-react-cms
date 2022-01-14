@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { Descriptions, Spin } from "antd";
 import { routeNames } from "../../routes";
 import { queueService } from "../../api/QueueService";
-import { IQueue, IQueueModelOptions } from "../../models/IQueue";
+import { Queue, QueueModelOptions } from "../../models/Queue";
 import { useModelView } from "../../hooks/modelView.hook";
 
 const modelRoutes = routeNames.queue;
@@ -12,7 +12,7 @@ const modelRoutes = routeNames.queue;
 const QueuePage: FC = () => {
   const { id } = useParams();
 
-  const { data, isInit } = useModelView<IQueue, IQueueModelOptions>(
+  const { data, isInit } = useModelView<Queue, QueueModelOptions>(
     id,
     queueService
   );

@@ -4,21 +4,19 @@ import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import { routeNames } from "../../routes";
 import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
-import { IOrder, IOrderModelOptions } from "../../models/IOrder";
+import { Order, OrderModelOptions } from "../../models/Order";
 import { orderService } from "../../api/OrderService";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
 const modelRoutes = routeNames.order;
 
 const OrdersPage: FC = () => {
-  const dataGridHook = useDataGrid<IOrder, IOrderModelOptions>(
+  const dataGridHook = useDataGrid<Order, OrderModelOptions>(
     orderService,
     "order"
   );
 
-  const getColumns = (
-    modelOptions: IOrderModelOptions
-  ): ColumnsType<IOrder> => [
+  const getColumns = (modelOptions: OrderModelOptions): ColumnsType<Order> => [
     {
       title: "Id",
       dataIndex: "id",

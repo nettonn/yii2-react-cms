@@ -1,10 +1,10 @@
-import { IModel, IModelOptions, IValueTextOption } from "../types";
-import { IFileModel } from "./IFileModel";
+import { Model, ModelOptions, ValueTextOption } from "../types";
+import { FileModel } from "./FileModel";
 
 export const PAGE_TYPE_COMMON = "common";
 export const PAGE_TYPE_MAIN = "main";
 
-export interface IPage extends IModel {
+export interface Page extends Model {
   name: string;
   alias: string;
   parent_id: number | null;
@@ -16,7 +16,7 @@ export interface IPage extends IModel {
   seo_h1: string;
   seo_description: string;
   seo_keywords: string;
-  images: IFileModel[] | null;
+  images: FileModel[] | null;
   images_id: number[] | null;
 }
 
@@ -27,9 +27,9 @@ interface ParentOption {
   children?: ParentOption[];
 }
 
-export interface IPageModelOptions extends IModelOptions {
-  status: IValueTextOption[];
-  type: IValueTextOption[];
-  blocks: IValueTextOption[];
+export interface PageModelOptions extends ModelOptions {
+  status: ValueTextOption[];
+  type: ValueTextOption[];
+  blocks: ValueTextOption[];
   parent: ParentOption[];
 }

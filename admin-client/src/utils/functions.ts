@@ -1,4 +1,4 @@
-import { IValidationErrorType } from "../types";
+import { ValidationError } from "../types";
 import CONSTANTS from "./constants";
 import { AxiosRequestConfig } from "axios";
 import _isEmpty from "lodash/isEmpty";
@@ -39,7 +39,7 @@ export function requestErrorHandler(e: any) {
   interface Errors {
     message?: string;
     status?: number;
-    validationErrors?: IValidationErrorType[];
+    validationErrors?: ValidationError[];
   }
   const result: Errors = {};
   if (e.response) {
@@ -62,7 +62,7 @@ export function requestErrorHandler(e: any) {
 }
 
 export function prepareAntdValidationErrors(
-  validationErrors: IValidationErrorType[]
+  validationErrors: ValidationError[]
 ) {
   const fields: FieldData[] = [];
   for (const { field, message } of validationErrors) {

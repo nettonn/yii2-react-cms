@@ -1,9 +1,9 @@
-import { IModel, IModelOptions, IValueTextOption } from "../types";
+import { Model, ModelOptions, ValueTextOption } from "../types";
 
 export const VERSION_ACTION_UPDATE = "UPDATE";
 export const VERSION_ACTION_DELETE = "DELETE";
 
-export interface IVersionAttributesCompare {
+export interface VersionAttributesCompare {
   attribute: string;
   label: string;
   version_value: string | number | boolean;
@@ -11,10 +11,10 @@ export interface IVersionAttributesCompare {
   is_diff?: boolean;
 }
 
-export interface IVersion extends IModel {
+export interface Version extends Model {
   name: string;
   attributes: { [key: string]: string | number | boolean };
-  attributes_compare: IVersionAttributesCompare[];
+  attributes_compare: VersionAttributesCompare[];
   action: typeof VERSION_ACTION_UPDATE | typeof VERSION_ACTION_DELETE;
   action_text: string;
   link_class: string;
@@ -26,8 +26,8 @@ export interface IVersion extends IModel {
   owner_update_url?: string;
 }
 
-export interface IVersionModelOptions extends IModelOptions {
-  action: IValueTextOption[];
-  link_class: IValueTextOption[];
-  link_id: IValueTextOption[];
+export interface VersionModelOptions extends ModelOptions {
+  action: ValueTextOption[];
+  link_class: ValueTextOption[];
+  link_id: ValueTextOption[];
 }

@@ -26,16 +26,16 @@ const sliceTyped = (name: Selector) => createGridSlice<Selector>(name);
 
 type Slice = ReturnType<typeof sliceTyped>;
 
-type SlicesType = Record<Selector, Slice>;
+type Slices = Record<Selector, Slice>;
 
-const slices = selectors.reduce<SlicesType>((object, selector) => {
+const slices = selectors.reduce<Slices>((object, selector) => {
   object[selector] = createGridSlice(selector);
   return object;
 }, {} as any);
 
-type ReducersType = Record<Selector, Reducer<DataGridState>>;
+type Reducers = Record<Selector, Reducer<DataGridState>>;
 
-export const dataGridReducers = selectors.reduce<ReducersType>(
+export const dataGridReducers = selectors.reduce<Reducers>(
   (object, selector) => {
     object[selector] = slices[selector].reducer;
     return object;
@@ -47,9 +47,9 @@ const actionsTyped = (name: Selector) => slices[name].actions;
 
 type Actions = ReturnType<typeof actionsTyped>;
 
-type GridActionsType = Record<Selector, Actions>;
+type GridActions = Record<Selector, Actions>;
 
-export const dataGridActions = selectors.reduce<GridActionsType>(
+export const dataGridActions = selectors.reduce<GridActions>(
   (object, selector) => {
     object[selector] = slices[selector].actions;
     return object;
