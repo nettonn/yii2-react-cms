@@ -1,5 +1,6 @@
 import RestService from "./RestService";
 import { AxiosRequestConfig } from "axios";
+import _merge from "lodash/merge";
 
 export default class MenuItemService extends RestService {
   protected name = "menu-item";
@@ -10,31 +11,25 @@ export default class MenuItemService extends RestService {
   }
 
   indexQueryKey() {
-    return `${this.name}-index-${this.menuId}`;
+    return `${super.indexQueryKey()}-${this.menuId}`;
   }
 
   modelOptionsQueryKey() {
-    return `${this.name}-model-options-${this.menuId}`;
+    return `${super.modelOptionsQueryKey()}-${this.menuId}`;
   }
 
   indexConfig(): AxiosRequestConfig {
-    return {
-      url: this.url,
-      method: "get",
-      params: {
-        menuId: this.menuId,
-      },
-    };
+    return _merge(super.indexConfig(), { params: { menu_id: this.menuId } });
+  }
+
+  createConfig(): AxiosRequestConfig {
+    return _merge(super.createConfig(), { data: { menu_id: this.menuId } });
   }
 
   modelOptionsConfig(): AxiosRequestConfig {
-    return {
-      url: `${this.url}/model-options`,
-      method: "get",
-      params: {
-        menuId: this.menuId,
-      },
-    };
+    return _merge(super.modelOptionsConfig(), {
+      params: { menu_id: this.menuId },
+    });
   }
 }
 

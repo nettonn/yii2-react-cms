@@ -4,6 +4,7 @@ use app\controllers\base\RestController;
 use app\models\Post;
 use app\utils\AdminClientHelper;
 use app\models\query\ActiveQuery;
+use Yii;
 
 class PostController extends RestController
 {
@@ -22,6 +23,13 @@ class PostController extends RestController
             ['like', 'description',  "$search"],
             ['like', 'content',  "$search"],
         ]);
+    }
+
+    protected function prepareQuery(ActiveQuery $query): ActiveQuery
+    {
+        $query = parent::prepareQuery($query);
+
+        return $query->andWhere(['section_id' => Yii::$app->request->get('section_id')]);
     }
 
     public function modelOptions(): array

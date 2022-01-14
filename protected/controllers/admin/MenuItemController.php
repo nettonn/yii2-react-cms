@@ -26,19 +26,13 @@ class MenuItemController extends RestController
     {
         $query = parent::prepareQuery($query);
 
-        $menuId = Yii::$app->request->get('menuId');
-        $query = $query->andWhere(['menu_id' => $menuId]);
-
-        return $query;
+        return $query->andWhere(['menu_id' => Yii::$app->request->get('menu_id')]);
     }
-
 
     public function modelOptions(): array
     {
-        $menuId = Yii::$app->request->get('menuId');
-
         $parentOptionsQuery = MenuItem::find()
-            ->andWhere(['menu_id' => $menuId])
+            ->andWhere(['menu_id' => Yii::$app->request->get('menu_id')])
             ->asArray();
 
         return [

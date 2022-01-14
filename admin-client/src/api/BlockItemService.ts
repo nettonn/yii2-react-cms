@@ -1,5 +1,6 @@
 import RestService from "./RestService";
 import { AxiosRequestConfig } from "axios";
+import _merge from "lodash/merge";
 
 export default class BlockItemService extends RestService {
   protected name = "block-item";
@@ -10,55 +11,25 @@ export default class BlockItemService extends RestService {
   }
 
   indexQueryKey() {
-    return `${this.name}-index-${this.blockId}`;
+    return `${super.indexQueryKey()}-${this.blockId}`;
   }
 
   modelOptionsQueryKey() {
-    return `${this.name}-model-options-${this.blockId}`;
+    return `${super.modelOptionsQueryKey()}-${this.blockId}`;
   }
 
   indexConfig(): AxiosRequestConfig {
-    return {
-      url: this.url,
-      method: "get",
-      params: {
-        block_id: this.blockId,
-      },
-    };
+    return _merge(super.indexConfig(), { params: { block_id: this.blockId } });
   }
 
   createConfig(): AxiosRequestConfig {
-    return {
-      url: this.url,
-      method: "post",
-      headers: { "Content-Type": "multipart/form-data" },
-      params: {
-        block_id: this.blockId,
-      },
-      data: {
-        block_id: this.blockId,
-      },
-    };
+    return _merge(super.createConfig(), { data: { block_id: this.blockId } });
   }
 
   modelOptionsConfig(): AxiosRequestConfig {
-    return {
-      url: `${this.url}/model-options`,
-      method: "get",
-      params: {
-        block_id: this.blockId,
-      },
-    };
-  }
-
-  modelDefaultsConfig(): AxiosRequestConfig {
-    return {
-      url: `${this.url}/model-defaults`,
-      method: "get",
-      params: {
-        block_id: this.blockId,
-      },
-    };
+    return _merge(super.modelOptionsConfig(), {
+      params: { block_id: this.blockId },
+    });
   }
 }
 

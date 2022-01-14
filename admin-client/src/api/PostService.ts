@@ -1,5 +1,6 @@
 import RestService from "./RestService";
 import { AxiosRequestConfig } from "axios";
+import _merge from "lodash/merge";
 
 export default class PostService extends RestService {
   protected name = "post";
@@ -10,52 +11,29 @@ export default class PostService extends RestService {
   }
 
   indexQueryKey() {
-    return `${this.name}-index-${this.sectionId}`;
+    return `${super.indexQueryKey()}-${this.sectionId}`;
   }
 
   modelOptionsQueryKey() {
-    return `${this.name}-model-options-${this.sectionId}`;
+    return `${super.modelOptionsQueryKey()}-${this.sectionId}`;
   }
 
   indexConfig(): AxiosRequestConfig {
-    return {
-      url: this.url,
-      method: "get",
-      params: {
-        section_id: this.sectionId,
-      },
-    };
+    return _merge(super.indexConfig(), {
+      params: { section_id: this.sectionId },
+    });
   }
 
   createConfig(): AxiosRequestConfig {
-    return {
-      url: this.url,
-      method: "post",
-      headers: { "Content-Type": "multipart/form-data" },
-      data: {
-        section_id: this.sectionId,
-      },
-    };
+    return _merge(super.createConfig(), {
+      data: { section_id: this.sectionId },
+    });
   }
 
   modelOptionsConfig(): AxiosRequestConfig {
-    return {
-      url: `${this.url}/model-options`,
-      method: "get",
-      params: {
-        section_id: this.sectionId,
-      },
-    };
-  }
-
-  modelDefaultsConfig(): AxiosRequestConfig {
-    return {
-      url: `${this.url}/model-defaults`,
-      method: "get",
-      params: {
-        section_id: this.sectionId,
-      },
-    };
+    return _merge(super.modelOptionsConfig(), {
+      params: { section_id: this.sectionId },
+    });
   }
 }
 

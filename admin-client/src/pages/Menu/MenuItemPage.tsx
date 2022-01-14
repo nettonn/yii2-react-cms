@@ -40,17 +40,6 @@ const MenuItemPage: FC = () => {
     modelOptions: MenuItemModelOptions
   ) => (
     <>
-      {!id ? (
-        <Form.Item
-          name="menu_id"
-          hidden={true}
-          noStyle={true}
-          initialValue={menuId}
-        >
-          <Input value={menuId} />
-        </Form.Item>
-      ) : null}
-
       <Form.Item label="Название" name="name" rules={[rules.required()]}>
         <Input />
       </Form.Item>
