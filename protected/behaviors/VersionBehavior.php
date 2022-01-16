@@ -2,24 +2,17 @@
 
 use app\models\Version;
 use Yii;
-use yii\base\Behavior;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
+use yii\db\BaseActiveRecord;
 use yii\helpers\Inflector;
-use yii\helpers\StringHelper;
-use yii\helpers\Url;
 use yii\helpers\VarDumper;
 
-/**
- * @property ActiveRecord $owner
- */
-class VersionBehavior extends Behavior
+class VersionBehavior extends BaseBehavior
 {
     public $nameAttribute = 'name';
 
     public $attributes;
-
-    public $validateModel = false;
 
     /**
      * attribute options in model field $attributeOptions
@@ -40,10 +33,10 @@ class VersionBehavior extends Behavior
     public function events()
     {
         return [
-            ActiveRecord::EVENT_BEFORE_UPDATE   => 'beforeUpdate',
-            ActiveRecord::EVENT_AFTER_UPDATE    => 'afterUpdate',
-            ActiveRecord::EVENT_BEFORE_DELETE   => 'beforeDelete',
-            ActiveRecord::EVENT_AFTER_DELETE    => 'afterDelete',
+            BaseActiveRecord::EVENT_BEFORE_UPDATE   => 'beforeUpdate',
+            BaseActiveRecord::EVENT_AFTER_UPDATE    => 'afterUpdate',
+            BaseActiveRecord::EVENT_BEFORE_DELETE   => 'beforeDelete',
+            BaseActiveRecord::EVENT_AFTER_DELETE    => 'afterDelete',
         ];
     }
 
@@ -54,21 +47,17 @@ class VersionBehavior extends Behavior
     public function attach($owner)
     {
         parent::attach($owner);
+    }
 
-        if(!$this->validateModel)
-            return;
-
-        $owner = $this->owner;
-
-        if(is_array($owner->getPrimaryKey())) {
-            throw new InvalidConfigException('Composite primary keys not allowed');
-        }
+    protected function validate()
+    {
+        parent::validate();
 
         if(!$this->attributes) {
             throw new InvalidConfigException('Please set attributes to save');
         }
 
-        if(!$owner->hasAttribute($this->nameAttribute)) {
+        if(!$this->owner->hasAttribute($this->nameAttribute)) {
             throw new InvalidConfigException('Invalid name attribute');
         }
     }
@@ -129,11 +118,10 @@ class VersionBehavior extends Behavior
 
     public function versionGetVersionsUrl()
     {
-        $owner = $this->owner;
         return Version::instance()->getAdminIndexUrl([
             'filters' => [
-                'link_type' => get_class($owner),
-                'link_id' =>  $owner->getPrimaryKey(),
+                'link_class' => $this->ownerClass,
+                'link_id' =>  $this->owner->{$this->ownerPkAttribute},
             ]
         ]);
     }
@@ -147,12 +135,13 @@ class VersionBehavior extends Behavior
     {
         if(!$this->_oldAttributes)
             return;
+
         $owner = $this->owner;
         $version = new Version();
         $version->name = $owner->getAttribute($this->nameAttribute);
         $version->action = $action;
-        $version->link_type = get_class($owner);
-        $version->link_id = $owner->getPrimaryKey();
+        $version->link_class = $this->ownerClass;
+        $version->link_id = $owner->{$this->ownerPkAttribute};
         $version->version_attributes_array = $this->_oldAttributes;
         if(!$version->save()) {
             Yii::error(VarDumper::dumpAsString($version->getErrors()));

@@ -1,10 +1,10 @@
 <?php namespace app\models;
 
+use app\behaviors\ContentImagesBehavior;
+use app\behaviors\FileBehavior;
 use app\behaviors\TimestampBehavior;
 use app\behaviors\VersionBehavior;
 use app\models\base\ActiveRecord;
-use nettonn\yii2filestorage\behaviors\ContentImagesBehavior;
-use nettonn\yii2filestorage\behaviors\FileBehavior;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -74,8 +74,8 @@ class Chunk extends ActiveRecord
     public function fields(): array
     {
         $fields = parent::fields();
-        $fields['type_text'] = function ($model) {
-            return $model->typeOptions[$model->type];
+        $fields['type_label'] = function (self $model) {
+            return $model->typeOptions[$model->type] ?? $model->type;
         };
         return $fields;
     }

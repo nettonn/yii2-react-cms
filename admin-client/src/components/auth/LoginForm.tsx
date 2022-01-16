@@ -1,60 +1,71 @@
-import React, { FC, useEffect, useState } from "react";
-import { Form, Input, Button, Checkbox, message } from "antd";
+import React, { FC } from "react";
+import { Form, Input, Button } from "antd";
 import rules from "../../utils/rules";
-import { FieldData } from "rc-field-form/es/interface";
-import { useAppActions, useAppSelector } from "../../hooks/redux";
+import { useAppActions } from "../../hooks/redux";
 import { authActions } from "../../store/reducers/auth";
+import { useMutation } from "react-query";
+import { authService } from "../../api/AuthService";
+import {
+  prepareAntdValidationErrors,
+  requestErrorHandler,
+} from "../../utils/functions";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { routeNames } from "../../routes";
+
+interface LoginFormValues {
+  email: string;
+  password: string;
+}
 
 const LoginForm: FC = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [form] = Form.useForm();
-  const { error, validationErrors } = useAppSelector((state) => state.auth);
+  const [form] = Form.useForm<LoginFormValues>();
+  const { authorize } = useAppActions(authActions);
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
-  const { login } = useAppActions(authActions);
+  const { isLoading, mutate: login } = useMutation(
+    async (values: LoginFormValues) => {
+      const { identity, token } = await authService.login(values);
 
-  useEffect(() => {
-    if (error) message.error(error);
-  }, [error]);
+      authService.setStorage({
+        isAuth: true,
+        token: token,
+        identity: identity,
+      });
+      authorize({ identity, token });
 
-  useEffect(() => {
-    if (validationErrors) {
-      setIsLoading(false);
-      const fields = [] as FieldData[];
-      for (const { field, message } of validationErrors) {
-        fields.push({
-          name: field,
-          errors: [message],
-        });
-      }
-      form.setFields(fields);
+      const returnUrl = searchParams.get("return");
+      const url = returnUrl ?? routeNames.home;
+
+      navigate(url, { replace: true });
+    },
+    {
+      onError: (e) => {
+        const errors = requestErrorHandler(e);
+        if (errors.validationErrors) {
+          const antdValidationErrors = prepareAntdValidationErrors(
+            errors.validationErrors
+          );
+          form.setFields(antdValidationErrors);
+        }
+      },
     }
-  }, [validationErrors, form]);
-
-  const onFinish = async (values: any) => {
-    setIsLoading(true);
-    await login(values);
-  };
+  );
 
   return (
     <Form
       name="basic"
       form={form}
       layout="vertical"
-      initialValues={{ remember: true }}
-      onFinish={onFinish}
-      // onFinishFailed={onFinishFailed}
+      onFinish={login}
       autoComplete="off"
     >
       <Form.Item label="E-Mail" name="email" rules={[rules.required()]}>
-        <Input />
+        <Input disabled={isLoading} />
       </Form.Item>
 
       <Form.Item label="Пароль" name="password" rules={[rules.required()]}>
-        <Input.Password />
-      </Form.Item>
-
-      <Form.Item name="remember" valuePropName="checked">
-        <Checkbox>Запомнить</Checkbox>
+        <Input.Password disabled={isLoading} />
       </Form.Item>
 
       <Form.Item>

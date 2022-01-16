@@ -3,7 +3,7 @@
 use app\controllers\base\RestController;
 use app\models\Log;
 use app\utils\AdminClientHelper;
-use yii\db\ActiveQuery;
+use app\models\query\ActiveQuery;
 
 class LogController extends RestController
 {
@@ -28,7 +28,6 @@ class LogController extends RestController
             ->select('DISTINCT(name)')
             ->orderBy('name ASC')
             ->indexBy('name')
-            ->notDeleted()
             ->column();
 
         return [
@@ -37,22 +36,24 @@ class LogController extends RestController
     }
 
     /**
-     * For yii\caching\DbDependency
      * @return string sql
      */
-    protected function getModelLastModifiedSql(): string
+    protected function getLastModifiedSql(): string
     {
-        $modelClass = $this->modelClass;
-        return 'SELECT MAX(created_at) from '.$modelClass::tableName();
+        return 'SELECT MAX(created_at) from '.($this->modelClass)::tableName();
     }
 
-    /**
-     * Timestamp in seconds
-     * @return int | null
-     */
-    protected function getModelOptionsLastModified(): ?int
+    public function actions(): array
     {
-        $modelClass = $this->modelClass;
-        return $modelClass::find()->select('MAX(created_at)')->scalar();
+        $actions = parent::actions();
+        unset($actions['create'], $actions['update'], $actions['model-defaults']);
+        return $actions;
+    }
+
+    public function verbs(): array
+    {
+        $verbs = parent::verbs();
+        unset($verbs['create'], $verbs['update'], $verbs['model-defaults']);
+        return $verbs;
     }
 }

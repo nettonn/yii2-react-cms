@@ -2,25 +2,24 @@ import PageHeader from "../../components/ui/PageHeader/PageHeader";
 import React, { FC } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Descriptions, Spin, Table } from "antd";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import { versionService } from "../../api/VersionService";
 import {
-  IVersion,
-  IVersionAttributesCompare,
-  IVersionModelOptions,
+  Version,
+  VersionAttributesCompare,
+  VersionModelOptions,
   VERSION_ACTION_UPDATE,
-} from "../../models/IVersion";
+} from "../../models/Version";
 import { useModelView } from "../../hooks/modelView.hook";
-import "./VersionPage.css";
 import { ColumnsType } from "antd/lib/table/Table";
 import { withoutBaseUrl } from "../../utils/functions";
 
-const modelRoutes = RouteNames.version;
+const modelRoutes = routeNames.version;
 
 const VersionPage: FC = () => {
   const { id } = useParams();
 
-  const { data, isInit } = useModelView<IVersion, IVersionModelOptions>(
+  const { data, isInit } = useModelView<Version, VersionModelOptions>(
     id,
     versionService
   );
@@ -29,7 +28,7 @@ const VersionPage: FC = () => {
 
   if (!data) return null;
 
-  const columns: ColumnsType<IVersionAttributesCompare> = [
+  const columns: ColumnsType<VersionAttributesCompare> = [
     {
       title: "Поле",
       dataIndex: "label",
@@ -58,7 +57,13 @@ const VersionPage: FC = () => {
       <PageHeader
         title="Просмотр версии"
         backPath={modelRoutes.index}
-        breadcrumbItems={[{ path: modelRoutes.index, label: "Версии" }]}
+        breadcrumbItems={[
+          { path: modelRoutes.index, label: "Версии" },
+          {
+            path: modelRoutes.updateUrl(id),
+            label: `${id}`,
+          },
+        ]}
       />
 
       <Descriptions
@@ -68,12 +73,12 @@ const VersionPage: FC = () => {
           data.owner_update_url ? (
             <Link to={withoutBaseUrl(data.owner_update_url)}>{data.name}</Link>
           ) : (
-            `${data.name} (${data.link_type} - ${data.link_id})`
+            `${data.name} (${data.link_class} - ${data.link_id})`
           )
         }
       >
         <Descriptions.Item label="Модель">
-          {data.link_type_label}
+          {data.link_class_label}
         </Descriptions.Item>
         <Descriptions.Item label="ID модели">{data.link_id}</Descriptions.Item>
         <hr />
@@ -86,6 +91,7 @@ const VersionPage: FC = () => {
       </Descriptions>
 
       <Table
+        className="app-version-page-table"
         columns={columns}
         dataSource={data.attributes_compare}
         rowKey="attribute"

@@ -1,25 +1,25 @@
 import React, { FC } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
 import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
-import { ISetting, ISettingModelOptions } from "../../models/ISetting";
+import { Setting, SettingModelOptions } from "../../models/Setting";
 import { settingService } from "../../api/SettingService";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
-const modelRoutes = RouteNames.setting;
+const modelRoutes = routeNames.setting;
 
 const SettingsPage: FC = () => {
-  const dataGridHook = useDataGrid<ISetting, ISettingModelOptions>(
+  const dataGridHook = useDataGrid<Setting, SettingModelOptions>(
     settingService,
     "setting"
   );
 
   const getColumns = (
-    modelOptions: ISettingModelOptions
-  ): ColumnsType<ISetting> => [
+    modelOptions: SettingModelOptions
+  ): ColumnsType<Setting> => [
     {
       title: "Id",
       dataIndex: "id",
@@ -30,7 +30,6 @@ const SettingsPage: FC = () => {
       title: "Название",
       dataIndex: "name",
       sorter: true,
-      // filters: ,
       ellipsis: true,
       render: (value, record) => {
         return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
@@ -40,13 +39,17 @@ const SettingsPage: FC = () => {
       title: "Ключ",
       dataIndex: "key",
       sorter: true,
-      // width: 120,
+    },
+    {
+      title: "Тип",
+      dataIndex: "type_label",
+      key: "type",
+      sorter: true,
+      filters: modelOptions.type,
     },
     {
       title: "Значение",
       dataIndex: "value",
-      // sorter: true,
-      // width: 200,
     },
     {
       title: "Изменено",
@@ -59,7 +62,16 @@ const SettingsPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Настройки" backPath={RouteNames.home} />
+      <PageHeader
+        title="Настройки"
+        backPath={routeNames.home}
+        breadcrumbItems={[
+          {
+            path: modelRoutes.index,
+            label: "Настройки",
+          },
+        ]}
+      />
 
       <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
 

@@ -9,11 +9,6 @@ $config = [
     'bootstrap' => [
         'log',
     ],
-    'modules' => [
-        'file-storage' => [
-            'class' => 'nettonn\yii2filestorage\Module',
-        ]
-    ],
     'language'=>'ru-RU',
     'timeZone' => 'Europe/Moscow',
     'aliases' => require(__DIR__ . '/parts/aliases.php'),
@@ -51,8 +46,11 @@ $config = [
             'errorAction' => 'site/error',
         ],
         'mailer' => require(__DIR__ . '/parts/mailer.php'),
-        'ajaxFileUpload' => [
-            'class'=> 'app\components\AjaxFileUploadComponent',
+        'fileStorage' => [
+            'class' => 'app\components\FileStorageComponent',
+        ],
+        'fileUpload' => [
+            'class'=> 'app\components\FileUploadComponent',
         ],
         'chunks' => [
             'class'=>'app\components\ChunkComponent'
@@ -68,6 +66,7 @@ $config = [
             ],
             'widgets' => [
                 'chunk' => 'app\widgets\ChunkWidget',
+                'block' => 'app\widgets\BlockWidget',
             ],
         ],
         'microdata' => [

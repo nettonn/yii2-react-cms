@@ -1,10 +1,10 @@
 <?php namespace app\commands;
 
+use app\models\Order;
 use app\models\Post;
 use app\models\User;
-use app\models\UserMock;
 use app\models\Page;
-use nettonn\yii2filestorage\models\FileModel;
+use app\models\FileModel;
 use Yii;
 use yii\console\Controller;
 use yii\console\ExitCode;
@@ -13,24 +13,6 @@ use yii\web\UploadedFile;
 
 class MockController extends Controller
 {
-    public function actionUser()
-    {
-        $json = file_get_contents('https://my.api.mockaroo.com/users.json?key=91f50010');
-        $data = \yii\helpers\Json::decode($json);
-
-        UserMock::deleteAll();
-
-        foreach($data as $row) {
-            $userMock = new UserMock();
-            $userMock->attributes = $row;
-            $userMock->save();
-        }
-
-        echo 'Imported: '.UserMock::find()->count() . "\n";
-
-        return ExitCode::OK;
-    }
-
     public function actionPost()
     {
         $json = file_get_contents('https://my.api.mockaroo.com/posts.json?key=91f50010');
@@ -159,5 +141,23 @@ class MockController extends Controller
         echo 'Imported: '.Page::find()->count() . "\n";
 
         return ExitCode::OK;
+    }
+
+    public function actionOrder()
+    {
+        $order = new Order([
+            'subject' => 'Order',
+            'name' => 'Name',
+            'phone' => 'Phone',
+            'email' => 'email',
+        ]);
+
+        $order->save();
+
+        $files = FileHelper::findFiles(Yii::getAlias('@app/temp/files'));
+
+        $order->fileAttachByFilename('files', $files);
+
+        $order->save();
     }
 }

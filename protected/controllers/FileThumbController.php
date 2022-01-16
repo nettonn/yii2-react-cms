@@ -1,6 +1,6 @@
 <?php namespace app\controllers;
 
-use nettonn\yii2filestorage\actions\ThumbAction;
+use app\actions\file\ThumbAction;
 use yii\web\Controller;
 
 class FileThumbController extends Controller

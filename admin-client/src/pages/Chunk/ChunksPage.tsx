@@ -1,25 +1,23 @@
 import React, { FC } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
 import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
-import { IChunk, IChunkModelOptions } from "../../models/IChunk";
+import { Chunk, ChunkModelOptions } from "../../models/Chunk";
 import { chunkService } from "../../api/ChunkService";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
-const modelRoutes = RouteNames.chunk;
+const modelRoutes = routeNames.chunk;
 
 const ChunksPage: FC = () => {
-  const dataGridHook = useDataGrid<IChunk, IChunkModelOptions>(
+  const dataGridHook = useDataGrid<Chunk, ChunkModelOptions>(
     chunkService,
     "chunk"
   );
 
-  const getColumns = (
-    modelOptions: IChunkModelOptions
-  ): ColumnsType<IChunk> => [
+  const getColumns = (modelOptions: ChunkModelOptions): ColumnsType<Chunk> => [
     {
       title: "Id",
       dataIndex: "id",
@@ -30,7 +28,6 @@ const ChunksPage: FC = () => {
       title: "Название",
       dataIndex: "name",
       sorter: true,
-      // filters: ,
       ellipsis: true,
       render: (value, record) => {
         return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
@@ -41,6 +38,13 @@ const ChunksPage: FC = () => {
       dataIndex: "key",
       sorter: true,
       width: 120,
+    },
+    {
+      title: "Тип",
+      dataIndex: "type_label",
+      key: "type",
+      sorter: true,
+      filters: modelOptions.type,
     },
     {
       title: "Создано",
@@ -60,7 +64,16 @@ const ChunksPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Чанки" backPath={RouteNames.home} />
+      <PageHeader
+        title="Чанки"
+        backPath={routeNames.home}
+        breadcrumbItems={[
+          {
+            path: modelRoutes.index,
+            label: "Чанки",
+          },
+        ]}
+      />
 
       <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
 

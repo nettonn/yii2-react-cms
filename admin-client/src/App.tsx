@@ -1,37 +1,16 @@
-import "antd/dist/antd.css";
-import React, { FC, useEffect } from "react";
-import PublicLayout from "./components/layout/PublicLayout/PublicLayout";
-import PrivateLayout from "./components/layout/PrivateLayout/PrivateLayout";
+import React, { FC } from "react";
+import useAuth from "./hooks/auth.hook";
 import FullScreenLoader from "./components/ui/FullScreenLoader";
-import { useAppActions, useAppSelector } from "./hooks/redux";
-import { authActions } from "./store/reducers/auth";
-import { authService } from "./api/AuthService";
+import AppRoutes from "./components/AppRoutes";
 
 const App: FC = () => {
-  const { authorize, clearAuth } = useAppActions(authActions);
-
-  const { isAuth, isAuthChecked } = useAppSelector((state) => state.auth);
-
-  useEffect(() => {
-    if (authService.getAuth()) {
-      authorize({
-        identity: authService.getIdentity(),
-        token: authService.getToken(),
-      });
-    } else {
-      clearAuth();
-    }
-  }, [authorize, clearAuth]);
+  const { isAuthChecked } = useAuth();
 
   if (!isAuthChecked) {
     return <FullScreenLoader />;
   }
 
-  if (!isAuth) {
-    return <PublicLayout />;
-  }
-
-  return <PrivateLayout />;
+  return <AppRoutes />;
 };
 
 export default App;

@@ -5,19 +5,19 @@ import { useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
 import { Form, Input, Switch, Tabs, TreeSelect } from "antd";
 import rules from "../../utils/rules";
-import { RouteNames } from "../../routes";
-import { ISeo, ISeoModelOptions } from "../../models/ISeo";
+import { routeNames } from "../../routes";
+import { Seo, SeoModelOptions } from "../../models/Seo";
 import { seoService } from "../../api/SeoService";
 import CkeditorInput from "../../components/crud/form/CkeditorInput/CkeditorInput";
 
-const modelRoutes = RouteNames.seo;
+const modelRoutes = routeNames.seo;
 
 const SeoPage: FC = () => {
   const { id } = useParams();
 
-  const modelForm = useModelForm<ISeo, ISeoModelOptions>(id, seoService);
+  const modelForm = useModelForm<Seo, SeoModelOptions>(id, seoService);
 
-  const formContent = (initData: ISeo, modelOptions: ISeoModelOptions) => (
+  const formContent = (initData: Seo, modelOptions: SeoModelOptions) => (
     <Tabs type="card">
       <Tabs.TabPane tab="Общее" key="common">
         <Form.Item label="Название" name="name" rules={[rules.required()]}>
@@ -30,15 +30,9 @@ const SeoPage: FC = () => {
 
         <Form.Item label="Родитель" name="parent_id">
           <TreeSelect
-            // style={{ width: "100%" }}
-            // dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
             treeData={modelOptions?.parent}
             placeholder="Выберите"
             allowClear
-            onClear={() => {
-              // data.parent_id = null;
-            }}
-            // treeDefaultExpandAll
           />
         </Form.Item>
         <Form.Item label="Seo Title" name="title">
@@ -73,7 +67,13 @@ const SeoPage: FC = () => {
       <PageHeader
         title={`${id ? "Редактирование" : "Создание"} SEO`}
         backPath={modelRoutes.index}
-        breadcrumbItems={[{ path: modelRoutes.index, label: "SEO" }]}
+        breadcrumbItems={[
+          { path: modelRoutes.index, label: "SEO" },
+          {
+            path: modelRoutes.updateUrl(id),
+            label: modelForm.initData?.name ?? id,
+          },
+        ]}
       />
 
       <ModelForm

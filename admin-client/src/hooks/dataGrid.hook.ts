@@ -1,28 +1,21 @@
 import RestService, { IRestServiceIndexQueryParams } from "../api/RestService";
-import { message } from "antd";
 import { TablePaginationConfig } from "antd/lib/table/interface";
-import { IFiltersParam, IModel, IModelOptions } from "../types";
+import { FilterParams, Model, ModelOptions } from "../types";
 import { useQuery, useMutation } from "react-query";
 import { useAppActions, useAppSelector } from "./redux";
 import { useEffect, useState } from "react";
-import { appActions } from "../store/reducers/app";
-import { queryClient } from "../http/query-client";
-import { useLocation, useNavigate } from "react-router-dom";
-import { queryStringParse } from "../utils/qs";
-import { buildUrl, withoutBaseUrl } from "../utils/functions";
-import { DataGridSelector, gridActions } from "../store/reducers/grid";
+import { requestErrorHandler } from "../utils/functions";
+import {
+  DataGridSelector,
+  dataGridActions,
+} from "../store/reducers/grid/grids";
+import { message } from "antd";
 
 export default function useDataGrid<
-  T extends IModel = IModel,
-  M extends IModelOptions = any
+  T extends Model = Model,
+  M extends ModelOptions = any
 >(modelService: RestService, dataGridSelector: DataGridSelector) {
-  const dataGridActions = gridActions[dataGridSelector];
-  const { pathname: locationPathname, search: locationSearch } = useLocation();
   const [isInit, setIsInit] = useState(false);
-  const { currentDataGridSelector } = useAppSelector((state) => state.app);
-  const { setCurrentDataGridSelector } = useAppActions(appActions);
-  const [allowQueries, setAllowQueries] = useState(false);
-  const navigate = useNavigate();
 
   const {
     currentPage,
@@ -33,34 +26,17 @@ export default function useDataGrid<
     sortDirection,
     searchQuery,
     filters,
-  } = useAppSelector((state) => state[dataGridSelector]);
+  } = useAppSelector((state) => state.grid[dataGridSelector]);
 
   const {
     setCurrentPage,
-    setDataCount,
     setFilters,
-    setPageCount,
-    setPageSize,
     setSearchQuery,
     setSortDirection,
     setSortField,
-  } = useAppActions(dataGridActions);
-
-  useEffect(() => {
-    if (locationSearch) {
-      const searchParams = queryStringParse(locationSearch);
-      if (searchParams) {
-        const searchFilters = getFiltersFromSearchParams(searchParams.filters);
-        if (searchFilters) {
-          setFilters(searchFilters);
-        }
-        delete searchParams.filters;
-      }
-      const newUrl = buildUrl(locationPathname, searchParams);
-      navigate(withoutBaseUrl(newUrl), { replace: true });
-    }
-    setAllowQueries(true);
-  }, [locationSearch, locationPathname, setFilters, navigate]);
+    setPagination,
+    reset: clearAll,
+  } = useAppActions(dataGridActions[dataGridSelector]);
 
   const {
     data: modelOptions,
@@ -71,15 +47,9 @@ export default function useDataGrid<
   } = useQuery(
     modelService.modelOptionsQueryKey(),
     async ({ signal }) => {
-      const result = await modelService.modelOptions<M>(signal);
-      if (result.success) {
-        return result.data;
-      }
-      message.error(result.error);
-      throw new Error(result.error);
+      return await modelService.modelOptions<M>(signal);
     },
     {
-      enabled: allowQueries,
       refetchOnMount: false,
     }
   );
@@ -105,46 +75,33 @@ export default function useDataGrid<
       if (filters) params.filters = filters;
 
       const result = await modelService.index<T>(params, signal);
-
-      if (result.success) {
-        if (result.pagination) {
-          if (result.pagination.currentPage !== undefined)
-            setCurrentPage(result.pagination.currentPage);
-          if (result.pagination.totalCount !== undefined)
-            setDataCount(result.pagination.totalCount);
-
-          if (result.pagination.perPage !== undefined)
-            setPageSize(result.pagination.perPage);
-
-          if (result.pagination.pageCount !== undefined)
-            setPageCount(result.pagination.pageCount);
-        }
-        return result.data;
+      if (result.pagination) {
+        setPagination({
+          currentPage: result.pagination.currentPage,
+          dataCount: result.pagination.totalCount,
+          pageSize: result.pagination.perPage,
+          pageCount: result.pagination.pageCount,
+        });
       }
-      message.error(result.error);
-      throw new Error(result.error);
+      return result.data;
     },
     {
-      enabled: allowQueries,
       keepPreviousData: true,
     }
   );
 
-  const {
-    mutate: deleteHandler,
-    isLoading: deleteIsLoading,
-    error: deleteError,
-  } = useMutation(async (id: number) => {
-    const result = await modelService.delete(id);
-    if (result.success) {
-      queryClient.invalidateQueries(modelService.listQueryKey());
-      queryClient.invalidateQueries(modelService.indexQueryKey());
+  const { mutate: deleteHandler, isLoading: deleteIsLoading } = useMutation(
+    async (id: number) => {
+      await modelService.delete(id);
       return true;
-    } else {
-      message.error(result.error);
-      throw new Error(result.error);
+    },
+    {
+      onError: (e) => {
+        const errors = requestErrorHandler(e);
+        message.error(errors.message);
+      },
     }
-  });
+  );
 
   const tableChangeHandler = (
     tablePagination: TablePaginationConfig,
@@ -168,21 +125,6 @@ export default function useDataGrid<
     } else {
       setFilters(null);
     }
-
-    // if (tableFilters) {
-    //   const filterKeys = Object.keys(tableFilters).filter(
-    //     (key: string) => tableFilters[key]
-    //   );
-    //   if (filterKeys.length) {
-    //     const params = {} as IFiltersParam;
-    //     for (const key of filterKeys) {
-    //       params[key] = tableFilters[key];
-    //     }
-    //     setFilters(params);
-    //   } else {
-    //     setFilters(null);
-    //   }
-    // }
   };
 
   const searchChangeHandler = async (value: string) => {
@@ -190,48 +132,30 @@ export default function useDataGrid<
     setCurrentPage(1);
   };
 
-  const clearAll = () => {
-    setFilters(null);
-    setSortField(null);
-    setSortDirection(null);
-    setCurrentPage(1);
-    setSearchQuery(null);
-  };
-
-  const error = indexError || modelOptionsError || deleteError;
+  const error = indexError || modelOptionsError;
 
   const isLoading =
     !indexIsFetched || !modelOptionsIsFetched || deleteIsLoading;
 
+  const isFetched = indexIsFetched && modelOptionsIsFetched;
+
+  const isLoaded =
+    indexIsSuccess &&
+    modelOptionsIsSuccess &&
+    !indexIsFetching &&
+    !modelOptionsIsFetching;
+
   useEffect(() => {
     if (isInit) return;
-    if (
-      currentDataGridSelector &&
-      currentDataGridSelector === dataGridSelector
-    ) {
+
+    if (isFetched) {
       setIsInit(true);
-      return;
     }
 
-    if (
-      indexIsSuccess &&
-      !indexIsFetching &&
-      modelOptionsIsSuccess &&
-      !modelOptionsIsFetching
-    ) {
-      setCurrentDataGridSelector(dataGridSelector);
+    if (isLoaded) {
       setIsInit(true);
     }
-  }, [
-    isInit,
-    indexIsSuccess,
-    indexIsFetching,
-    modelOptionsIsSuccess,
-    modelOptionsIsFetching,
-    currentDataGridSelector,
-    setCurrentDataGridSelector,
-    dataGridSelector,
-  ]);
+  }, [isInit, isFetched, isLoaded]);
 
   return {
     data,
@@ -251,23 +175,24 @@ export default function useDataGrid<
     tableChangeHandler,
     deleteHandler,
     clearAll,
+    dataGridSelector,
   };
 }
 
-function getFiltersFromSearchParams(searchFilters: any) {
-  if (
-    searchFilters &&
-    typeof searchFilters === "object" &&
-    !Array.isArray(searchFilters)
-  ) {
-    Object.keys(searchFilters).forEach((key) => {
-      if (!Array.isArray(searchFilters[key]))
-        searchFilters[key] = [searchFilters[key]];
-    });
-    return searchFilters;
-  }
-  return false;
-}
+// function getFiltersFromSearchParams(searchFilters: any) {
+//   if (
+//     searchFilters &&
+//     typeof searchFilters === "object" &&
+//     !Array.isArray(searchFilters)
+//   ) {
+//     Object.keys(searchFilters).forEach((key) => {
+//       if (!Array.isArray(searchFilters[key]))
+//         searchFilters[key] = [searchFilters[key]];
+//     });
+//     return searchFilters;
+//   }
+//   return false;
+// }
 
 function parseTableFilters(tableFilters: any) {
   if (!tableFilters) return false;
@@ -278,7 +203,7 @@ function parseTableFilters(tableFilters: any) {
 
   if (!filterKeys.length) return false;
 
-  const filterParams = {} as IFiltersParam;
+  const filterParams = {} as FilterParams;
   for (const key of filterKeys) {
     filterParams[key] = tableFilters[key];
   }

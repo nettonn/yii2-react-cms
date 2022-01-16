@@ -1,26 +1,26 @@
 import React, { FC } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
 import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
-import { IRedirect, IRedirectModelOptions } from "../../models/IRedirect";
+import { Redirect, RedirectModelOptions } from "../../models/Redirect";
 import { redirectService } from "../../api/RedirectService";
 import { statusColumn } from "../../components/crud/grid/columns";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
-const modelRoutes = RouteNames.redirect;
+const modelRoutes = routeNames.redirect;
 
 const RedirectsPage: FC = () => {
-  const dataGridHook = useDataGrid<IRedirect, IRedirectModelOptions>(
+  const dataGridHook = useDataGrid<Redirect, RedirectModelOptions>(
     redirectService,
     "redirect"
   );
 
   const getColumns = (
-    modelOptions: IRedirectModelOptions
-  ): ColumnsType<IRedirect> => [
+    modelOptions: RedirectModelOptions
+  ): ColumnsType<Redirect> => [
     {
       title: "Id",
       dataIndex: "id",
@@ -31,7 +31,6 @@ const RedirectsPage: FC = () => {
       title: "Откуда",
       dataIndex: "from",
       sorter: true,
-      // filters: ,
       ellipsis: true,
       render: (value, record) => {
         return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
@@ -56,12 +55,21 @@ const RedirectsPage: FC = () => {
       sorter: true,
       width: 120,
     },
-    statusColumn<IRedirect>({ filters: modelOptions.status }),
+    statusColumn<Redirect>({ filters: modelOptions.status }),
   ];
 
   return (
     <>
-      <PageHeader title="Редиректы" backPath={RouteNames.home} />
+      <PageHeader
+        title="Редиректы"
+        backPath={routeNames.home}
+        breadcrumbItems={[
+          {
+            path: modelRoutes.index,
+            label: "Редиректы",
+          },
+        ]}
+      />
 
       <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
 

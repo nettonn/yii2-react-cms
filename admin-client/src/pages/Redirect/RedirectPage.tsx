@@ -5,23 +5,23 @@ import { useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
 import { Form, FormInstance, Input, Switch } from "antd";
 import rules from "../../utils/rules";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import { redirectService } from "../../api/RedirectService";
-import { IRedirect, IRedirectModelOptions } from "../../models/IRedirect";
+import { Redirect, RedirectModelOptions } from "../../models/Redirect";
 
-const modelRoutes = RouteNames.redirect;
+const modelRoutes = routeNames.redirect;
 
 const RedirectPage: FC = () => {
   const { id } = useParams();
 
-  const modelForm = useModelForm<IRedirect, IRedirectModelOptions>(
+  const modelForm = useModelForm<Redirect, RedirectModelOptions>(
     id,
     redirectService
   );
 
   const formContent = (
-    initData: IRedirect,
-    modelOptions: IRedirectModelOptions,
+    initData: Redirect,
+    modelOptions: RedirectModelOptions,
     form: FormInstance
   ) => (
     <>
@@ -58,7 +58,13 @@ const RedirectPage: FC = () => {
       <PageHeader
         title={`${id ? "Редактирование" : "Создание"} редиректа`}
         backPath={modelRoutes.index}
-        breadcrumbItems={[{ path: modelRoutes.index, label: "Редиректы" }]}
+        breadcrumbItems={[
+          { path: modelRoutes.index, label: "Редиректы" },
+          {
+            path: modelRoutes.updateUrl(id),
+            label: modelForm.initData?.from ?? id,
+          },
+        ]}
       />
 
       <ModelForm

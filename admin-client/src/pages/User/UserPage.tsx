@@ -5,18 +5,18 @@ import { useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
 import { Form, Input, Select, Switch } from "antd";
 import rules from "../../utils/rules";
-import { IUser, IUserModelOptions } from "../../models/IUser";
-import { RouteNames } from "../../routes";
+import { User, UserModelOptions } from "../../models/User";
+import { routeNames } from "../../routes";
 import { userService } from "../../api/UserService";
 
-const modelRoutes = RouteNames.user;
+const modelRoutes = routeNames.user;
 
 const UserPage: FC = () => {
   const { id } = useParams();
 
-  const modelForm = useModelForm<IUser, IUserModelOptions>(id, userService);
+  const modelForm = useModelForm<User, UserModelOptions>(id, userService);
 
-  const formContent = (initData: IUser, modelOptions: IUserModelOptions) => (
+  const formContent = (initData: User, modelOptions: UserModelOptions) => (
     <>
       <Form.Item label="Username" name="username">
         <Input />
@@ -45,7 +45,13 @@ const UserPage: FC = () => {
       <PageHeader
         title={`${id ? "Редактирование" : "Создание"} пользователя`}
         backPath={modelRoutes.index}
-        breadcrumbItems={[{ path: modelRoutes.index, label: "Пользователи" }]}
+        breadcrumbItems={[
+          { path: modelRoutes.index, label: "Пользователи" },
+          {
+            path: modelRoutes.updateUrl(id),
+            label: `${id}`,
+          },
+        ]}
       />
 
       <ModelForm

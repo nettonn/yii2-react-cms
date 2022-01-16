@@ -5,53 +5,50 @@ import { useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
 import { Form, Input, Switch, TreeSelect } from "antd";
 import rules from "../../utils/rules";
-import { RouteNames } from "../../routes";
-import { IMenuItem, IMenuItemModelOptions } from "../../models/IMenuItem";
+import { routeNames } from "../../routes";
+import { MenuItem, MenuItemModelOptions } from "../../models/MenuItem";
 import MenuItemService from "../../api/MenuItemService";
+import { useQuery } from "react-query";
+import { menuService } from "../../api/MenuService";
+import { Menu } from "../../models/Menu";
 
-const modelRoutes = RouteNames.menuItem;
+const modelRoutes = routeNames.menuItem;
 
 const MenuItemPage: FC = () => {
   const { id, menuId } = useParams();
 
+  const { data: menuData } = useQuery(
+    [menuService.viewQueryKey(), menuId],
+    async ({ signal }) => {
+      if (!menuId) throw Error("Id not set");
+      return await menuService.view<Menu>(menuId, signal);
+    },
+    {
+      refetchOnMount: false,
+    }
+  );
+
   const menuItemService = useMemo(() => new MenuItemService(menuId), [menuId]);
 
-  const modelForm = useModelForm<IMenuItem, IMenuItemModelOptions>(
+  const modelForm = useModelForm<MenuItem, MenuItemModelOptions>(
     id,
     menuItemService
   );
 
   const formContent = (
-    initData: IMenuItem,
-    modelOptions: IMenuItemModelOptions
+    initData: MenuItem,
+    modelOptions: MenuItemModelOptions
   ) => (
     <>
-      {!id ? (
-        <Form.Item
-          name="menu_id"
-          hidden={true}
-          noStyle={true}
-          initialValue={menuId}
-        >
-          <Input value={menuId} />
-        </Form.Item>
-      ) : null}
-
       <Form.Item label="Название" name="name" rules={[rules.required()]}>
         <Input />
       </Form.Item>
 
       <Form.Item label="Родитель" name="parent_id">
         <TreeSelect
-          // style={{ width: "100%" }}
-          // dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
           treeData={modelOptions?.parent}
           placeholder="Выберите"
           allowClear
-          onClear={() => {
-            // data.parent_id = null;
-          }}
-          // treeDefaultExpandAll
         />
       </Form.Item>
 
@@ -83,14 +80,18 @@ const MenuItemPage: FC = () => {
         title={`${id ? "Редактирование" : "Создание"} пункта меню`}
         backPath={modelRoutes.indexUrl(menuId)}
         breadcrumbItems={[
-          { path: RouteNames.menu.index, label: "Меню" },
+          { path: routeNames.menu.index, label: "Меню" },
           {
-            path: RouteNames.menu.updateUrl(menuId),
-            label: menuId ? menuId : "",
+            path: routeNames.menu.updateUrl(menuId),
+            label: menuData ? menuData.name : menuId ?? "",
           },
           {
             path: modelRoutes.indexUrl(menuId),
             label: "Пункты меню",
+          },
+          {
+            path: modelRoutes.updateUrl(menuId, id),
+            label: modelForm.initData?.name ?? id,
           },
         ]}
       />

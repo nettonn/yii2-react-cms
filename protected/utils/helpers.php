@@ -168,3 +168,6 @@ function remove_nbsp($value) {
     return str_ireplace('&nbsp;', ' ', $value);
 }
 
+function thumb($filename, $variant = false, $relative = true) {
+    return Yii::$app->fileStorage->getThumb($filename, $variant, $relative);
+}

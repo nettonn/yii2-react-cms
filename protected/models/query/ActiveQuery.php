@@ -10,6 +10,9 @@ class ActiveQuery extends \yii\db\ActiveQuery
 
     protected $hasSoftDelete;
 
+    /**
+     * @inheritdoc
+     */
     public function init()
     {
         if(null === $this->hasSoftDelete) {
@@ -34,10 +37,8 @@ class ActiveQuery extends \yii\db\ActiveQuery
 
     public function active($state = true)
     {
-        $query = $this->andWhere(['status' => $state]);
-        if($this->hasSoftDelete)
-            $query = $query->andWhere(['is_deleted' => false]);
-        return $query;
+        return $this->andWhere(['status' => $state])
+            ->notDeleted();
     }
 
     public function orderSort($desc = false)
@@ -71,5 +72,11 @@ class ActiveQuery extends \yii\db\ActiveQuery
     public function selectOptions($valueField, $nameField)
     {
         return ArrayHelper::map($this->select([$valueField, $nameField])->asArray()->all(), $valueField, $nameField);
+    }
+
+    public function onlyFirst()
+    {
+        $this->andWhere(['sort' => 1]);
+        return $this;
     }
 }

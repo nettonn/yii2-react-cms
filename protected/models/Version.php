@@ -2,23 +2,20 @@
 
 namespace app\models;
 
-use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
 use Yii;
-use yii\helpers\StringHelper;
 
 /**
  * This is the model class for table "version".
  *
  * @property int $id
  * @property string $name
- * @property string $link_type
+ * @property string $link_class
  * @property int $link_id
  * @property string $action
  * @property string|null $version_attributes
  * @property array|null $version_attributes_array
  * @property int|null $created_at
- * @property int|null $updated_at
  */
 class Version extends ActiveRecord
 {
@@ -48,10 +45,10 @@ class Version extends ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'link_type', 'link_id', 'action'], 'required'],
+            [['name', 'link_class', 'link_id', 'action'], 'required'],
             [['link_id'], 'integer'],
             [['name', 'action'], 'string', 'max' => 255],
-            [['link_type'], 'string', 'max' => 128],
+            [['link_class'], 'string', 'max' => 128],
             [['version_attributes_array'], 'safe'],
         ];
     }
@@ -64,25 +61,12 @@ class Version extends ActiveRecord
         return [
             'id' => 'ID',
             'name' => 'Name',
-            'link_type' => 'Link Type',
+            'link_class' => 'Link Type',
             'link_id' => 'Link ID',
             'action' => 'Action',
             'version_attributes' => 'Attributes',
             'version_attributes_array' => 'Attributes',
             'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors(): array
-    {
-        return [
-            'TimestampBehavior' => [
-                'class' => TimestampBehavior::class,
-            ],
         ];
     }
 
@@ -95,9 +79,9 @@ class Version extends ActiveRecord
     {
         $fields = parent::fields();
 
-        $fields['link_type_label'] = function($model) {
-            $label = ActiveRecord::getModelLabelForClass($model->link_type);
-            return $label ?? $model->link_type;
+        $fields['link_class_label'] = function($model) {
+            $label = ActiveRecord::getModelLabelForClass($model->link_class);
+            return $label ?? $model->link_class;
         };
 
         $fields['action_text'] = function($model) {
@@ -132,17 +116,21 @@ class Version extends ActiveRecord
     {
         $this->version_attributes = $this->version_attributes_array ? serialize($this->version_attributes_array) : $this->version_attributes;
 
+        $this->created_at = time();
+
         return parent::beforeSave($insert);
     }
 
-    public function getOwner(): ?\yii\db\ActiveRecord
+    public function getOwner(): ?ActiveRecord
     {
-        if(!class_exists($this->link_type))
+        if(!class_exists($this->link_class))
             return null;
-        $class = $this->link_type;
+        /** @var ActiveRecord $class */
+        $class = $this->link_class;
         $primaryKey = $class::primaryKey();
         $primaryKey = current($primaryKey);
-        $owner = $class::find()->where([$primaryKey => $this->link_id])->notDeleted()->one();
+        /** @var ActiveRecord $owner */
+        $owner = $class::find()->where([$primaryKey => $this->link_id])->one();
         if($owner)
             return $owner;
         return $class::instance();

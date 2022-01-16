@@ -1,11 +1,11 @@
 <?php namespace app\models;
 
+use app\behaviors\ContentImagesBehavior;
+use app\behaviors\FileBehavior;
 use app\behaviors\TimestampBehavior;
 use app\behaviors\TreeBehavior;
 use app\models\base\ActiveRecord;
 use app\models\query\ActiveQuery;
-use nettonn\yii2filestorage\behaviors\ContentImagesBehavior;
-use nettonn\yii2filestorage\behaviors\FileBehavior;
 use yii\helpers\Url;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
@@ -165,7 +165,7 @@ class Seo extends ActiveRecord
         return parent::beforeSave($insert);
     }
 
-    public function getUrl($scheme = false): string
+    public function getUrl($scheme = false)
     {
         return Url::to($this->url, $scheme);
     }

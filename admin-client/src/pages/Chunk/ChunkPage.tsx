@@ -1,50 +1,37 @@
 import ModelForm from "../../components/crud/form/ModelForm";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import React, { FC, useLayoutEffect, useState } from "react";
+import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
-import {
-  Col,
-  Form,
-  FormInstance,
-  Input,
-  Radio,
-  RadioChangeEvent,
-  Row,
-} from "antd";
+import { Col, Form, FormInstance, Input, Row, Select } from "antd";
 import rules from "../../utils/rules";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import { chunkService } from "../../api/ChunkService";
 import {
-  IChunk,
-  IChunkModelOptions,
+  Chunk,
+  ChunkModelOptions,
   CHUNK_TYPE_TEXT,
   CHUNK_TYPE_HTML,
-} from "../../models/IChunk";
+} from "../../models/Chunk";
 import AceInput from "../../components/crud/form/AceInput/AceInput";
 import CkeditorInput from "../../components/crud/form/CkeditorInput/CkeditorInput";
-import { IModelOptions } from "../../types";
+import { ModelOptions } from "../../types";
 import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
+import useModelType from "../../hooks/modelType.hook";
 
-const modelRoutes = RouteNames.chunk;
+const modelRoutes = routeNames.chunk;
 
 const ChunkPage: FC = () => {
   const { id } = useParams();
-  const [type, setType] = useState<number>();
+  const modelForm = useModelForm<Chunk, ModelOptions>(id, chunkService, [
+    "content",
+  ]);
 
-  const modelForm = useModelForm<IChunk, IModelOptions>(id, chunkService);
+  const { type, typeChangeHandler } = useModelType<number>(
+    modelForm.initData?.type
+  );
 
-  const initType = modelForm.initData?.type;
-
-  useLayoutEffect(() => {
-    if (initType) setType(initType);
-  }, [initType]);
-
-  const typeChangeHandler = (e: RadioChangeEvent) => {
-    setType(e.target.value);
-  };
-
-  const getContentField = (type?: number) => {
+  const getContentField = () => {
     if (type === CHUNK_TYPE_TEXT) return <AceInput />;
     if (type === CHUNK_TYPE_HTML) return <CkeditorInput />;
 
@@ -52,8 +39,8 @@ const ChunkPage: FC = () => {
   };
 
   const formContent = (
-    initData: IChunk,
-    modelOptions: IChunkModelOptions,
+    initData: Chunk,
+    modelOptions: ChunkModelOptions,
     form: FormInstance
   ) => (
     <>
@@ -71,16 +58,17 @@ const ChunkPage: FC = () => {
       </Row>
 
       <Form.Item label="Тип" name="type" rules={[rules.required()]}>
-        <Radio.Group optionType="button" onChange={typeChangeHandler}>
+        <Select onChange={typeChangeHandler}>
           {modelOptions?.type.map((i) => (
-            <Radio.Button key={i.value} value={i.value}>
+            <Select.Option key={i.value} value={i.value}>
               {i.text}
-            </Radio.Button>
+            </Select.Option>
           ))}
-        </Radio.Group>
+        </Select>
       </Form.Item>
+
       <Form.Item label="Содержимое" name="content" shouldUpdate={true}>
-        {getContentField(type)}
+        {getContentField()}
       </Form.Item>
     </>
   );
@@ -90,7 +78,13 @@ const ChunkPage: FC = () => {
       <PageHeader
         title={`${id ? "Редактирование" : "Создание"} чанков`}
         backPath={modelRoutes.index}
-        breadcrumbItems={[{ path: modelRoutes.index, label: "Чанки" }]}
+        breadcrumbItems={[
+          { path: modelRoutes.index, label: "Чанки" },
+          {
+            path: modelRoutes.updateUrl(id),
+            label: modelForm.initData?.name ?? id,
+          },
+        ]}
       />
 
       <ModelForm

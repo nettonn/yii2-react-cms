@@ -1,17 +1,19 @@
 <?php namespace app\behaviors;
 
+use app\components\PlaceholderComponent;
+use app\components\SearchComponent;
 use app\models\SearchEntry;
 use Yii;
-use yii\base\Behavior;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
 use yii\db\BaseActiveRecord;
+use yii\di\Instance;
 use yii\helpers\StringHelper;
 
 /**
  * For russian and english only
  */
-class SearchBehavior extends Behavior
+class SearchBehavior extends BaseBehavior
 {
     /**
      * @var string|callback attribute name of string or callback with string return
@@ -68,10 +70,6 @@ class SearchBehavior extends Behavior
      */
     public $placeholdersComponent = 'placeholders';
 
-    protected $ownerClass;
-
-    protected $ownerPk;
-
     public function events()
     {
         return [
@@ -87,23 +85,44 @@ class SearchBehavior extends Behavior
      */
     public function attach($owner)
     {
+        parent::attach($owner);
+    }
+
+    protected function validate()
+    {
+        parent::validate();
+
         if(!$this->name) {
             throw new InvalidConfigException('Attribute name and status are required');
         }
+    }
 
-        $ownerClass = get_class($owner);
-        if(!is_subclass_of($ownerClass, ActiveRecord::class)) {
-            throw new InvalidConfigException('Attach allowed only for children of ActiveRecord');
+    protected $_placeholdersComponent;
+
+    /**
+     * @return PlaceholderComponent|null
+     * @throws InvalidConfigException
+     */
+    protected function getPlaceholdersComponent()
+    {
+        if(null === $this->_placeholdersComponent && $this->placeholdersComponent) {
+            $this->_placeholdersComponent = Instance::ensure($this->placeholdersComponent, PlaceholderComponent::class);
         }
-        $ownerPk = $ownerClass::primaryKey();
+        return $this->_placeholdersComponent;
+    }
 
-        if(count($ownerPk) > 1) {
-            throw new InvalidConfigException('Composite primary keys not allowed');
+    protected $_searchComponent;
+
+    /**
+     * @return SearchComponent|null
+     * @throws InvalidConfigException
+     */
+    protected function getSearchComponent()
+    {
+        if(null === $this->_searchComponent && $this->searchComponent) {
+            $this->_searchComponent = Instance::ensure($this->searchComponent, SearchComponent::class);
         }
-        $this->ownerClass = $ownerClass;
-        $this->ownerPk = current($ownerPk);
-
-        parent::attach($owner);
+        return $this->_searchComponent;
     }
 
     public function afterSave()
@@ -137,6 +156,8 @@ class SearchBehavior extends Behavior
             return;
         }
 
+        $placeholdersComponent = $this->getPlaceholdersComponent();
+
         $content = '';
         foreach($this->attributes as $attribute) {
             $attributeContent = '';
@@ -148,8 +169,8 @@ class SearchBehavior extends Behavior
             if(!$attributeContent)
                 continue;
 
-            if($this->placeholdersComponent && $placeholders = Yii::$app->{$this->placeholdersComponent}) {
-                $attributeContent = $placeholders->removeAll($attributeContent);
+            if($placeholdersComponent) {
+                $attributeContent = $placeholdersComponent->removeAll($attributeContent);
             }
             $content .= trim($this->prepareContent($attributeContent)) . ' ';
         }
@@ -172,8 +193,8 @@ class SearchBehavior extends Behavior
         elseif($owner->hasProperty($this->description))
             $description = $owner->{$this->description};
 
-        if($description && $this->placeholdersComponent && $placeholders = Yii::$app->{$this->placeholdersComponent}) {
-            $description = $placeholders->removeAll($description);
+        if($description && $placeholdersComponent) {
+            $description = $placeholdersComponent->removeAll($description);
         }
 
         $description = StringHelper::truncate($description, 255);
@@ -184,12 +205,12 @@ class SearchBehavior extends Behavior
 
         $model = SearchEntry::find()->where([
             'link_class' => $this->ownerClass,
-            'link_id' => $owner->{$this->ownerPk},
+            'link_id' => $owner->{$this->ownerPkAttribute},
         ])->one();
         if(!$model) {
             $model = new SearchEntry();
             $model->link_class = $this->ownerClass;
-            $model->link_id = $owner->{$this->ownerPk};
+            $model->link_id = $owner->{$this->ownerPkAttribute};
         }
 
         $model->name = $name;
@@ -202,8 +223,7 @@ class SearchBehavior extends Behavior
 
     public function searchDeleteIndex()
     {
-        $owner = $this->owner;
-        SearchEntry::deleteAll(['link_class' => $this->ownerClass, 'link_id' => $owner->{$this->ownerPk}]);
+        SearchEntry::deleteAll(['link_class' => $this->ownerClass, 'link_id' => $this->owner->{$this->ownerPkAttribute}]);
     }
 
     protected function prepareContent($content)
@@ -223,8 +243,8 @@ class SearchBehavior extends Behavior
         $content = preg_replace('~\s[a-zа-я\d]{1,2}$~ui', ' ', $content);
         if($this->removeStopWords) {
             $stopWords = $this->additionalStopWords;
-            if($this->searchComponent && $search = Yii::$app->{$this->searchComponent}) {
-                $stopWords = array_merge($search->getStopWords(), $stopWords);
+            if($searchComponent = $this->getSearchComponent()) {
+                $stopWords = array_merge($searchComponent->getStopWords(), $stopWords);
             }
             if($stopWords) {
                 $stopWords = implode('|', $stopWords);

@@ -56,9 +56,6 @@ abstract class BaseApiController extends \yii\rest\Controller
             'class' => VerbFilter::class,
             'actions' => $this->verbs(),
         ];
-        $behaviors['rateLimiter'] = [
-            'class' => RateLimiter::class,
-        ];
         $behaviors['authenticator'] = [
             'class' => JwtHttpBearerAuth::class,
             'except' => $this->authExcept(),
@@ -66,6 +63,9 @@ abstract class BaseApiController extends \yii\rest\Controller
                 $user = User::findOne($token->getClaim('uid'));
                 return $user && Yii::$app->getUser()->login($user);
             }
+        ];
+        $behaviors['rateLimiter'] = [
+            'class' => RateLimiter::class,
         ];
 
         return $behaviors;

@@ -5,6 +5,7 @@ namespace app\models;
 use app\models\base\ActiveRecord;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\web\BadRequestHttpException;
 use yii\web\IdentityInterface;
 
 /**
@@ -67,7 +68,9 @@ class User extends ActiveRecord implements IdentityInterface
             ['password', 'string', 'min' => 2, 'max' => 255],
 
             [['status'], 'boolean',],
+            [['status'], 'validateSaveRestrictions',],
             ['role', 'safe'],
+            ['role', 'validateSaveRestrictions'],
         ];
     }
 
@@ -114,6 +117,26 @@ class User extends ActiveRecord implements IdentityInterface
             return Yii::$app->getFormatter()->asDate($model->updated_at);
         };
         return $fields;
+    }
+
+    public function validateSaveRestrictions($attribute, $params, $validator)
+    {
+        if($this->isNewRecord)
+            return;
+
+        if(!in_array($attribute, ['role', 'status']))
+            return;
+
+        $user = Yii::$app->getUser()->getIdentity();
+        if($this->id !== $user->id)
+            return;
+
+        if($attribute === 'role' && $this->$attribute != $user->role) {
+            $this->addError($attribute, 'Нельзя изменить роль у самого себя');
+        }
+        if($attribute === 'status' && $this->$attribute != $user->status) {
+            $this->addError($attribute, 'Нельзя изменить статус у самого себя');
+        }
     }
 
     /**
@@ -189,6 +212,17 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->getPrimaryKey();
     }
 
+    public function beforeDelete()
+    {
+        $user = Yii::$app->getUser()->getIdentity();
+        if($this->id === $user->id) {
+            throw new BadRequestHttpException('Нельзя удалить самого себя');
+        }
+
+        return parent::beforeDelete();
+    }
+
+
     /**
      * @inheritdoc
      */
@@ -222,14 +256,13 @@ class User extends ActiveRecord implements IdentityInterface
      * Finds user by password reset token
      *
      * @param string $token password reset token
-     * @return User|null
      */
     public static function findByPasswordResetToken($token)
     {
-        if (!User::isPasswordResetTokenValid($token)) {
+        if (!self::isPasswordResetTokenValid($token)) {
             return null;
         }
-        return User::find()
+        return self::find()
             ->where(['password_reset_token' => $token,])
             ->active()
             ->one();

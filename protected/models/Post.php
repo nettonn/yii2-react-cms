@@ -2,12 +2,18 @@
 
 namespace app\models;
 
+use app\behaviors\ContentImagesBehavior;
+use app\behaviors\FileBehavior;
+use app\behaviors\SearchBehavior;
 use app\behaviors\TimestampBehavior;
+use app\behaviors\VersionBehavior;
 use app\models\base\ActiveRecord;
 use app\models\query\ActiveQuery;
-use nettonn\yii2filestorage\behaviors\FileBehavior;
 use Yii;
+use yii\base\InvalidArgumentException;
 use yii\helpers\Inflector;
+use yii\helpers\Url;
+use yii2tech\ar\dynattribute\DynamicAttributeBehavior;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -16,18 +22,25 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property int $id
  * @property string $name
  * @property string $alias
- * @property string|null $introtext
+ * @property string $path
+ * @property string|null $description
  * @property string|null $content
- * @property int|null $user_id
+ * @property string|null $data
+ * @property int $section_id
  * @property int|null $created_at
  * @property int|null $updated_at
- * @property bool $status
+ * @property int $status
+ * @property int $is_deleted
+ * @property string|null $seo_title
+ * @property string|null $seo_h1
+ * @property string|null $seo_keywords
+ * @property string|null $seo_description
+ *
+ * @property PostSection $section
+ * @property PostTag[] $tags
  */
 class Post extends ActiveRecord
 {
-    public $options;
-    public $option;
-
     const STATUS_NOT_ACTIVE = false;
     const STATUS_ACTIVE = true;
 
@@ -36,10 +49,12 @@ class Post extends ActiveRecord
         self::STATUS_ACTIVE => 'Активно',
     ];
 
+    protected $adminUrlParams = ['section_id'];
+
     /**
      * {@inheritdoc}
      */
-    public static function tableName(): string
+    public static function tableName()
     {
         return '{{%post}}';
     }
@@ -47,35 +62,42 @@ class Post extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules(): array
+    public function rules()
     {
         return [
             [['name', 'alias'], 'required'],
-            [['content'], 'string'],
+            [['description', 'content'], 'string'],
+            [['section_id'], 'integer'],
+            [['name', 'alias', 'seo_title', 'seo_h1'], 'string', 'max' => 255],
+            [['seo_keywords', 'seo_description'], 'string', 'max' => 500],
             [['status'], 'boolean'],
-            [['name', 'alias', 'introtext'], 'string', 'max' => 255],
-//            [['options', 'option'], 'string'],
-//            ['images', 'string']
-            ['alias', 'filter', 'filter' => [Inflector::class, 'slug']],
-            [['images_id', 'files_id', 'picture_id'], 'integer', 'allowArray' => true],
+            [['alias'], 'filter', 'filter' => [Inflector::class, 'slug']],
+            [['images_id'], 'integer', 'allowArray' => true],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels(): array
+    public function attributeLabels()
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'alias' => 'Alias',
-            'introtext' => 'Introtext',
-            'content' => 'Content',
-            'user_id' => 'User ID',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'status' => 'Status',
+            'name' => 'Название',
+            'alias' => 'Псевдоним',
+            'path' => 'Путь',
+            'description' => 'Описание',
+            'content' => 'Контент',
+            'data' => 'Data',
+            'section_id' => 'Раздел',
+            'created_at' => 'Создано',
+            'updated_at' => 'Изменено',
+            'status' => 'Статус',
+            'is_deleted' => 'Is Deleted',
+            'seo_title' => 'Seo Title',
+            'seo_h1' => 'Seo H1',
+            'seo_keywords' => 'Seo Keywords',
+            'seo_description' => 'Seo Description',
         ];
     }
 
@@ -84,34 +106,39 @@ class Post extends ActiveRecord
         return 'Записи';
     }
 
+    /**
+     * Gets query for [[PostSection]].
+     *
+     * @return ActiveQuery
+     */
+    public function getSection()
+    {
+        return $this->hasOne(PostSection::class, ['id' => 'section_id'])
+            ->inverseOf('posts');
+    }
+
+    /**
+     * Gets query for [[Tags]].
+     *
+     * @return ActiveQuery
+     */
+    public function getTags()
+    {
+        return $this->hasMany(PostTag::class, ['id' => 'tag_id'])
+            ->viaTable('{{%post_tag_link}}', ['post_id' => 'id'])
+            ->inverseOf('posts');
+    }
+
     public function fields(): array
     {
         $fields = parent::fields();
-
-        if($this->isRelationPopulated('user'))
-            $fields[] = 'user';
 
         if($this->isRelationPopulated('images')) {
             $fields[] = 'images';
             $fields[] = 'images_id';
         }
 
-        if($this->isRelationPopulated('files')) {
-            $fields[] = 'files';
-            $fields[] = 'files_id';
-        }
-
-        if($this->isRelationPopulated('picture')) {
-            $fields[] = 'picture';
-            $fields[] = 'picture_id';
-        }
-
         return $fields;
-    }
-
-    public function getUser(): ActiveQuery
-    {
-        return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 
     public function behaviors(): array
@@ -120,22 +147,39 @@ class Post extends ActiveRecord
             'TimestampBehavior' => [
                 'class' => TimestampBehavior::class,
             ],
+            'ContentImagesBehavior' => [
+                'class' => ContentImagesBehavior::class,
+                'imagesAttribute' => 'content_images',
+                'contentAttributes' => ['content'],
+            ],
             'FileBehavior' => [
                 'class' => FileBehavior::class,
                 'attributes' => [
+                    'content_images' => [
+                        'multiple' => true,
+                    ],
                     'images' => [
                         'multiple' => true,
                     ],
-                    'files' => [
-                        'multiple' => true,
-                        'image' => false,
-                        'extensions' => ['txt', 'pdf'],
-                    ],
-                    'picture' => [
-                        'multiple' => false,
-                        'image' => true,
-                    ],
                 ]
+            ],
+            'VersionBehavior' => [
+                'class' => VersionBehavior::class,
+                'attributes' => [
+                    'name', 'alias', 'description', 'content', 'status',
+                    'seo_title', 'seo_h1', 'seo_description', 'seo_keywords',
+                ]
+            ],
+            'SearchBehavior' => [
+                'class' => SearchBehavior::class,
+                'attributes' => [
+                    'content',
+                ]
+            ],
+            'DynamicAttribute' => [
+                'class' => DynamicAttributeBehavior::class,
+                'storageAttribute' => 'data', // field to store serialized attributes
+                'dynamicAttributeDefaults' => [], // default values for the dynamic attributes
             ],
             'softDeleteBehavior' => [
                 'class' => SoftDeleteBehavior::class,
@@ -143,7 +187,7 @@ class Post extends ActiveRecord
                     'is_deleted' => true
                 ],
             ],
-      ];
+        ];
     }
 
     public function init()
@@ -155,14 +199,29 @@ class Post extends ActiveRecord
         parent::init();
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function beforeSave($insert): bool
+    public function beforeSave($insert)
     {
-        if (!$this->user_id) {
-            $this->user_id = Yii::$app->user->id;
-        }
+        $this->path = $this->generatePath();
         return parent::beforeSave($insert);
+    }
+
+    public function generatePath($update = false)
+    {
+        $path = $this->section->alias . '/' . $this->alias;
+        if($update) {
+            $this->path = $path;
+            $this->updateAttributes(['path' => $path]);
+        }
+        return $path;
+    }
+
+    public function getUrl($scheme = false): ?string
+    {
+        return Url::to(['/site/post', 'path' => $this->path], $scheme);
+    }
+
+    public function getLayout()
+    {
+        return null;
     }
 }

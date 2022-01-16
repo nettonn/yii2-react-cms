@@ -1,8 +1,8 @@
 import React from "react";
 import { FormOutlined } from "@ant-design/icons";
 import { stringReplace } from "../../utils/functions";
-const Pages = React.lazy(() => import("../../pages/Page/Pages"));
-const Page = React.lazy(() => import("../../pages/Page/Page"));
+const PagesPage = React.lazy(() => import("../../pages/Page/PagesPage"));
+const PagePage = React.lazy(() => import("../../pages/Page/PagePage"));
 
 const names = {
   index: "/pages",
@@ -13,15 +13,15 @@ const names = {
 };
 
 const routes = [
-  { path: names.index, element: Pages },
+  { path: names.index, element: PagesPage },
   {
     path: names.create,
-    element: Page,
+    element: PagePage,
     elementProps: { key: "create" },
   },
   {
     path: names.update,
-    element: Page,
+    element: PagePage,
     elementProps: { key: "update" },
   },
 ];

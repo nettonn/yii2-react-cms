@@ -1,0 +1,242 @@
+.app-private-layout .ant-layout {
+  background: #fff;
+}
+.app-content-layout {
+  margin-left: 200px;
+  -webkit-transition: margin 0.2s ease;
+  -o-transition: margin 0.2s ease;
+  transition: margin 0.2s ease;
+}
+@media (max-width: 991.98px) {
+  .app-content-layout {
+    margin-left: 0;
+  }
+}
+.app-content {
+  padding: 10px 15px 200px;
+}
+.ant-layout-sider-collapsed + .app-content-layout {
+  margin-left: 0;
+}
+.app-private-layout .ant-layout-sider-collapsed + .app-content-layout .ant-breadcrumb {
+  padding-left: 40px;
+}
+.app-sidebar {
+/*overflow: auto;*/
+  height: 100vh;
+  position: fixed;
+  left: 0;
+}
+.app-sidebar .ant-layout-sider-children {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  overflow-y: auto;
+}
+.app-sidebar-bottom {
+  margin-top: 20px;
+}
+.app-sidebar.ant-layout-sider {
+  z-index: 200;
+}
+.app-sidebar .logo {
+  text-align: center;
+  color: #fff;
+  font-size: 20px;
+  padding: 20px 0;
+}
+.ant-layout-sider-zero-width-trigger {
+  top: 0;
+}
+.app-page-header {
+  padding: 0 0 20px;
+}
+.app-page-header.has-breadcrumb {
+  padding-top: 0;
+}
+.ant-page-header-heading-title {
+  font-size: 24px;
+  line-height: 35px;
+}
+.app-page-actions {
+  position: fixed;
+  z-index: 100;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  background: #fafafa;
+  padding-left: 200px;
+  -webkit-box-shadow: 0 1px 7px #9a9a9a;
+          box-shadow: 0 1px 7px #9a9a9a;
+  -webkit-transition: padding 0.2s;
+  -o-transition: padding 0.2s;
+  transition: padding 0.2s;
+}
+.app-page-actions .app-page-actions-wrapper {
+  overflow-x: auto;
+  padding: 15px 20px 15px;
+}
+.ant-layout-sider-collapsed + .app-content-layout .app-page-actions {
+  padding-left: 0;
+}
+.app-file-list {
+  margin-left: -2.5px;
+  margin-right: -2.5px;
+}
+.app-file-list .ant-col {
+  padding-left: 2.5px;
+  padding-right: 2.5px;
+}
+.app-file-list-file {
+  position: relative;
+  overflow: hidden;
+  outline: 1px solid #f0f0f0;
+}
+.app-file-list-file a {
+  color: #000;
+}
+.app-file-list-file img {
+  width: 100%;
+}
+.app-file-list-file-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+.app-file-list-file-icon .anticon {
+  margin-bottom: 5px;
+}
+.app-file-list-file-icon .anticon svg,
+.app-file-list-file-icon .anticon img {
+  width: 50px;
+  height: 50px;
+}
+.app-file-list-mask {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  padding: 10px;
+  overflow: hidden;
+}
+.app-file-list-mask.hover {
+  opacity: 1;
+}
+.app-file-list-mask-name {
+  margin-bottom: 5px;
+  font-size: 12px;
+  line-height: 14px;
+  max-height: 70px;
+  word-break: break-word;
+  overflow: hidden;
+}
+.app-file-list-mask-buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.app-file-list-mask-buttons button {
+  margin: 0 3px;
+}
+.app-file-list-mask-buttons button:last-child {
+  margin-right: 0;
+}
+.app-file-list-mask-buttons button:first-child {
+  margin-left: 0;
+}
+.app-file-upload {
+  margin-bottom: 24px;
+}
+.app-file-upload-button {
+  margin-bottom: 10px;
+}
+.app-file-upload-button:only-child {
+  margin-bottom: 0;
+}
+.app-version-page-table .ant-table-tbody > tr > td {
+  vertical-align: top;
+}
+.app-version-page-table .ant-table-content pre {
+  margin-bottom: 0;
+}
+.app-version-page-table .ant-table-row-version-diff td {
+  background: rgba(255,77,79,0.2);
+}
+.app-version-page-table .ant-table-tbody > tr.ant-table-row-version-diff:hover > td {
+  background: rgba(255,120,117,0.2);
+}
+.app-blocks-list__item {
+  padding: 8px 5px;
+  border: 1px solid #f0f0f0;
+  margin-bottom: 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  width: 100%;
+  -webkit-transition: background 0.3s ease-in-out;
+  -o-transition: background 0.3s ease-in-out;
+  transition: background 0.3s ease-in-out;
+}
+.app-blocks-list__item:hover {
+  background: #f0f0f0;
+}
+.app-blocks-list__drag {
+  width: 50px;
+  margin-right: 20px;
+}
+.app-blocks-list__drag button {
+  cursor: move;
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+.app-blocks-list__name {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+}
+.app-blocks-list__delete {
+  width: 50px;
+  margin-left: 20px;
+  text-align: center;
+}
+.app-blocks-list__add {
+  margin-top: 15px;
+}

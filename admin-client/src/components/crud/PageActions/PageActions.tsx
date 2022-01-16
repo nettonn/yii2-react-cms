@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import "./PageActions.css";
 
 interface PageActionsProps {
   content?: React.ReactNode;

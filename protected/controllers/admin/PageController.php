@@ -1,9 +1,10 @@
 <?php namespace app\controllers\admin;
 
 use app\controllers\base\RestController;
+use app\models\Block;
 use app\models\Page;
 use app\utils\AdminClientHelper;
-use yii\db\ActiveQuery;
+use app\models\query\ActiveQuery;
 
 class PageController extends RestController
 {
@@ -12,7 +13,7 @@ class PageController extends RestController
 
     public $indexQuerySelectExclude = ['content', 'description', 'seo_title', 'seo_h1', 'seo_description', 'seo_keywords'];
 
-    public $modelWith = ['images'];
+    public $modelWith = ['images', 'blockLinks'];
 
     protected function prepareSearchQuery(ActiveQuery $query, string $search) : ActiveQuery
     {
@@ -31,9 +32,24 @@ class PageController extends RestController
 
     public function modelOptions(): array
     {
+        $instance = Page::instance();
         return [
-            'status' => AdminClientHelper::getOptionsFromKeyValue(Page::instance()->statusOptions),
-            'parent' => AdminClientHelper::getOptionsFromModelQuery(Page::find()->notDeleted()->asArray()),
+            'status' => AdminClientHelper::getOptionsFromKeyValue($instance->statusOptions),
+            'type' => AdminClientHelper::getOptionsFromKeyValue($instance->typeOptions),
+            'blocks' => AdminClientHelper::getOptionsFromKeyValue($instance->blockOptions),
+            'parent' => AdminClientHelper::getOptionsFromModelQuery(Page::find()->asArray()),
         ];
+    }
+
+    protected function getLastModifiedSql(): string
+    {
+        $pageTable = ($this->modelClass)::tableName();
+        $blockTable = Block::tableName();
+        return "
+            SELECT MAX(updated_at) FROM (
+                SELECT MAX(updated_at) AS updated_at FROM $pageTable
+                UNION ALL 
+                SELECT MAX(updated_at) AS updated_at FROM $blockTable
+            ) a";
     }
 }

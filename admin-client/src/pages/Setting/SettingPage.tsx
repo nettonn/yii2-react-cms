@@ -1,43 +1,37 @@
 import ModelForm from "../../components/crud/form/ModelForm";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import React, { FC, useLayoutEffect, useState } from "react";
+import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 import { useModelForm } from "../../hooks/modelForm.hook";
 import { Col, Form, FormInstance, Input, Row, Select, Switch } from "antd";
 import rules from "../../utils/rules";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import { settingService } from "../../api/SettingService";
 import {
-  ISetting,
-  ISettingModelOptions,
+  Setting,
+  SettingModelOptions,
   SETTING_TYPE_BOOL,
   SETTING_TYPE_INT,
   SETTING_TYPE_STRING,
-} from "../../models/ISetting";
+} from "../../models/Setting";
 import { DEFAULT_ROW_GUTTER } from "../../utils/constants";
+import useModelType from "../../hooks/modelType.hook";
 
-const modelRoutes = RouteNames.setting;
+const modelRoutes = routeNames.setting;
 
 const SettingPage: FC = () => {
   const { id } = useParams();
-  const [type, setType] = useState<number>();
 
-  const modelForm = useModelForm<ISetting, ISettingModelOptions>(
+  const modelForm = useModelForm<Setting, SettingModelOptions>(
     id,
     settingService
   );
 
-  const initType = modelForm.initData?.type;
+  const { type, typeChangeHandler } = useModelType<number>(
+    modelForm.initData?.type
+  );
 
-  useLayoutEffect(() => {
-    if (initType) setType(initType);
-  }, [initType]);
-
-  const typeChangeHandler = (value: number) => {
-    setType(value);
-  };
-
-  const getValueField = (type?: number) => {
+  const getValueField = () => {
     if (type === SETTING_TYPE_BOOL)
       return (
         <Form.Item
@@ -66,8 +60,8 @@ const SettingPage: FC = () => {
   };
 
   const formContent = (
-    initData: ISetting,
-    modelOptions: ISettingModelOptions,
+    initData: Setting,
+    modelOptions: SettingModelOptions,
     form: FormInstance
   ) => (
     <>
@@ -98,17 +92,7 @@ const SettingPage: FC = () => {
         </Select>
       </Form.Item>
 
-      {/*<Form.Item label="Тип" name="type" rules={[rules.required()]}>*/}
-      {/*  <Radio.Group optionType="button" onChange={typeChangeHandler}>*/}
-      {/*    {modelOptions?.type.map((i) => (*/}
-      {/*      <Radio.Button key={i.value} value={i.value}>*/}
-      {/*        {i.text}*/}
-      {/*      </Radio.Button>*/}
-      {/*    ))}*/}
-      {/*  </Radio.Group>*/}
-      {/*</Form.Item>*/}
-
-      {getValueField(type)}
+      {getValueField()}
     </>
   );
 
@@ -117,7 +101,13 @@ const SettingPage: FC = () => {
       <PageHeader
         title={`${id ? "Редактирование" : "Добавление"} параметра`}
         backPath={modelRoutes.index}
-        breadcrumbItems={[{ path: modelRoutes.index, label: "Настройки" }]}
+        breadcrumbItems={[
+          { path: modelRoutes.index, label: "Настройки" },
+          {
+            path: modelRoutes.updateUrl(id),
+            label: modelForm.initData?.name ?? id,
+          },
+        ]}
       />
 
       <ModelForm

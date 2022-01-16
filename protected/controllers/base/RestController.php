@@ -7,8 +7,8 @@ use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
-use yii\db\ActiveQuery;
-use yii\db\ActiveRecord;
+use app\models\query\ActiveQuery;
+use app\models\base\ActiveRecord;
 use yii\helpers\StringHelper;
 
 abstract class RestController extends BaseApiController
@@ -145,10 +145,6 @@ abstract class RestController extends BaseApiController
 
         $query = $modelClass::find();
 
-        if($modelClass::getTableSchema()->getColumn('is_deleted')) {
-            $query = $query->andWhere(['is_deleted' => false]);
-        }
-
         if($this->modelWith) {
             $query = $query->with($this->modelWith);
         }
@@ -162,10 +158,6 @@ abstract class RestController extends BaseApiController
 
         $query = $modelClass::find();
 
-        if($modelClass::getTableSchema()->getColumn('is_deleted')) {
-            $query = $query->andWhere(['is_deleted' => false]);
-        }
-
         if($this->indexModelWith) {
             $query = $query->with($this->indexModelWith);
         }
@@ -173,7 +165,7 @@ abstract class RestController extends BaseApiController
         return $query;
     }
 
-    public function findModel($id) : ?ActiveRecord
+    public function findModel($id)
     {
         $modelClass = $this->modelClass;
         $keys = $modelClass::primaryKey();
@@ -207,8 +199,7 @@ abstract class RestController extends BaseApiController
     public function prepareDataProvider()
     {
         $request = Yii::$app->getRequest();
-        $modelClass = $this->modelClass;
-        $modelColumns = $modelClass::getTableSchema()->getColumnNames();
+        $modelColumns = ($this->modelClass)::getTableSchema()->getColumnNames();
 
         $query = $this->getListModelQuery();
 
@@ -320,8 +311,7 @@ abstract class RestController extends BaseApiController
 
     public function modelDefaults(): ActiveRecord
     {
-        $modelClass = $this->modelClass;
-        return $modelClass::instance();
+        return ($this->modelClass)::instance();
     }
 
     /**
@@ -344,13 +334,11 @@ abstract class RestController extends BaseApiController
     }
 
     /**
-     * For yii\caching\DbDependency
      * @return string sql
      */
-    protected function getModelLastModifiedSql(): string
+    protected function getLastModifiedSql(): string
     {
-        $modelClass = $this->modelClass;
-        return 'SELECT MAX(updated_at) from '.$modelClass::tableName();
+        return 'SELECT MAX(updated_at) from '.($this->modelClass)::tableName();
     }
 
     /**
@@ -359,8 +347,7 @@ abstract class RestController extends BaseApiController
      */
     protected function getModelOptionsLastModified(): ?int
     {
-        $modelClass = $this->modelClass;
-        return $modelClass::find()->select('MAX(updated_at)')->scalar();
+        return Yii::$app->getDb()->createCommand($this->getLastModifiedSql())->queryScalar();
     }
 
 }

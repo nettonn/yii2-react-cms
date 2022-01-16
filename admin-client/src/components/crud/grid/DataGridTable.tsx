@@ -1,21 +1,23 @@
 import useDataGrid from "../../../hooks/dataGrid.hook";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
-import { Popconfirm, Space, Table, Spin, Button, Col, Row } from "antd";
-import Search from "antd/es/input/Search";
+import { Popconfirm, Space, Table, Spin, Button, Col, Row, Input } from "antd";
 import { ColumnsType } from "antd/lib/table/interface";
-import React, { FC, useState } from "react";
+import React, { FC, ReactNode, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { IModel } from "../../../types";
-import RestService from "../../../api/RestService";
-import { useLocalStorage } from "usehooks-ts";
+import { Model } from "../../../types";
 import { DEFAULT_ROW_GUTTER } from "../../../utils/constants";
+import { useAppActions, useAppSelector } from "../../../hooks/redux";
+import { dataGridActions } from "../../../store/reducers/grid/grids";
+
+const Search = Input.Search;
 
 interface DataGridTableProps {
   dataGridHook: ReturnType<typeof useDataGrid>;
   getColumns: (modelOptions: any) => ColumnsType<any>;
   scroll?: { x?: number; y?: number };
   hasUrl?: boolean;
-  actionButtons?: (record: any) => React.ReactNode[];
+  actionButtons?: (record: any) => ReactNode;
+  updatePath?: string; // or use '${location.pathname}/${id}'
 }
 
 const DataGridTable: FC<DataGridTableProps> = ({
@@ -24,6 +26,7 @@ const DataGridTable: FC<DataGridTableProps> = ({
   scroll = { x: 600 },
   hasUrl,
   actionButtons,
+  updatePath,
 }) => {
   const {
     currentPage,
@@ -42,22 +45,24 @@ const DataGridTable: FC<DataGridTableProps> = ({
     filters,
     modelOptions,
     clearAll,
+    dataGridSelector,
   } = dataGridHook;
 
   const { pathname } = useLocation();
 
   const [searchInputValue, setSearchInputValue] = useState(searchQuery ?? "");
 
-  const [expandedRows, setExpandedRows] = useLocalStorage(
-    `${RestService.name}-data-grid-expanded-rows`,
-    []
+  const { expandedRows } = useAppSelector(
+    (state) => state.grid[dataGridSelector]
   );
+
+  const { setExpandedRows } = useAppActions(dataGridActions[dataGridSelector]);
 
   if (!isInit) return <Spin spinning={true} />;
 
   if (error) return null;
 
-  const viewButton = (record: IModel) => {
+  const viewButton = (record: Model) => {
     if (hasUrl) {
       return (
         <a href={record.view_url}>
@@ -76,11 +81,11 @@ const DataGridTable: FC<DataGridTableProps> = ({
     key: "x",
     width: 70,
     fixed: "right",
-    render: (_: any, record: IModel) => (
+    render: (_: any, record: Model) => (
       <Space>
         {actionButtons ? actionButtons(record) : null}
         {viewButton(record)}
-        <Link to={`${pathname}/${record.id}`}>
+        <Link to={updatePath ?? `${pathname}/${record.id}`}>
           <EditOutlined />
         </Link>
         <Popconfirm title="Удалить?" onConfirm={() => deleteHandler(record.id)}>
@@ -113,7 +118,10 @@ const DataGridTable: FC<DataGridTableProps> = ({
 
   return (
     <>
-      <Row gutter={DEFAULT_ROW_GUTTER} style={{ marginBottom: "20px" }}>
+      <Row
+        gutter={[DEFAULT_ROW_GUTTER, DEFAULT_ROW_GUTTER]}
+        style={{ marginBottom: "20px" }}
+      >
         <Col flex="auto">
           <Search
             placeholder="Поиск"
@@ -140,14 +148,13 @@ const DataGridTable: FC<DataGridTableProps> = ({
       <Table
         columns={allColumns}
         rowKey="id"
-        dataSource={data as IModel[]}
+        dataSource={data as Model[]}
         loading={isLoading}
         pagination={{
           total: dataCount ?? undefined,
           current: currentPage ?? 1,
-          pageSize: pageSize ?? 0,
+          pageSize: pageSize ?? undefined,
           showSizeChanger: false,
-          // disabled: !dataCount || dataCount <= pageSize,
           hideOnSinglePage: true,
           size: "default",
         }}
@@ -157,7 +164,7 @@ const DataGridTable: FC<DataGridTableProps> = ({
         size="small"
         expandable={{
           indentSize: 10,
-          defaultExpandedRowKeys: expandedRows,
+          expandedRowKeys: expandedRows,
           onExpandedRowsChange: async (rows: any) => {
             setExpandedRows(rows);
           },

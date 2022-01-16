@@ -10,11 +10,6 @@ $config = [
     'aliases' => array_merge(require(__DIR__ . '/parts/aliases.php'), [
         '@runnerScript' => '@app/yii'
     ]),
-    'modules' => [
-        'file-storage' => [
-            'class' => 'nettonn\yii2filestorage\Module',
-        ]
-    ],
     'language'=>'ru-RU',
     'timeZone' => 'Europe/Moscow',
     'controllerMap' => [
@@ -30,7 +25,6 @@ $config = [
             'migrationPath' => null,
             'migrationNamespaces' => [
                 'app\migrations',
-                'nettonn\yii2filestorage\migrations',
                 'yii\queue\db\migrations',
             ],
         ],
@@ -56,6 +50,9 @@ $config = [
         ],
         'search' => [
             'class' => 'app\components\SearchComponent',
+        ],
+        'fileStorage' => [
+            'class' => 'app\components\FileStorageComponent',
         ],
         'queue' => require(__DIR__ . '/parts/queue.php'),
         'db' => require (__DIR__ . '/parts/db.php'),

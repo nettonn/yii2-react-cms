@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { Breadcrumb } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 
 export interface BreadcrumbItem {
   path?: string;
@@ -17,7 +17,7 @@ const Breadcrumbs: FC<BreadcrumbsProps> = ({ items }) => {
   return (
     <Breadcrumb>
       <Breadcrumb.Item>
-        <Link to={RouteNames.home}>
+        <Link to={routeNames.home}>
           <HomeOutlined />
         </Link>
       </Breadcrumb.Item>

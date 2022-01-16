@@ -1,15 +1,17 @@
 <?php namespace app\models;
 
+use app\behaviors\BlockBehavior;
+use app\behaviors\ContentImagesBehavior;
+use app\behaviors\FileBehavior;
 use app\behaviors\SearchBehavior;
 use app\behaviors\TimestampBehavior;
 use app\behaviors\VersionBehavior;
 use app\models\base\ActiveRecord;
 use app\models\query\ActiveQuery;
-use nettonn\yii2filestorage\behaviors\ContentImagesBehavior;
-use nettonn\yii2filestorage\behaviors\FileBehavior;
 use Yii;
 use yii\helpers\Inflector;
 use yii\helpers\Url;
+use yii2tech\ar\dynattribute\DynamicAttributeBehavior;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 use app\behaviors\TreeBehavior;
 
@@ -25,7 +27,8 @@ use app\behaviors\TreeBehavior;
  * @property integer $level
  * @property string $description
  * @property string $content
- * @property string $layout
+ * @property string $data
+ * @property string $type
  * @property boolean $status
  * @property integer $is_deleted
  * @property integer $created_at
@@ -34,13 +37,44 @@ use app\behaviors\TreeBehavior;
  * @property string $seo_h1
  * @property string $seo_keywords
  * @property string $seo_description
- * @property string $data
  *
  * @property Page[] $children
  * @property Page $parent
+ *
+ * FileBehavior
+ * @property array $images
+ * @property array $images_id
+ * @method array filesGet(string $attribute)
+ * @method array fileGet(string $attribute)
+ * @method array filesThumbsGet(string $attribute, array $variants = null, $relative = true)
+ * @method array filesThumbGet(string $attribute, string $variant = null, $relative = true)
+ * @method array fileThumbsGet(string $attribute, array $variants = null, $relative = true)
+ * @method array fileThumbGet(string $attribute, string $variant = null, $relative = true)
+ * @method ActiveQuery getImages()
+ *
+ * BlocksBehavior
+ * @property array $blocks
+ * @property array $topBlocks
+ * @property array $bottomBlocks
+ * @property array $blockOptions
+ * @property array $blockLinks
+ * @method array getBlocks()
+ * @method array setBlocks()
+ * @method array getTopBlocks()
+ * @method array getBottomBlocks()
+ * @method array getBlockOptions()
+ * @method ActiveQuery getBlockLinks()
  */
 class Page extends ActiveRecord
 {
+    const TYPE_COMMON = 'common';
+    const TYPE_MAIN = 'main';
+
+    public $typeOptions = [
+        self::TYPE_COMMON => 'Общий',
+        self::TYPE_MAIN => 'Главная',
+    ];
+
     const STATUS_ACTIVE = true;
     const STATUS_NOT_ACTIVE = false;
 
@@ -67,12 +101,12 @@ class Page extends ActiveRecord
             [['parent_id'], 'number', 'skipOnEmpty' => true],
             [['parent_id'], 'safe'],
             [['description', 'content'], 'string'],
-            [['name', 'alias', 'seo_title', 'seo_h1'], 'string', 'max' => 255],
+            [['name', 'alias', 'type', 'seo_title', 'seo_h1'], 'string', 'max' => 255],
             [['seo_keywords', 'seo_description'], 'string', 'max' => 500],
-            [['layout'], 'string', 'max' => 50],
             [['status'], 'boolean',],
             [['alias'], 'filter', 'filter'=>[Inflector::class, 'slug']],
             [['images_id'], 'integer', 'allowArray' => true],
+            [['blocks'], 'safe'],
         ];
     }
 
@@ -91,7 +125,7 @@ class Page extends ActiveRecord
             'level' => 'Level',
             'description' => 'Описание',
             'content' => 'Содержимое',
-            'layout' => 'Шаблон',
+            'type' => 'Тип',
             'status' => 'Статус',
             'created_at' => 'Создано',
             'updated_at' => 'Изменено',
@@ -113,9 +147,16 @@ class Page extends ActiveRecord
     {
         $fields = parent::fields();
 
+        if($this->isRelationPopulated('blockLinks')) {
+            $fields[] = 'blocks';
+        }
+
         if($this->isRelationPopulated('images')) {
-            $fields[] = 'images';
             $fields[] = 'images_id';
+        }
+
+        foreach($this->getDynamicAttributes() as $name => $value) {
+            $fields[] = $name;
         }
 
         if($this->isRelationPopulated('children') && $this->children) {
@@ -154,19 +195,26 @@ class Page extends ActiveRecord
             ],
             'FileBehavior' => [
                 'class' => FileBehavior::class,
-                'attributes' => [
-                    'images' => [
-                        'multiple' => true,
+                'attributes' => array_merge(
+                    [
+                        'content_images' => [
+                            'multiple' => true,
+                        ],
+                        'images' => [
+                            'multiple' => true,
+                        ],
                     ],
-                    'content_images' => [
-                        'multiple' => true,
-                    ],
-                ]
+                ),
+            ],
+            'DynamicAttribute' => [
+                'class' => DynamicAttributeBehavior::class,
+                'storageAttribute' => 'data', // field to store serialized attributes
+                'dynamicAttributeDefaults' => [], // default values for the dynamic attributes
             ],
             'VersionBehavior' => [
                 'class' => VersionBehavior::class,
                 'attributes' => [
-                    'name', 'alias', 'parent_id', 'description', 'content', 'layout', 'status',
+                    'name', 'alias', 'parent_id', 'description', 'content', 'type', 'status',
                     'seo_title', 'seo_h1', 'seo_description', 'seo_keywords',
                 ]
             ],
@@ -181,7 +229,10 @@ class Page extends ActiveRecord
                 'attributes' => [
                     'content',
                 ]
-            ]
+            ],
+            'BlockBehavior' => [
+                'class' => BlockBehavior::class,
+            ],
         ];
     }
 
@@ -190,6 +241,7 @@ class Page extends ActiveRecord
         if($this->getIsNewRecord())
         {
             $this->status = self::STATUS_NOT_ACTIVE;
+            $this->type = self::TYPE_COMMON;
         }
 
         parent::init();
@@ -207,4 +259,11 @@ class Page extends ActiveRecord
         return Url::to($this->_url, $scheme);
     }
 
+    public function getLayout()
+    {
+        switch($this->type) {
+            case self::TYPE_MAIN: return 'mainpage';
+        }
+        return false;
+    }
 }

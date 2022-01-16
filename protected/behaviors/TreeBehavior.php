@@ -54,9 +54,6 @@ class TreeBehavior extends Behavior
     {
         if(!$this->query) {
             $this->query = get_class($this->owner)::find();
-            if($this->query->hasMethod('notDeleted')) {
-                $this->query = $this->query->notDeleted();
-            }
         }
         return clone $this->query;
     }

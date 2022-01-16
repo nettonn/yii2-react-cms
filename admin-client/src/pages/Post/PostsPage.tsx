@@ -1,38 +1,49 @@
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
-import { IPost, IPostModelOptions } from "../../models/IPost";
+import { Post, PostModelOptions } from "../../models/Post";
 import { ColumnsType } from "antd/lib/table/interface";
 import { statusColumn } from "../../components/crud/grid/columns";
-import { Link } from "react-router-dom";
-import { postService } from "../../api/PostService";
+import { Link, useParams } from "react-router-dom";
+import PostService from "../../api/PostService";
 import useDataGrid from "../../hooks/dataGrid.hook";
+import { useQuery } from "react-query";
+import { PostSection } from "../../models/PostSection";
+import { postSectionService } from "../../api/PostSectionService";
 
-const modelRoutes = RouteNames.post;
+const modelRoutes = routeNames.post;
+const postSectionRoutes = routeNames.postSection;
 
 const PostsPage: FC = () => {
-  const dataGridHook = useDataGrid<IPost, IPostModelOptions>(
-    postService,
-    "post"
+  const { sectionId } = useParams();
+
+  const { data: sectionData } = useQuery(
+    [postSectionService.viewQueryKey(), sectionId],
+    async ({ signal }) => {
+      if (!sectionId) throw Error("Id not set");
+      return await postSectionService.view<PostSection>(sectionId, signal);
+    },
+    {
+      refetchOnMount: false,
+    }
   );
 
-  const getColumns = (modelOptions: IPostModelOptions): ColumnsType<IPost> => [
-    // {
-    //   title: "Id",
-    //   dataIndex: "id",
-    //   sorter: true,
-    //   width: 80,
-    // },
+  const postService = useMemo(() => new PostService(sectionId), [sectionId]);
+
+  const dataGridHook = useDataGrid<Post, PostModelOptions>(postService, "post");
+
+  const getColumns = (modelOptions: PostModelOptions): ColumnsType<Post> => [
     {
       title: "Название",
       dataIndex: "name",
       sorter: true,
-      // filters: ,
       ellipsis: true,
       render: (value, record) => {
-        return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
+        return (
+          <Link to={modelRoutes.updateUrl(sectionId, record.id)}>{value}</Link>
+        );
       },
     },
     {
@@ -49,12 +60,26 @@ const PostsPage: FC = () => {
       sorter: true,
       width: 120,
     },
-    statusColumn<IPost>({ filters: modelOptions.status }),
+    statusColumn<Post>({ filters: modelOptions.status }),
   ];
 
   return (
     <>
-      <PageHeader title="Записи" backPath={RouteNames.home} />
+      <PageHeader
+        title="Записи"
+        backPath={routeNames.home}
+        breadcrumbItems={[
+          { path: postSectionRoutes.index, label: "Разделы записей" },
+          {
+            path: postSectionRoutes.updateUrl(sectionId),
+            label: sectionData ? sectionData.name : sectionId ?? "",
+          },
+          {
+            path: modelRoutes.indexUrl(sectionId),
+            label: "Записи",
+          },
+        ]}
+      />
 
       <DataGridTable
         dataGridHook={dataGridHook}
@@ -62,7 +87,7 @@ const PostsPage: FC = () => {
         hasUrl={true}
       />
 
-      <IndexPageActions createPath={modelRoutes.create} />
+      <IndexPageActions createPath={modelRoutes.createUrl(sectionId)} />
     </>
   );
 };

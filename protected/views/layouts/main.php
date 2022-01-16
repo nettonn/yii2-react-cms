@@ -3,7 +3,7 @@
 /* @var $this app\components\View */
 /* @var $content string */
 
-app\assets\SiteAsset::register($this);
+//app\assets\SiteAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

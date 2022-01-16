@@ -3,16 +3,17 @@ import { Form, FormInstance, Spin } from "antd";
 import _isEmpty from "lodash/isEmpty";
 import { useModelForm } from "../../../hooks/modelForm.hook";
 import UpdatePageActions from "./../../crud/PageActions/UpdatePageActions";
-import { IModel, IModelOptions } from "../../../types";
+import { Model, ModelOptions } from "../../../types";
 import { Navigate } from "react-router-dom";
-import { RouteNames } from "../../../routes";
+import { routeNames } from "../../../routes";
 import { stringReplace } from "../../../utils/functions";
+import VersionsButton from "../PageActions/VersionsButton";
 
 interface ModelFormProps {
   modelForm: any | ReturnType<typeof useModelForm>; // how without any?
   formContent(
-    initData?: IModel,
-    modelOptions?: IModelOptions,
+    initData?: Model,
+    modelOptions?: ModelOptions,
     form?: FormInstance
   ): React.ReactNode;
   exitRoute: string;
@@ -30,7 +31,10 @@ const ModelForm: FC<ModelFormProps> = ({
   hasViewUrl,
 }) => {
   const {
+    id,
     newId,
+    modelClass,
+    modelHasVersions,
     viewUrl,
     form,
     initData,
@@ -46,13 +50,12 @@ const ModelForm: FC<ModelFormProps> = ({
     onValuesChange,
     modelOptions,
     isNotFound,
-    versionsUrl,
   } = modelForm;
 
   if (!isInit) return <Spin spinning={true} />;
 
   if (isNotFound) {
-    return <Navigate to={RouteNames.error.e404} />;
+    return <Navigate to={routeNames.error.e404} />;
   }
 
   const renderForm = () => (
@@ -90,7 +93,15 @@ const ModelForm: FC<ModelFormProps> = ({
         }
         hasViewUrl={hasViewUrl}
         viewUrl={viewUrl}
-        versionsUrl={versionsUrl}
+        extra={
+          modelHasVersions ? (
+            <VersionsButton
+              modelId={id}
+              modelClass={modelClass}
+              isLoading={isSaveLoading}
+            />
+          ) : null
+        }
       />
     </>
   );

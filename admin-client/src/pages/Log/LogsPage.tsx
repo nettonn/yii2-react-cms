@@ -1,19 +1,19 @@
 import React, { FC } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import { ColumnsType } from "antd/lib/table/interface";
 import { Link } from "react-router-dom";
-import { ILog, ILogModelOptions } from "../../models/ILog";
+import { Log, LogModelOptions } from "../../models/Log";
 import { logService } from "../../api/LogService";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
-const modelRoutes = RouteNames.log;
+const modelRoutes = routeNames.log;
 
 const LogsPage: FC = () => {
-  const dataGridHook = useDataGrid<ILog, ILogModelOptions>(logService, "log");
+  const dataGridHook = useDataGrid<Log, LogModelOptions>(logService, "log");
 
-  const getColumns = (modelOptions: ILogModelOptions): ColumnsType<ILog> => [
+  const getColumns = (modelOptions: LogModelOptions): ColumnsType<Log> => [
     {
       title: "Id",
       dataIndex: "id",
@@ -47,7 +47,16 @@ const LogsPage: FC = () => {
 
   return (
     <>
-      <PageHeader title="Логи" backPath={RouteNames.home} />
+      <PageHeader
+        title="Логи"
+        backPath={routeNames.home}
+        breadcrumbItems={[
+          {
+            path: modelRoutes.index,
+            label: "Логи",
+          },
+        ]}
+      />
 
       <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
     </>

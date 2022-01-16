@@ -1,11 +1,11 @@
-import { $api } from "../../../../http/api";
+import { $api } from "../../../../http/axios";
 import {
   prepareAxiosConfig,
   requestErrorHandler,
 } from "../../../../utils/functions";
 import { fileService } from "../../../../api/FileService";
 import axios, { CancelTokenSource } from "axios";
-import { IImageFileModel } from "../../../../models/IFileModel";
+import { ImageFileModel } from "../../../../models/FileModel";
 
 export class UploadAdapter {
   constructor(
@@ -24,7 +24,7 @@ export class UploadAdapter {
       const config = prepareAxiosConfig(fileService.createImageConfig());
       config.data = formData;
       config.cancelToken = this.cancelToken.token;
-      const response = await $api.request<IImageFileModel>(config);
+      const response = await $api.request<ImageFileModel>(config);
       return {
         default: response.data.image_thumbs.normal,
       };

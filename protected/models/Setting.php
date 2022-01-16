@@ -87,6 +87,10 @@ class Setting extends ActiveRecord
     {
         $fields = parent::fields();
 
+        $fields['type_label'] = function(self $model) {
+            return $model->typeOptions[$model->type] ?? $model->type;
+        };
+
         $fields['value'] = function ($model) {
             return $model->getValue();
         };

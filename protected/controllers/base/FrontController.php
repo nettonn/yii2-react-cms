@@ -20,9 +20,9 @@ abstract class FrontController extends Controller
         return parent::afterAction($action, $result);
     }
 
-    public function setLayout($layout = false)
+    public function setLayout($layout = null)
     {
-        $layout = $layout ? $layout : 'common';
+        $layout = $layout ?: 'common';
         $this->layout = '//'.$layout;
     }
 

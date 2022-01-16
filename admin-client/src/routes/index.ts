@@ -2,6 +2,7 @@ import common from "./parts/common";
 import error from "./parts/error";
 import user from "./parts/user";
 import post from "./parts/post";
+import postSection from "./parts/post-section";
 import page from "./parts/page";
 import chunk from "./parts/chunk";
 import redirect from "./parts/redirect";
@@ -11,13 +12,18 @@ import menu from "./parts/menu";
 import menuItem from "./parts/menu-item";
 import version from "./parts/version";
 import log from "./parts/log";
-import { IRoute } from "../types";
+import queue from "./parts/queue";
+import order from "./parts/order";
+import block from "./parts/block";
+import blockItem from "./parts/block-item";
+import { RouteType } from "../types";
 
-export const RouteNames = {
+export const routeNames = {
   ...common.names,
   error: error.names,
   user: user.names,
   post: post.names,
+  postSection: postSection.names,
   page: page.names,
   chunk: chunk.names,
   redirect: redirect.names,
@@ -27,16 +33,18 @@ export const RouteNames = {
   menuItem: menuItem.names,
   version: version.names,
   log: log.names,
+  queue: queue.names,
+  order: order.names,
+  block: block.names,
+  blockItem: blockItem.names,
 };
 
-export const publicRoutes: IRoute[] = [...common.publicRoutes];
-
-export const privateRoutes: IRoute[] = [
+export const routes: readonly RouteType[] = [
   ...common.routes,
-
   ...error.routes,
   ...user.routes,
   ...post.routes,
+  ...postSection.routes,
   ...page.routes,
   ...chunk.routes,
   ...redirect.routes,
@@ -46,12 +54,17 @@ export const privateRoutes: IRoute[] = [
   ...menuItem.routes,
   ...version.routes,
   ...log.routes,
+  ...queue.routes,
+  ...order.routes,
+  ...block.routes,
+  ...blockItem.routes,
 ];
 
 export const routeIcons = {
   ...common.icons,
   ...user.icons,
   ...post.icons,
+  ...postSection.icons,
   ...page.icons,
   ...chunk.icons,
   ...redirect.icons,
@@ -61,4 +74,8 @@ export const routeIcons = {
   ...menuItem.icons,
   ...version.icons,
   ...log.icons,
+  ...queue.icons,
+  ...order.icons,
+  ...block.icons,
+  ...blockItem.icons,
 };

@@ -2,6 +2,9 @@
 
 use app\controllers\base\FrontController;
 use app\models\Page;
+use app\models\Post;
+use app\models\PostSection;
+use app\models\query\ActiveQuery;
 use Yii;
 use yii\helpers\Url;
 use yii\web\HttpException;
@@ -15,22 +18,65 @@ class SiteController extends FrontController
 
     public function actionPage($path = null)
     {
-        if($path === null) {
-            $model = Page::find()->where(['id'=>Yii::$app->settings->get('main_page_id')])->active()->cache()->one();
+        if(null === $path) {
+            $mainPageId = Yii::$app->settings->get('main_page_id');
+            $page = $this->findModel(Page::find()->where(['id'=>$mainPageId]));
         } else {
-            $model = Page::find()->where(['path'=>$path])->active()->cache()->one();
+            $page = $this->findModel(Page::find()->where(['path'=>$path]));
         }
 
-        if($model === null)
-            throw new HttpException(404, 'Страница не найдена');
+        Yii::$app->admin->setAdminLink($page->getAdminUpdateUrl());
 
-        Yii::$app->admin->setAdminLink(Url::to(['/admin/page/update', 'id' => $model->id]));
-
-        $this->setLayout($model->layout);
+        $this->setLayout($page->getLayout());
 
         return $this->render('page', [
-            'model'=>$model,
+            'page'=>$page,
         ]);
+    }
+
+    public function actionPostSection($alias)
+    {
+        $postSection = $this->findModel(PostSection::find()->where(['alias' => $alias]));
+
+        Yii::$app->admin->setAdminLink($postSection->getAdminUpdateUrl());
+
+        $this->setLayout($postSection->getLayout());
+
+        return $this->render('post-section', [
+            'postSection' => $postSection,
+        ]);
+    }
+
+    public function actionPost($path)
+    {
+        $post = $this->findModel(Post::find()->where(['path' => $path]));
+
+        $postSection = $this->findModel($post->getSection());
+
+        Yii::$app->admin->setAdminLink($post->getAdminUpdateUrl());
+
+        $this->setLayout($post->getLayout());
+
+        return $this->render('post', [
+            'post' => $post,
+            'postSection' => $postSection,
+        ]);
+    }
+
+    protected function findModel(ActiveQuery $query, $active = true, $cache = true)
+    {
+        if($active)
+            $query = $query->active();
+
+        if($cache)
+            $query = $query->cache();
+
+        $model = $query->one();
+
+        if(null === $model)
+            throw new HttpException(404, 'Страница не найдена');
+
+        return $model;
     }
 
     /**

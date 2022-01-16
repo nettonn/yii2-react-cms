@@ -4,44 +4,53 @@ use app\controllers\base\RestController;
 use app\models\base\ActiveRecord;
 use app\models\Version;
 use app\utils\AdminClientHelper;
-use yii\db\ActiveQuery;
+use app\models\query\ActiveQuery;
 
 class VersionController extends RestController
 {
     public $modelClass = Version::class;
     public $indexQuerySelectExclude = ['version_attributes'];
+    public $defaultSortAttribute = 'created_at';
+    public $defaultSortDirection = SORT_DESC;
 
     protected function prepareSearchQuery(ActiveQuery $query, string $search) : ActiveQuery
     {
         return $query->andWhere(['or',
             ['like', 'id',  "$search"],
             ['like', 'name',  "$search"],
-            ['like', 'link_type',  "$search"],
+            ['like', 'link_class',  "$search"],
             ['like', 'link_id',  "$search"],
         ]);
     }
 
     public function modelOptions(): array
     {
-        $linkTypeOptions = [];
-        foreach(Version::find()->select('link_type')->notDeleted()->column() as $linkType) {
-            $label = ActiveRecord::getModelLabelForClass($linkType);
-            $linkTypeOptions[$linkType] = $label ?? $linkType;
+        $linkClassOptions = [];
+        foreach(Version::find()->select('link_class')->column() as $linkClass) {
+            $label = ActiveRecord::getModelLabelForClass($linkClass);
+            $linkClassOptions[$linkClass] = $label ?? $linkClass;
         }
-        asort($linkTypeOptions);
+        asort($linkClassOptions);
 
         $linkIdOptions = Version::find()
             ->select('DISTINCT(link_id)')
             ->orderBy('link_id ASC')
             ->indexBy('link_id')
-            ->notDeleted()
             ->column();
 
         return [
             'action' => AdminClientHelper::getOptionsFromKeyValue( Version::instance()->actionOptions),
-            'link_type' => AdminClientHelper::getOptionsFromKeyValue($linkTypeOptions),
+            'link_class' => AdminClientHelper::getOptionsFromKeyValue($linkClassOptions),
             'link_id' => AdminClientHelper::getOptionsFromKeyValue($linkIdOptions),
         ];
+    }
+
+    /**
+     * @return string sql
+     */
+    protected function getLastModifiedSql(): string
+    {
+        return 'SELECT MAX(created_at) from '.($this->modelClass)::tableName();
     }
 
     public function actions(): array

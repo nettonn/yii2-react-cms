@@ -1,32 +1,25 @@
 import React, { FC } from "react";
 import DataGridTable from "../../components/crud/grid/DataGridTable";
 import PageHeader from "../../components/ui/PageHeader/PageHeader";
-import { RouteNames } from "../../routes";
+import { routeNames } from "../../routes";
 import IndexPageActions from "../../components/crud/PageActions/IndexPageActions";
-import { ISeo, ISeoModelOptions } from "../../models/ISeo";
+import { Seo, SeoModelOptions } from "../../models/Seo";
 import { ColumnsType } from "antd/lib/table/interface";
 import { statusColumn } from "../../components/crud/grid/columns";
 import { seoService } from "../../api/SeoService";
 import { Link } from "react-router-dom";
 import useDataGrid from "../../hooks/dataGrid.hook";
 
-const modelRoutes = RouteNames.seo;
+const modelRoutes = routeNames.seo;
 
 const SeoGridPage: FC = () => {
-  const dataGridHook = useDataGrid<ISeo, ISeoModelOptions>(seoService, "seo");
+  const dataGridHook = useDataGrid<Seo, SeoModelOptions>(seoService, "seo");
 
-  const getColumns = (modelOptions: ISeoModelOptions): ColumnsType<ISeo> => [
-    // {
-    //   title: "Id",
-    //   dataIndex: "id",
-    //   sorter: true,
-    //   width: 160,
-    // },
+  const getColumns = (modelOptions: SeoModelOptions): ColumnsType<Seo> => [
     {
       title: "Название",
       dataIndex: "name",
       sorter: true,
-      // filters: ,
       ellipsis: true,
       render: (value, record) => {
         return <Link to={modelRoutes.updateUrl(record.id)}>{value}</Link>;
@@ -52,12 +45,21 @@ const SeoGridPage: FC = () => {
       sorter: true,
       width: 120,
     },
-    statusColumn<ISeo>({ filters: modelOptions.status }),
+    statusColumn<Seo>({ filters: modelOptions.status }),
   ];
 
   return (
     <>
-      <PageHeader title="SEO" backPath={RouteNames.home} />
+      <PageHeader
+        title="SEO"
+        backPath={routeNames.home}
+        breadcrumbItems={[
+          {
+            path: modelRoutes.index,
+            label: "SEO",
+          },
+        ]}
+      />
 
       <DataGridTable
         dataGridHook={dataGridHook}
