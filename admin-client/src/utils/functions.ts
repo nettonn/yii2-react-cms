@@ -17,7 +17,7 @@ export function simpleCloneObject(object: {}) {
 
 export function prepareAxiosConfig(
   config: AxiosRequestConfig,
-  addConfig?: { params?: {}; data?: {}; headers?: {} }
+  addConfig?: { params?: {}; data?: {}; headers?: {}; signal?: AbortSignal }
 ) {
   const defaultConfig: AxiosRequestConfig = {
     url: "",
