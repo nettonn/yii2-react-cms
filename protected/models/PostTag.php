@@ -6,6 +6,7 @@ use app\behaviors\TimestampBehavior;
 use app\models\base\ActiveRecord;
 use app\models\query\ActiveQuery;
 use Yii;
+use yii\helpers\StringHelper;
 
 /**
  * This is the model class for table "post_tag".
@@ -65,6 +66,13 @@ class PostTag extends ActiveRecord
     {
         return $this->hasMany(Post::class, ['id' => 'post_id'])
             ->viaTable('{{%post_tag_link}}', ['tag_id' => 'id']);
+    }
+
+    public function beforeSave($insert)
+    {
+        $this->name = StringHelper::mb_ucfirst(strtolower($this->name));
+
+        return parent::beforeSave($insert);
     }
 
     public function behaviors(): array

@@ -5,6 +5,7 @@ namespace app\models;
 use app\behaviors\ContentImagesBehavior;
 use app\behaviors\FileBehavior;
 use app\behaviors\SearchBehavior;
+use app\behaviors\TagsBehavior;
 use app\behaviors\TimestampBehavior;
 use app\behaviors\VersionBehavior;
 use app\models\base\ActiveRecord;
@@ -73,6 +74,7 @@ class Post extends ActiveRecord
             [['status'], 'boolean'],
             [['alias'], 'filter', 'filter' => [Inflector::class, 'slug']],
             [['images_id'], 'integer', 'allowArray' => true],
+            ['user_tags', 'each', 'rule' => ['string', 'max' => 255]]
         ];
     }
 
@@ -126,7 +128,7 @@ class Post extends ActiveRecord
     {
         return $this->hasMany(PostTag::class, ['id' => 'tag_id'])
             ->viaTable('{{%post_tag_link}}', ['post_id' => 'id'])
-            ->inverseOf('posts');
+            ;
     }
 
     public function fields(): array
@@ -136,6 +138,10 @@ class Post extends ActiveRecord
         if($this->isRelationPopulated('images')) {
             $fields[] = 'images';
             $fields[] = 'images_id';
+        }
+
+        if($this->isRelationPopulated('tags')) {
+            $fields[] = 'user_tags';
         }
 
         return $fields;
@@ -186,6 +192,9 @@ class Post extends ActiveRecord
                 'softDeleteAttributeValues' => [
                     'is_deleted' => true
                 ],
+            ],
+            'TagsBehavior' => [
+                'class' => TagsBehavior::class,
             ],
         ];
     }
