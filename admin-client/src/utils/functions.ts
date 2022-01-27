@@ -1,5 +1,8 @@
 import { ValidationError } from "../types";
-import CONSTANTS from "./constants";
+import {
+  RESPONSE_NOT_FOUND,
+  RESPONSE_STATUS_VALIDATION_ERROR,
+} from "./constants";
 import { AxiosRequestConfig } from "axios";
 import _isEmpty from "lodash/isEmpty";
 import _merge from "lodash/merge";
@@ -46,9 +49,9 @@ export function requestErrorHandler(e: any) {
     if (e.response.status) {
       result.status = e.response.status;
     }
-    if (e.response.status === CONSTANTS.STATUS_VALIDATION_ERROR) {
+    if (e.response.status === RESPONSE_STATUS_VALIDATION_ERROR) {
       result.validationErrors = e.response.data;
-    } else if (e.response.status === CONSTANTS.STATUS_NOT_FOUND) {
+    } else if (e.response.status === RESPONSE_NOT_FOUND) {
       result.message = e.message || "Данные не найдены на сервере";
     } else {
       result.message = e.response.data.message || "Неизвестная ошибка";
