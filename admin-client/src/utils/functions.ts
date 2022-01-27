@@ -127,13 +127,9 @@ export function stringReplace(
   string: string,
   replaces: { [key: string]: string | number | undefined }
 ) {
-  Object.keys(replaces).forEach((find) => {
-    let replace = replaces[find];
+  Object.entries(replaces).forEach(([find, replace]) => {
     if (!replace) return;
-    if (typeof replace === "number") {
-      replace = replace.toString();
-    }
-    string = string.replace(new RegExp(find), replace);
+    string = string.replace(new RegExp(find), String(replace));
   });
 
   return string;
