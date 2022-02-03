@@ -43,8 +43,7 @@ export default class RestService {
     params?: IRestServiceIndexQueryParams,
     signal?: AbortSignal
   ): Promise<{ pagination: ApiServicePagination; data: T[] }> {
-    const config = prepareAxiosConfig(this.indexConfig(), { params });
-    if (signal) config.signal = signal;
+    const config = prepareAxiosConfig(this.indexConfig(), { params, signal });
     const response = await $api.request<T[]>(config);
     const pagination: ApiServicePagination = {};
 
@@ -74,8 +73,7 @@ export default class RestService {
   }
 
   async view<T>(id: number | string, signal?: AbortSignal): Promise<T> {
-    const config = prepareAxiosConfig(this.viewConfig(id));
-    if (signal) config.signal = signal;
+    const config = prepareAxiosConfig(this.viewConfig(id), { signal });
     const response = await $api.request<T>(config);
     this.prepareModelOptions(response);
 
@@ -122,15 +120,13 @@ export default class RestService {
   }
 
   async modelOptions<T>(signal?: AbortSignal): Promise<T> {
-    const config = prepareAxiosConfig(this.modelOptionsConfig());
-    if (signal) config.signal = signal;
+    const config = prepareAxiosConfig(this.modelOptionsConfig(), { signal });
     const response = await $api.request<T>(config);
     return response.data;
   }
 
   async modelDefaults<T>(signal?: AbortSignal): Promise<T> {
-    const config = prepareAxiosConfig(this.modelDefaultsConfig());
-    if (signal) config.signal = signal;
+    const config = prepareAxiosConfig(this.modelDefaultsConfig(), { signal });
     const response = await $api.request<T>(config);
     return response.data;
   }

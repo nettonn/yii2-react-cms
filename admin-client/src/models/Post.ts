@@ -6,6 +6,7 @@ export interface Post extends Model {
   alias: string;
   description: string;
   content: string;
+  user_tags: string[];
   status: boolean;
   section_id: number;
   seo_title: string;
@@ -18,4 +19,5 @@ export interface Post extends Model {
 
 export interface PostModelOptions extends ModelOptions {
   status: ValueTextOption[];
+  tag: ValueTextOption[];
 }

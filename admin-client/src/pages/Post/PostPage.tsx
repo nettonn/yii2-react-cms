@@ -16,6 +16,7 @@ import { useQuery } from "react-query";
 import { postSectionService } from "../../api/PostSectionService";
 import { PostSection } from "../../models/PostSection";
 import useModelType from "../../hooks/modelType.hook";
+import TagInput from "../../components/crud/form/TagInput/TagInput";
 
 const modelRoutes = routeNames.post;
 const postSectionRoutes = routeNames.postSection;
@@ -83,6 +84,10 @@ const PostPage: FC = () => {
         </Form.Item>
 
         {getTypeForm()}
+
+        <Form.Item label="Теги" name="user_tags">
+          <TagInput options={modelOptions.tag} />
+        </Form.Item>
 
         <Form.Item label="Статус" name="status" valuePropName="checked">
           <Switch />

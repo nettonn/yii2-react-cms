@@ -156,12 +156,12 @@ export function useModelForm<
   );
 
   const onValuesChange = (changedFields: any, allFields: any) => {
-    // find undefined keys and set it to null
-    Object.keys(changedFields).forEach((key) => {
-      if (changedFields[key] === undefined) {
-        form.setFields([{ name: key, value: null, errors: [] }]);
+    // find undefined values and set it to null, for send null values to server
+    Object.entries(changedFields).forEach(([name, value]) => {
+      if (value === undefined) {
+        form.setFields([{ name, value: null, errors: [] }]);
       } else {
-        form.setFields([{ name: key, errors: [] }]);
+        form.setFields([{ name, errors: [] }]);
       }
     });
 

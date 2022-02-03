@@ -2,6 +2,7 @@
 
 use app\controllers\base\RestController;
 use app\models\Post;
+use app\models\PostTag;
 use app\utils\AdminClientHelper;
 use app\models\query\ActiveQuery;
 use Yii;
@@ -12,7 +13,7 @@ class PostController extends RestController
 
     public $indexQuerySelectExclude = ['content', 'description'];
 
-    public $modelWith = ['images'];
+    public $modelWith = ['images', 'tags'];
 
     protected function prepareSearchQuery(ActiveQuery $query, string $search) : ActiveQuery
     {
@@ -36,7 +37,21 @@ class PostController extends RestController
     {
         return [
             'status' => AdminClientHelper::getOptionsFromKeyValue(Post::instance()->statusOptions),
+            'tag' => AdminClientHelper::getOptionsFromKeyValue(PostTag::find()->selectOptions('id', 'name')),
         ];
+    }
+
+    protected function getLastModifiedSql(): string
+    {
+        $postTable = ($this->modelClass)::tableName();
+        $postTagTable = PostTag::tableName();
+
+        return "
+            SELECT MAX(updated_at) FROM (
+                SELECT MAX(updated_at) AS updated_at FROM $postTable
+                UNION ALL 
+                SELECT MAX(updated_at) AS updated_at FROM $postTagTable
+            ) a";
     }
 
 }
