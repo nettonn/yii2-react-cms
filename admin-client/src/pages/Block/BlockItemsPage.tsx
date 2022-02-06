@@ -96,7 +96,7 @@ const BlockItemsPage: FC = () => {
       />
 
       <DataGridTable
-        dataGridHook={dataGridHook}
+        {...dataGridHook}
         getColumns={getColumns}
         scroll={{ x: 800 }}
       />

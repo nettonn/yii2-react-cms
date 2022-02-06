@@ -64,7 +64,7 @@ const MenusPage: FC = () => {
       />
 
       <DataGridTable
-        dataGridHook={dataGridHook}
+        {...dataGridHook}
         getColumns={getColumns}
         scroll={{ x: 800 }}
         actionButtons={(record: Menu) => [

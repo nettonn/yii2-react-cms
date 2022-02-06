@@ -11,8 +11,8 @@ import { dataGridActions } from "../../../store/reducers/grid/grids";
 
 const Search = Input.Search;
 
-interface DataGridTableProps {
-  dataGridHook: ReturnType<typeof useDataGrid>;
+interface DataGridTableProps extends ReturnType<typeof useDataGrid> {
+  // dataGridHook: ReturnType<typeof useDataGrid>;
   getColumns: (modelOptions: any) => ColumnsType<any>;
   scroll?: { x?: number; y?: number };
   hasUrl?: boolean;
@@ -21,33 +21,30 @@ interface DataGridTableProps {
 }
 
 const DataGridTable: FC<DataGridTableProps> = ({
-  dataGridHook,
+  // dataGridHook,
   getColumns,
   scroll = { x: 600 },
   hasUrl,
   actionButtons,
   updatePath,
+  currentPage,
+  pageSize,
+  dataCount,
+  isInit,
+  isLoading,
+  data,
+  error,
+  tableChangeHandler,
+  searchChangeHandler,
+  deleteHandler,
+  searchQuery,
+  sortField,
+  sortDirection,
+  filters,
+  modelOptions,
+  clearAll,
+  dataGridSelector,
 }) => {
-  const {
-    currentPage,
-    pageSize,
-    dataCount,
-    isInit,
-    isLoading,
-    data,
-    error,
-    tableChangeHandler,
-    searchChangeHandler,
-    deleteHandler,
-    searchQuery,
-    sortField,
-    sortDirection,
-    filters,
-    modelOptions,
-    clearAll,
-    dataGridSelector,
-  } = dataGridHook;
-
   const { pathname } = useLocation();
 
   const [searchInputValue, setSearchInputValue] = useState(searchQuery ?? "");

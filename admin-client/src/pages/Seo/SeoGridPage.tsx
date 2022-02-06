@@ -62,7 +62,7 @@ const SeoGridPage: FC = () => {
       />
 
       <DataGridTable
-        dataGridHook={dataGridHook}
+        {...dataGridHook}
         getColumns={getColumns}
         scroll={{ x: 800 }}
         hasUrl={true}

@@ -54,7 +54,7 @@ const UsersPage: FC = () => {
         ]}
       />
 
-      <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
+      <DataGridTable {...dataGridHook} getColumns={getColumns} />
 
       <IndexPageActions createPath={modelRoutes.create} />
     </>
