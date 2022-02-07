@@ -9,8 +9,7 @@ import { routeNames } from "../../../routes";
 import { stringReplace } from "../../../utils/functions";
 import VersionsButton from "../PageActions/VersionsButton";
 
-interface ModelFormProps {
-  modelForm: any | ReturnType<typeof useModelForm>; // how without any?
+interface ModelFormProps extends ReturnType<typeof useModelForm> {
   formContent(
     initData?: Model,
     modelOptions?: ModelOptions,
@@ -23,35 +22,32 @@ interface ModelFormProps {
 }
 
 const ModelForm: FC<ModelFormProps> = ({
-  modelForm,
+  // modelForm,
   formContent,
   exitRoute,
   createRoute,
   updateRoute,
   hasViewUrl,
+  id,
+  newId,
+  modelClass,
+  modelHasVersions,
+  viewUrl,
+  form,
+  initData,
+  isDataLoading,
+  isSaveLoading,
+  isSaveSuccess,
+  isTouchedAfterSubmit,
+  isInit,
+  error,
+  validationErrors,
+  onSubmit,
+  onFinishFailed,
+  onValuesChange,
+  modelOptions,
+  isNotFound,
 }) => {
-  const {
-    id,
-    newId,
-    modelClass,
-    modelHasVersions,
-    viewUrl,
-    form,
-    initData,
-    isDataLoading,
-    isSaveLoading,
-    isSaveSuccess,
-    isTouchedAfterSubmit,
-    isInit,
-    error,
-    validationErrors,
-    onSubmit,
-    onFinishFailed,
-    onValuesChange,
-    modelOptions,
-    isNotFound,
-  } = modelForm;
-
   if (!isInit) return <Spin spinning={true} />;
 
   if (isNotFound) {

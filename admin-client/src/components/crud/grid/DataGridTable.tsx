@@ -12,7 +12,6 @@ import { dataGridActions } from "../../../store/reducers/grid/grids";
 const Search = Input.Search;
 
 interface DataGridTableProps extends ReturnType<typeof useDataGrid> {
-  // dataGridHook: ReturnType<typeof useDataGrid>;
   getColumns: (modelOptions: any) => ColumnsType<any>;
   scroll?: { x?: number; y?: number };
   hasUrl?: boolean;

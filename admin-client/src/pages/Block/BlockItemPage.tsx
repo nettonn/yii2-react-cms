@@ -92,7 +92,7 @@ const BlockItemPage: FC = () => {
       />
 
       <ModelForm
-        modelForm={modelForm}
+        {...modelForm}
         formContent={formContent}
         exitRoute={modelRoutes.indexUrl(blockId)}
         createRoute={modelRoutes.createUrl(blockId)}

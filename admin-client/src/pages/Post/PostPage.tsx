@@ -142,7 +142,7 @@ const PostPage: FC = () => {
       />
 
       <ModelForm
-        modelForm={modelForm}
+        {...modelForm}
         formContent={formContent}
         exitRoute={modelRoutes.indexUrl(sectionId)}
         createRoute={modelRoutes.createUrl(sectionId)}
