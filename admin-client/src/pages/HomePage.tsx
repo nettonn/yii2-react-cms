@@ -33,6 +33,10 @@ const HomePage: FC = () => {
       title: "Меню",
     },
     {
+      route: routeNames.block.index,
+      title: "Блоки",
+    },
+    {
       route: routeNames.order.index,
       title: "Заявки",
     },

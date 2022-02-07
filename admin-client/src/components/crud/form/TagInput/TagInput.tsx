@@ -10,7 +10,10 @@ interface TagInputProps {
 }
 
 const TagInput: FC<TagInputProps> = ({ value, onChange, options }) => {
-  if (!value || !onChange) return null;
+  if (!value) {
+    value = [];
+  }
+  if (!onChange) return null;
 
   return <TagInputInternal tags={value} setTags={onChange} options={options} />;
 };

@@ -62,7 +62,7 @@ const RedirectPage: FC = () => {
           { path: modelRoutes.index, label: "Редиректы" },
           {
             path: modelRoutes.updateUrl(id),
-            label: modelForm.initData?.from ?? id,
+            label: modelForm.initData?.from ?? id ?? "Создание",
           },
         ]}
       />

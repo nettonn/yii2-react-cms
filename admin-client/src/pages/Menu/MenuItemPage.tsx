@@ -91,7 +91,7 @@ const MenuItemPage: FC = () => {
           },
           {
             path: modelRoutes.updateUrl(menuId, id),
-            label: modelForm.initData?.name ?? id,
+            label: modelForm.initData?.name ?? id ?? "Создание",
           },
         ]}
       />

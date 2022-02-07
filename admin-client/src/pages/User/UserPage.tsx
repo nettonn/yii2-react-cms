@@ -49,7 +49,7 @@ const UserPage: FC = () => {
           { path: modelRoutes.index, label: "Пользователи" },
           {
             path: modelRoutes.updateUrl(id),
-            label: `${id}`,
+            label: id ?? "Создание",
           },
         ]}
       />

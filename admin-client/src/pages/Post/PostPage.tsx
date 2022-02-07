@@ -136,7 +136,7 @@ const PostPage: FC = () => {
           },
           {
             path: modelRoutes.updateUrl(sectionId, id),
-            label: modelForm.initData?.name ?? id,
+            label: modelForm.initData?.name ?? id ?? "Создание",
           },
         ]}
       />
