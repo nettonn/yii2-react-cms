@@ -78,7 +78,7 @@ const VersionsPage: FC = () => {
         ]}
       />
 
-      <DataGridTable dataGridHook={dataGridHook} getColumns={getColumns} />
+      <DataGridTable {...dataGridHook} getColumns={getColumns} />
     </>
   );
 };

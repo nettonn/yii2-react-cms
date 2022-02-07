@@ -55,7 +55,7 @@ const UserPage: FC = () => {
       />
 
       <ModelForm
-        modelForm={modelForm}
+        {...modelForm}
         formContent={formContent}
         exitRoute={modelRoutes.index}
         createRoute={modelRoutes.create}

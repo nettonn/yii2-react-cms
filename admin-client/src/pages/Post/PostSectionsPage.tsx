@@ -68,11 +68,7 @@ const PostSectionsPage: FC = () => {
         ]}
       />
 
-      <DataGridTable
-        dataGridHook={dataGridHook}
-        getColumns={getColumns}
-        hasUrl={true}
-      />
+      <DataGridTable {...dataGridHook} getColumns={getColumns} hasUrl={true} />
 
       <IndexPageActions createPath={modelRoutes.create} />
     </>

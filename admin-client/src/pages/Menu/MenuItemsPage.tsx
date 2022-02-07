@@ -93,7 +93,7 @@ const MenuItemsPage: FC = () => {
       />
 
       <DataGridTable
-        dataGridHook={dataGridHook}
+        {...dataGridHook}
         getColumns={getColumns}
         scroll={{ x: 800 }}
       />

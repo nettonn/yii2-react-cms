@@ -97,7 +97,7 @@ const MenuItemPage: FC = () => {
       />
 
       <ModelForm
-        modelForm={modelForm}
+        {...modelForm}
         formContent={formContent}
         exitRoute={modelRoutes.indexUrl(menuId)}
         createRoute={modelRoutes.createUrl(menuId)}

@@ -109,7 +109,7 @@ export function useModelForm<
     mutate: onSubmit,
     error: submitError,
   } = useMutation(
-    async (values: T) => {
+    async (values: any) => {
       setValidationErrors(null);
       setIsTouchedAfterSubmit(false);
 
